@@ -38,43 +38,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Exchanger;
 
 
 public class MainActivity extends AppCompatActivity {
-    private static String getStringFromInputStream(InputStream is) {
-
-        BufferedReader br = null;
-        StringBuilder sb = new StringBuilder();
-
-        String line;
-        try
-        {
-            br = new BufferedReader(new InputStreamReader(is));
-            while ((line = br.readLine()) != null)
-            {
-                sb.append(line);
-            }
-
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            if (br != null)
-            {
-                try
-                {
-                    br.close();
-                } catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return sb.toString();
-    }
 
     private static String convertStreamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -104,17 +71,17 @@ public class MainActivity extends AppCompatActivity {
             conn.setRequestMethod("GET");
             InputStream in = new BufferedInputStream(conn.getInputStream());
             response = convertStreamToString(in);
-            Log.i("JSON: ", response);
         } catch(Exception e) {
             Log.i("Error", e.toString()+" "+urlString);
         }
         return response;
     }
-    private void registerUser(final String name, final String email, final String userId){
+    private void registerUser(final String name, final String email, final String userId) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.0.103/TripSharr/index.php/user/add",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        //EveryThing Fine..
                         Log.i("Response", response);
                         Intent i = new Intent(getApplication(), HomeActivity.class);
                         i.putExtra("userId", userId);
@@ -127,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        //Volley Error..
                         Log.i("Error", error.toString());
                     }
                 }){
@@ -152,49 +120,64 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Object doInBackground(Object[] params) {
             try {
+                //See if user is registered at server..
                 JSONArray user = new JSONArray(getJSONObjectFromURL(params[0].toString()));
                 try {
                     String user_id = new JSONObject(user.get(0).toString()).get("user_id").toString();
-                    if(user_id != null)
-                        throw new Exception("Fucking Empty");
+                    if(user_id == null)
+                        throw new Exception("Empty User ID");
+                    else
+                    {
+                        //Is registered..
+                        Intent intent = new Intent(getApplication(), HomeActivity.class);
+                        intent.putExtra("userId", userId);
+                        intent.putExtra("authToken", authToken);
+                        startActivity(intent);
+                    }
                 } catch (Exception e) {
-                    Log.i("Debug", "Hell NO");
+                    //Not registered on the server..
+                    //Get data from facebook to register..
                     GraphRequest request = GraphRequest.newMeRequest(
-                            AccessToken.getCurrentAccessToken(),
-                            new GraphRequest.GraphJSONObjectCallback() {
-                                @Override
-                                public void onCompleted(
-                                        JSONObject object,
-                                        GraphResponse response) {
-                                    Log.i("Debug", "Got In");
-                                    if(response.getError() != null)
-                                    {
-                                        Log.i("ErrorFB", response.getError().toString());
-                                    }
-                                    try {
-                                        String name =  object.get("name").toString();
-                                        String email;
-                                        try {
-                                            email = object.get("email").toString();
-                                        } catch (Exception e) {
-                                            email= "unavailable";
-                                        }
-                                        registerUser(name, email, userId);
-                                    } catch (Exception e) {
-                                        Log.i("Error4", e.toString());
-                                        Intent i = new Intent(getApplication(), HomeActivity.class);
-                                        i.putExtra("userId", userId);
-                                        i.putExtra("authToken", authToken);
-                                        startActivity(i);
-                                        //LoginManager.getInstance().logOut();
-                                        finish();
-                                    }
+                        AccessToken.getCurrentAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(
+                                    JSONObject object,
+                                    GraphResponse response) {
+                                Log.i("Debug", "Got In");
+                                if(response.getError() != null) {
+                                    //Couldn't get data..
+                                    Log.i("Error", response.getError().toString());
                                 }
-                            });
+                                try {
+                                    //Got data.. Lets Register..
+                                    String name =  object.get("name").toString();
+                                    String email;
+                                    try {
+                                        email = object.get("email").toString();
+                                    } catch (Exception e) {
+                                        email= "unavailable";
+                                    }
+                                    //Volley Call to register user..
+                                    registerUser(name, email, userId);
+                                } catch (Exception e) {
+                                    //This should never come.. Cause could be volley..
+                                    Log.i("Error", e.toString());
+                                    Intent i = new Intent(getApplication(), HomeActivity.class);
+                                    i.putExtra("userId", userId);
+                                    i.putExtra("authToken", authToken);
+                                    startActivity(i);
+                                    //LoginManager.getInstance().logOut();
+                                    finish();
+                                }
+                            }
+                        }
+                    );
                     Bundle parameters = new Bundle();
                     parameters.putString("fields", "id,name");
                     request.setParameters(parameters);
                     Log.i("Debug", "In here");
+                    //Wait till the request is completed..
                     request.executeAndWait();
                 }
             } catch (Exception e) {
@@ -207,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateWithToken(final AccessToken currentAccessToken) {
 
         if (currentAccessToken != null) {
+            //New Access Token
             Log.i("Debug", currentAccessToken.getToken());
             new Handler().postDelayed(new Runnable() {
 
@@ -215,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
                     userId = currentAccessToken.getUserId();
                     authToken = currentAccessToken.getToken();
                     String url = "http://192.168.0.103/TripSharr/index.php/user/user_id/"+userId+"/";
+                    //Change  The Thread..
                     new getUser().execute(url);
                 }
             }, 0);
@@ -225,42 +210,44 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-        updateWithToken(AccessToken.getCurrentAccessToken());
-        AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
-                updateWithToken(newAccessToken);
-            }
-        };
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                userId = loginResult.getAccessToken().getUserId();
-                authToken = loginResult.getAccessToken().getToken();
-                message = "login success";
-                Intent intent = new Intent(getApplication(), HomeActivity.class);
-                intent.putExtra("userId", userId);
-                intent.putExtra("authToken", authToken);
-                startActivity(intent);
-                Log.i("LoginAttempt", message);
-                Log.i("AuthToken", authToken);
-                Log.i("UserId", userId);
-            }
-            @Override
-            public void onCancel() {
-                message = "Login attempt canceled.";
-                Log.i("LoginAttempt", message);
-            }
-            @Override
-            public void onError(FacebookException e) {
-                message = "Login attempt failed.";
-                Log.i("LoginAttempt", message);
-            }
-        });
+        //Check if already logged in..
+        if(AccessToken.getCurrentAccessToken().toString() == null) {
+            //Not Logged
+            setContentView(R.layout.activity_main);
+            LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    userId = loginResult.getAccessToken().getUserId();
+                    authToken = loginResult.getAccessToken().getToken();
+                    message = "login success";
+                    Intent intent = new Intent(getApplication(), HomeActivity.class);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("authToken", authToken);
+                    startActivity(intent);
+                    Log.i("LoginAttempt", message);
+                    Log.i("AuthToken", authToken);
+                    Log.i("UserId", userId);
+                }
 
+                @Override
+                public void onCancel() {
+                    message = "Login attempt canceled.";
+                    Log.i("LoginAttempt", message);
+                }
+
+                @Override
+                public void onError(FacebookException e) {
+                    message = "Login attempt failed.";
+                    Log.i("LoginAttempt", message);
+                }
+            });
+        }
+        else {
+            //Logged.. Update Access Token..
+            updateWithToken(AccessToken.getCurrentAccessToken());
+        }
     }
 
     @Override
