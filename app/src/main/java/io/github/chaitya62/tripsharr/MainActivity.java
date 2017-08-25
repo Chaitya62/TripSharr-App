@@ -212,7 +212,13 @@ public class MainActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         super.onCreate(savedInstanceState);
         //Check if already logged in..
-        if(AccessToken.getCurrentAccessToken().toString() == null) {
+        boolean checkFlag = false;
+        try{
+            AccessToken.getCurrentAccessToken().toString();
+        } catch (Exception e) {
+            checkFlag = true;
+        }
+        if( checkFlag ? (true): (AccessToken.getCurrentAccessToken().toString() == null)) {
             //Not Logged
             setContentView(R.layout.activity_main);
             LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
