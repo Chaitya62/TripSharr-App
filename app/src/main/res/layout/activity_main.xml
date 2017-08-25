@@ -7,17 +7,21 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/com_facebook_profile_picture_blank_portrait" />
+        android:src="@drawable/com_facebook_profile_picture_blank_portrait"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="45dp" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
+        style="@style/FacebookLoginButton"
         android:text="@string/facebook_login_string"
+        android:drawableStart="@drawable/fb_button"
         android:textColor="#ffffff"
         android:background="#3b5998"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="35dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 

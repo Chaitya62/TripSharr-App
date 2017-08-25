@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Exchanger;
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                                     try {
                                         email = object.get("email").toString();
                                     } catch (Exception e) {
+                                        Log.i("Error", e.toString());
                                         email= "unavailable";
                                     }
                                     //Volley Call to register user..
@@ -174,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     );
                     Bundle parameters = new Bundle();
-                    parameters.putString("fields", "id,name");
+                    parameters.putString("fields", "id,name,email");
                     request.setParameters(parameters);
                     Log.i("Debug", "In here");
                     //Wait till the request is completed..
@@ -222,19 +224,17 @@ public class MainActivity extends AppCompatActivity {
             //Not Logged
             setContentView(R.layout.activity_main);
             LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
+            loginButton.setReadPermissions(Arrays.asList("email"));
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
                     userId = loginResult.getAccessToken().getUserId();
                     authToken = loginResult.getAccessToken().getToken();
                     message = "login success";
-                    Intent intent = new Intent(getApplication(), HomeActivity.class);
-                    intent.putExtra("userId", userId);
-                    intent.putExtra("authToken", authToken);
-                    startActivity(intent);
                     Log.i("LoginAttempt", message);
                     Log.i("AuthToken", authToken);
                     Log.i("UserId", userId);
+                    updateWithToken(AccessToken.getCurrentAccessToken());
                 }
 
                 @Override
