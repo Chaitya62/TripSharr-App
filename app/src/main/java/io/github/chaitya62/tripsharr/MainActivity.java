@@ -37,6 +37,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import io.github.chaitya62.tripsharr.VolleySingleton;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -70,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
             InputStream in = new BufferedInputStream(conn.getInputStream());
             response = convertStreamToString(in);
         } catch(Exception e) {
-            Log.i("Error", e.toString()+" "+urlString);
+            Log.i("Error1", e.toString()+" "+urlString);
         }
         return response;
     }
     private void registerUser(final String name, final String email, final String userId) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://192.168.0.103/TripSharr/index.php/user/add",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://tripshare.codeadventure.in/TripShare/index.php/user/add",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -106,8 +107,8 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+
     }
 
     private String authToken, userId, message;
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 //See if user is registered at server..
                 JSONArray user = new JSONArray(getJSONObjectFromURL(params[0].toString()));
+                Log.i("LOG: ", user.toString());
                 try {
                     String user_id = new JSONObject(user.get(0).toString()).get("user_id").toString();
                     if(user_id == null)
@@ -145,7 +147,8 @@ public class MainActivity extends AppCompatActivity {
                                 Log.i("Debug", "Got In");
                                 if(response.getError() != null) {
                                     //Couldn't get data..
-                                    Log.i("Error", response.getError().toString());
+
+                                    Log.i("Error1", response.getError().toString());
                                 }
                                 try {
                                     //Got data.. Lets Register..
@@ -197,8 +200,10 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     userId = currentAccessToken.getUserId();
                     authToken = currentAccessToken.getToken();
-                    String url = "http://192.168.0.103/TripSharr/index.php/user/user_id/"+userId+"/";
+                    String url = "http://tripshare.codeadventure.in/TripShare/index.php/user/user_id.json/"+(!userId.isEmpty() ? userId : 1 )+"/";
                     //Change  The Thread..
+                    //RequestQueue queue
+                    Log.i("url : ",url);
                     new getUser().execute(url);
                 }
             }, 0);

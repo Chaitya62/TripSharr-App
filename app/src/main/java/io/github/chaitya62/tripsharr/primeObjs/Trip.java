@@ -1,4 +1,4 @@
-package io.github.chaitya62.tripsharr.primeObjs;
+package io.github.chaitya62.tripsharr;
 
 import android.util.Pair;
 

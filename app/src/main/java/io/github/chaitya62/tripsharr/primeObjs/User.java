@@ -5,4 +5,5 @@ package io.github.chaitya62.tripsharr.primeObjs;
  */
 
 public class User {
+
 }
