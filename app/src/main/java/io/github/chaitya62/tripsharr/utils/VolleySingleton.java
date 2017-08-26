@@ -1,4 +1,4 @@
-package io.github.chaitya62.tripsharr;
+package io.github.chaitya62.tripsharr.utils;
 
 import android.content.Context;
 

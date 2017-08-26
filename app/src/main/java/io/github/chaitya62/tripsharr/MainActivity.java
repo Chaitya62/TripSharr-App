@@ -2,9 +2,9 @@ package io.github.chaitya62.tripsharr;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -35,6 +35,8 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 
 public class MainActivity extends AppCompatActivity {

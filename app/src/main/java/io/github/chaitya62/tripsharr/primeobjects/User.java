@@ -1,4 +1,4 @@
-package io.github.chaitya62.tripsharr;
+package io.github.chaitya62.tripsharr.primeobjects;
 
 import org.json.JSONObject;
 
@@ -12,6 +12,8 @@ import java.util.Map;
 public class User {
     private long id;
     private String email, name, userId;
+    private long stars;
+    private long forks;
 
     public User() {
         id = -1;
@@ -80,5 +82,21 @@ public class User {
         if (name != null) params.put("name", name);
         else throw new Exception("Name not set");
         return params;
+    }
+
+    public long getStars() {
+        return stars;
+    }
+
+    public void setStars(long stars) {
+        this.stars = stars;
+    }
+
+    public long getForks() {
+        return forks;
+    }
+
+    public void setForks(long forks) {
+        this.forks = forks;
     }
 }
