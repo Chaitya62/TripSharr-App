@@ -28,7 +28,7 @@ public class Trip {
         endCoordinate = new Pair<Double, Double>(-1.0, -1.0);
     }
 
-    public Trip(JSONObject trip) throws Exception{
+    public Trip(JSONObject trip) throws Exception {
         this();
         try {
             id = Long.parseLong(trip.get("id").toString());
@@ -47,8 +47,7 @@ public class Trip {
         }
     }
 
-
-    public Trip(long id, long uid, String n, String desc, Pair<Double, Double> start, Pair<Double, Double> end){
+    public Trip(long id, long uid, String n, String desc, Pair<Double, Double> start, Pair<Double, Double> end) {
         this.id = id;
         userId = uid;
         name = n;
@@ -61,12 +60,12 @@ public class Trip {
         return name;
     }
 
-    public Map<String, String> getParams() throws Exception{
+    public Map<String, String> getParams() throws Exception {
         Map<String, String> params = new HashMap<String, String>();
         if(id != -1 ) params.put("id", Long.toString(id));
-        if(userId != -1){
+        if(userId != -1) {
             params.put("user_id", Long.toString(userId));
-        }else throw new Exception("must set a valid user_id");
+        } else throw new Exception("must set a valid user_id");
         if(name != null){
             params.put("name", name);
         }else throw new Exception("must set name");
@@ -81,7 +80,6 @@ public class Trip {
             params.put("end_x", Double.toString(startCoordinate.first));
             params.put("end_y", Double.toString(startCoordinate.second));
         }else throw new Exception("Must set endCoordinate");
-
         return params;
     }
 

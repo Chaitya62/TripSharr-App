@@ -8,11 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -37,7 +35,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import io.github.chaitya62.tripsharr.VolleySingleton;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -108,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-
     }
 
     private String authToken, userId, message;
