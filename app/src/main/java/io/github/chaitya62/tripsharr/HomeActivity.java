@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.facebook.login.LoginManager;
 
@@ -92,4 +93,10 @@ public class HomeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void goToProfileActivity(View view){
+        Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(profile);
+    }
+
 }

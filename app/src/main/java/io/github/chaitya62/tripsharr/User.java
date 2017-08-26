@@ -1,9 +1,8 @@
-package io.github.chaitya62.tripsharr.primeObjs;
+package io.github.chaitya62.tripsharr;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
