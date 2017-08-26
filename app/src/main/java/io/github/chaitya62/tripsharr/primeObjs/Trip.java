@@ -49,7 +49,7 @@ public class Trip {
 
 
     public Trip(long id, long uid, String n, String desc, Pair<Double, Double> start, Pair<Double, Double> end){
-        id = id;
+        this.id = id;
         userId = uid;
         name = n;
         description = desc;
