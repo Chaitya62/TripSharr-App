@@ -13,6 +13,6 @@ public class ViewTripActivity extends NavigationActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.activity_viewtrip, contentFrameLayout);
+       getLayoutInflater().inflate(R.layout.activity_viewtrip, contentFrameLayout);
     }
 }
