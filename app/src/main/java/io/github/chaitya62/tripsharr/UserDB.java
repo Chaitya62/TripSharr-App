@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import io.github.chaitya62.tripsharr.primeObjs.User;
 
 /**
  * Created by ankit on 26/8/17.
