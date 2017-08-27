@@ -17,7 +17,9 @@ public class Trip {
     private String description;
     private Pair<Double, Double> startCoordinate;
     private Pair<Double, Double> endCoordinate;
-    private boolean isCompleted;
+    private boolean isComplete,isPublic;
+    private long noOfStars,noOfForks,ownerId;
+
 
     public Trip(){
         id = -1;
@@ -26,9 +28,14 @@ public class Trip {
         description = null;
         startCoordinate = new Pair<Double, Double>(-1.0 , -1.0);
         endCoordinate = new Pair<Double, Double>(-1.0, -1.0);
+        noOfStars = 0;
+        noOfForks = 0;
+        isComplete = false;
+        isPublic = false;
+        ownerId = 0;
     }
 
-    public Trip(JSONObject trip) throws Exception {
+    public Trip(JSONObject trip) throws Exception{
         this();
         try {
             id = Long.parseLong(trip.get("id").toString());
@@ -42,30 +49,41 @@ public class Trip {
             x = Double.parseDouble(trip.get("end_x").toString());
             y = Double.parseDouble(trip.get("end_y").toString());
             endCoordinate = new Pair<Double, Double>(x, y);
+            noOfStars = Long.parseLong(trip.get("no_of_stars").toString());
+            noOfForks = Long.parseLong(trip.get("no_of_forks").toString());
+            isComplete = Boolean.parseBoolean(trip.get("is_complete").toString());
+            isPublic = Boolean.parseBoolean(trip.get("is_public").toString());
+            ownerId = Long.parseLong(trip.get("owner_id").toString());
         }catch(Exception e){
             throw e;
         }
     }
 
-    public Trip(long id, long uid, String n, String desc, Pair<Double, Double> start, Pair<Double, Double> end) {
+    public Trip(long id, long userId, String name, String description, Pair<Double, Double> startCoordinate, Pair<Double, Double> endCoordinate, boolean isComplete, boolean isPublic, long noOfStars, long noOfForks, long ownerId) {
         this.id = id;
-        userId = uid;
-        name = n;
-        description = desc;
-        startCoordinate = start;
-        endCoordinate = end;
+        this.userId = userId;
+        this.name = name;
+        this.description = description;
+        this.startCoordinate = startCoordinate;
+        this.endCoordinate = endCoordinate;
+        this.isComplete = isComplete;
+        this.isPublic = isPublic;
+        this.noOfStars = noOfStars;
+        this.noOfForks = noOfForks;
+        this.ownerId = ownerId;
     }
+
 
     public String getName(){
         return name;
     }
 
-    public Map<String, String> getParams() throws Exception {
+    public Map<String, String> getParams() throws Exception{
         Map<String, String> params = new HashMap<String, String>();
         if(id != -1 ) params.put("id", Long.toString(id));
-        if(userId != -1) {
+        if(userId != -1){
             params.put("user_id", Long.toString(userId));
-        } else throw new Exception("must set a valid user_id");
+        }else throw new Exception("must set a valid user_id");
         if(name != null){
             params.put("name", name);
         }else throw new Exception("must set name");
@@ -80,6 +98,7 @@ public class Trip {
             params.put("end_x", Double.toString(startCoordinate.first));
             params.put("end_y", Double.toString(startCoordinate.second));
         }else throw new Exception("Must set endCoordinate");
+
         return params;
     }
 
@@ -114,5 +133,57 @@ public class Trip {
 
     public void setEndCoordinate(Pair<Double, Double> endCoordinate) {
         this.endCoordinate = endCoordinate;
+    }
+
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public long getNoOfStars() {
+        return noOfStars;
+    }
+
+    public long getNoOfForks() {
+        return noOfForks;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setComplete(boolean complete) {
+        isComplete = complete;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public void setNoOfStars(long noOfStars) {
+        this.noOfStars = noOfStars;
+    }
+
+    public void setNoOfForks(long noOfForks) {
+        this.noOfForks = noOfForks;
+    }
+
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
     }
 }

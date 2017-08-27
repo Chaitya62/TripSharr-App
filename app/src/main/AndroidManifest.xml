@@ -12,16 +12,32 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".CreateTripActivity"
+            android:label="Create Trip">
+        </activity>
+        <activity android:name=".NavigationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ViewTripActivity"
+            android:label="View Trip"/>
+        <activity android:name=".OnGoingTripActivity"
+            android:label="On-Going Trip"/>
+        <activity android:name=".ShareTripActivity"
+            android:label="Share Trip"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
