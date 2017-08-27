@@ -3,14 +3,16 @@ package io.github.chaitya62.tripsharr;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends NavigationActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        getLayoutInflater().inflate(R.layout.activity_profile, contentFrameLayout);
 //        String[] testArray = {"Android","IPhone","WindowsMobile","Blackberry",
 //                "WebOS","Ubuntu","Windows7","Max OS X"};
 //        ArrayAdapter testAdapter = new ArrayAdapter<>(this,
