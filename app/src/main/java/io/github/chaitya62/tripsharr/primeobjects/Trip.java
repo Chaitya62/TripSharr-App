@@ -12,6 +12,7 @@ import java.util.Map;
  */
 public class Trip {
     private long id;
+    private long oldTripId;
     private long userId;
     private String name;
     private String description;
@@ -26,6 +27,7 @@ public class Trip {
         userId = -1;
         name = "STuff";
         description = null;
+        oldTripId = 0;
         startCoordinate = new Pair<Double, Double>(-1.0 , -1.0);
         endCoordinate = new Pair<Double, Double>(-1.0, -1.0);
         noOfStars = 0;
@@ -53,13 +55,14 @@ public class Trip {
             noOfForks = Long.parseLong(trip.get("no_of_forks").toString());
             isComplete = Boolean.parseBoolean(trip.get("is_complete").toString());
             isPublic = Boolean.parseBoolean(trip.get("is_public").toString());
+            oldTripId = Long.parseLong(trip.get("old_trip_id").toString());
             ownerId = Long.parseLong(trip.get("owner_id").toString());
         }catch(Exception e){
             throw e;
         }
     }
 
-    public Trip(long id, long userId, String name, String description, Pair<Double, Double> startCoordinate, Pair<Double, Double> endCoordinate, boolean isComplete, boolean isPublic, long noOfStars, long noOfForks, long ownerId) {
+    public Trip(long id, long userId, long oldTripId, String name, String description, Pair<Double, Double> startCoordinate, Pair<Double, Double> endCoordinate, boolean isComplete, boolean isPublic, long noOfStars, long noOfForks, long ownerId) {
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -68,6 +71,7 @@ public class Trip {
         this.endCoordinate = endCoordinate;
         this.isComplete = isComplete;
         this.isPublic = isPublic;
+        this.oldTripId = oldTripId;
         this.noOfStars = noOfStars;
         this.noOfForks = noOfForks;
         this.ownerId = ownerId;
@@ -81,6 +85,12 @@ public class Trip {
     public Map<String, String> getParams() throws Exception{
         Map<String, String> params = new HashMap<String, String>();
         if(id != -1 ) params.put("id", Long.toString(id));
+        if(oldTripId != 0) params.put("old_trip_id", Long.toString(id));
+        if(noOfForks != 0) params.put("no_of_forks", Long.toString(id));
+        if(noOfStars != 0) params.put("no_of_stars", Long.toString(id));
+        if(ownerId != 0) params.put("owner_id", Long.toString(ownerId));
+        params.put("is_public", Boolean.toString(isPublic));
+        params.put("is_complete", Boolean.toString(isComplete));
         if(userId != -1){
             params.put("user_id", Long.toString(userId));
         }else throw new Exception("must set a valid user_id");
@@ -185,5 +195,13 @@ public class Trip {
 
     public void setOwnerId(long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public long getOldTripId() {
+        return oldTripId;
+    }
+
+    public void setOldTripId(long oldTripId) {
+        this.oldTripId = oldTripId;
     }
 }

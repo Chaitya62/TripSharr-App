@@ -58,6 +58,7 @@ public class UserDB extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         User user = new User();
         Cursor res = db.rawQuery("select * from user where id = "+id, null);
+        res.moveToFirst();
         user.setUserId(res.getString(res.getColumnIndex("user_id")));
         user.setEmail(res.getString(res.getColumnIndex("email")));
         user.setId(id);
@@ -72,6 +73,7 @@ public class UserDB extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         User user = new User();
         Cursor res = db.rawQuery("select * from user where user_id = "+userId, null);
+        res.moveToFirst();
         user.setUserId(res.getString(res.getColumnIndex("user_id")));
         user.setEmail(res.getString(res.getColumnIndex("email")));
         user.setId(res.getLong(res.getColumnIndex("id")));

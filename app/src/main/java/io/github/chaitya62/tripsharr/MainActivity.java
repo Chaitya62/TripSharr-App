@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 //This should never come.. Cause could be volley..
                                 Log.i("Error", e.toString());
-                                Intent i = new Intent(getApplication(), HomeActivity.class);
+                                Intent i = new Intent(getApplication(), NavigationActivity.class);
                                 i.putExtra("userId", userId);
                                 i.putExtra("authToken", authToken);
                                 startActivity(i);
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                             throw new Exception("Empty User ID");
                         else {
                             //Is registered..
-                            Intent intent = new Intent(getApplication(), HomeActivity.class);
+                            Intent intent = new Intent(getApplication(), NavigationActivity.class);
                             intent.putExtra("userId", user.getUserId());
                             intent.putExtra("name", user.getName());
                             intent.putExtra("email", user.getEmail());
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     //Change  The Thread..
                     //RequestQueue queue
                     doInBackground();
-                    Intent intent = new Intent(getApplication(), HomeActivity.class);
+                    Intent intent = new Intent(getApplication(), NavigationActivity.class);
                     intent.putExtra("userId", userId);
                     intent.putExtra("name", name);
                     intent.putExtra("email", email);
