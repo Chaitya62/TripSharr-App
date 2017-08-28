@@ -128,8 +128,7 @@ public class Coordinates {
 
     public Map< String, String > getParams() throws Exception {
         Map< String, String > params = new HashMap<>();
-        if (id == -1) throw new Exception("User Not Present");
-        else params.put("id", Long.toString(id));
+        if (id != -1) params.put("id", Long.toString(id));
         if (tripId == -1) throw new Exception("TripId Not set");
         else params.put("trip_id", Long.toString(tripId));
         if (name.equals("Default")) throw new Exception("Name Not set");

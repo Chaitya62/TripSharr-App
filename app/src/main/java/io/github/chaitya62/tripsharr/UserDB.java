@@ -20,11 +20,13 @@ public class UserDB extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table user " +
-                        "id integer PRIMARY KEY AUTO_INCREMENT," +
+        db.execSQL("create table user (" +
+                        "id integer PRIMARY KEY AUTOINCREMENT," +
                 "name text  NOT NULL," +
                 "email text NOT NULL," +
-                "user_id text UNIQUE NOT NULL"
+                "user_id text UNIQUE NOT NULL,"+
+                "forks integer DEFAULT 0,"+
+                "stars integer DEFAULT 0 );"
         );
     }
 
@@ -40,6 +42,8 @@ public class UserDB extends SQLiteOpenHelper{
         contentValues.put("email", user.getEmail());
         contentValues.put("user_id", user.getUserId());
         contentValues.put("name", user.getName());
+        contentValues.put("stars", user.getStars());
+        contentValues.put("forks", user.getForks());
         return contentValues;
     }
 
@@ -57,6 +61,22 @@ public class UserDB extends SQLiteOpenHelper{
         user.setUserId(res.getString(res.getColumnIndex("user_id")));
         user.setEmail(res.getString(res.getColumnIndex("email")));
         user.setId(id);
+        user.setForks(res.getLong(res.getColumnIndex("forks")));
+        user.setStars(res.getLong(res.getColumnIndex("stars")));
+        user.setName(res.getString(res.getColumnIndex("name")));
+        res.close();
+        return user;
+    }
+
+    public User getByUserId(long userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = new User();
+        Cursor res = db.rawQuery("select * from user where user_id = "+userId, null);
+        user.setUserId(res.getString(res.getColumnIndex("user_id")));
+        user.setEmail(res.getString(res.getColumnIndex("email")));
+        user.setId(res.getLong(res.getColumnIndex("id")));
+        user.setForks(res.getLong(res.getColumnIndex("forks")));
+        user.setStars(res.getLong(res.getColumnIndex("stars")));
         user.setName(res.getString(res.getColumnIndex("name")));
         res.close();
         return user;

@@ -20,6 +20,8 @@ public class User {
         email = "unavailable";
         name = null;
         userId = null;
+        stars = 0;
+        forks = 0;
     }
 
     public User(JSONObject user ) throws Exception {
@@ -29,13 +31,23 @@ public class User {
             email = user.getString("email");
             name = user.getString("name");
             userId = user.getString("user_id");
+            stars = user.getLong("stars");
+            forks = user.getLong("forks");
         } catch (Exception e) {
             throw e;
         }
     }
 
-    public User(Long id, String email, String name, String userId) {
+    public User(Long id, String name, String email, String userId) {
+        this();
         this.id = id;
+        this.email = email;
+        this.name = name;
+        this.userId = userId;
+    }
+
+    public User(String name, String email, String userId) {
+        this();
         this.email = email;
         this.name = name;
         this.userId = userId;
@@ -81,6 +93,8 @@ public class User {
         else throw new Exception("User Id Not set");
         if (name != null) params.put("name", name);
         else throw new Exception("Name not set");
+        params.put("stars", Long.toString(stars));
+        params.put("forks", Long.toString(forks));
         return params;
     }
 
