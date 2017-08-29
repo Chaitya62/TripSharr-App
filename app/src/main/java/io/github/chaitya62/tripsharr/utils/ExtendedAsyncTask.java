@@ -26,15 +26,19 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
 
     private Handler handler;
     private Context context;
+    private int callType;
     private Cloudinary cloudinary;
     private int counter = 0;
 
-    public ExtendedAsyncTask() {
-        HashMap<String, String > config = new HashMap<>();
-        config.put("cloud_name", "tripsharr");
-        config.put("api_key", "848582555262954");
-        config.put("api_secret", "oGLYQVK1y-Wfm4bF3CvLWMW_utI");
-        cloudinary = new Cloudinary(config);
+    public ExtendedAsyncTask(int callType) {
+        this.callType = callType;
+        if(callType == 1) {
+            HashMap<String, String> config = new HashMap<>();
+            config.put("cloud_name", "tripsharr");
+            config.put("api_key", "848582555262954");
+            config.put("api_secret", "oGLYQVK1y-Wfm4bF3CvLWMW_utI");
+            cloudinary = new Cloudinary(config);
+        }
     }
 
     private String getRealPathFromURI(Uri contentURI) {
@@ -52,9 +56,8 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
 
     @Override
     protected Object doInBackground(Object... params) {
-        Integer callType = (Integer) params[0];
-        if(callType.equals(1)) {
-            Intent data = (Intent)params[1];
+        if(callType == 1) {
+            Intent data = (Intent)params[0];
             Uri selectedImage = data.getData();
             try {
                 File file = new File(getRealPathFromURI(selectedImage));
