@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             //See if user is registered at server..
             VolleyWrapperUser volleyWrapperUser = new VolleyWrapperUser(getApplicationContext());
+            //Set handler for checking registration
             volleyWrapperUser.handler = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage (Message msg) {
@@ -55,40 +56,47 @@ public class MainActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         //Not registered on the server..
                         //Get data from facebook to register..
-                        ExtendedAsyncTask graph = new ExtendedAsyncTask(2);
-                        graph.setContext(getApplicationContext());
+                        ExtendedAsyncTask graph = new ExtendedAsyncTask(2); //Call Type 2 for Graph data..
+                        graph.setContext(getApplicationContext()); //Set context
                         Log.i("Debug", "In Graph");
+                        //Make a new handler to respond when data arrives..
                         Handler handler = new Handler(Looper.getMainLooper()) {
                             @Override
-                            public void handleMessage(Message message) {
+                            public void handleMessage(final Message message) {
                                 if(message.what == 1) {
+                                    //Error in Graph Call
                                     Log.i("Error", "Could Not register user");
                                 }
                                 if(message.what == 0) {
+                                    //Data arrives properly
+                                    //Now register the user..
                                     VolleyWrapperUser volleyWrapperUser = new VolleyWrapperUser(getApplicationContext());
+                                    //Set handler to respond on Callback
                                     volleyWrapperUser.handler = new Handler(Looper.getMainLooper()) {
                                         @Override
                                         public void handleMessage(Message msg) {
+                                            //Registered..
                                             Log.i("Info", "Registered User Successfully");
+                                            Intent i = new Intent(getApplication(), NavigationActivity.class);
+                                            i.putExtra("userId", ((User) message.obj).getUserId());
+                                            i.putExtra("name", ((User) message.obj).getName());
+                                            i.putExtra("email", ((User) message.obj).getEmail());
+                                            i.putExtra("authToken", authToken);
+                                            startActivity(i);
+                                            finish();
                                         }
                                     };
-                                    ((User)message.obj).setUserId(userId);
-                                    volleyWrapperUser.addUser((User)message.obj);
-                                    Intent i = new Intent(getApplication(), NavigationActivity.class);
-                                    i.putExtra("userId", ((User) message.obj).getUserId());
-                                    i.putExtra("name", ((User) message.obj).getName());
-                                    i.putExtra("email", ((User) message.obj).getEmail());
-                                    i.putExtra("authToken", authToken);
-                                    startActivity(i);
-                                    finish();
+                                    ((User)message.obj).setUserId(userId); // Set userId to the received data..
+                                    volleyWrapperUser.addUser((User)message.obj);//Add user
                                 }
                             }
                         };
-                        graph.setHandler(handler);
-                        graph.execute();
+                        graph.setHandler(handler); //Set handler
+                        graph.execute(); //Make Graph Call
                     }
                 }
             };
+            //Check if registered
             volleyWrapperUser.getUserByUserId(userId);
         } catch (Exception e) {
             Log.i("Error", e.toString());
