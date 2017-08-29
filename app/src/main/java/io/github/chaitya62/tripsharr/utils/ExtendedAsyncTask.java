@@ -1,11 +1,11 @@
 package io.github.chaitya62.tripsharr.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -13,10 +13,17 @@ import android.util.Log;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
+
+import io.github.chaitya62.tripsharr.primeobjects.User;
 
 /**
  * Created by ankit on 28/8/17.
@@ -72,6 +79,47 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
             catch (Exception e) {
                 Log.i("Exception In Upload", e.toString());
             }
+            return null;
+        }
+        else if(callType == 2) {
+            GraphRequest request = GraphRequest.newMeRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(
+                                JSONObject object,
+                                GraphResponse response) {
+                            Log.i("Debug", "Got In");
+                            if(response.getError() != null) {
+                                //Couldn't get data..
+                                Log.i("Error1", response.getError().toString());
+                            }
+                            try {
+                                //Got data.. Lets Register..
+                                User user = new User();
+                                user.setName(object.get("name").toString());
+                                try {
+                                    user.setEmail(object.get("email").toString());
+                                } catch (Exception e) {
+                                    Log.i("Error", e.toString());
+                                    user.setEmail("unavailable");
+                                }
+                                Message message = handler.obtainMessage(0, user);
+                                message.sendToTarget();
+                                //Volley Call to register user..
+                            } catch (Exception e) {
+                                Message message = handler.obtainMessage(1, e);
+                                message.sendToTarget();
+                            }
+                        }
+                    }
+            );
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,name,email");
+            request.setParameters(parameters);
+            Log.i("Debug", "In here");
+            //Wait till the request is completed..
+            request.executeAndWait();
             return null;
         }
         return null;

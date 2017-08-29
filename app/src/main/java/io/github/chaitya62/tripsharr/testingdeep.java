@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.util.Map;
+
 /**
  * Created by chaitya62 on 29/8/17.
  */
@@ -20,7 +22,7 @@ public class testingdeep extends Activity {
         String action = extintent.getAction();
         Uri data = extintent.getData();
         Log.i("DATA : ", data.toString());
-        Intent intent = new Intent(this, MapsActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

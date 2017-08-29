@@ -1,7 +1,6 @@
 package io.github.chaitya62.tripsharr;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,87 +13,23 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
-import org.json.JSONObject;
 
 import java.util.Arrays;
 
 import io.github.chaitya62.tripsharr.primeobjects.User;
+import io.github.chaitya62.tripsharr.utils.ExtendedAsyncTask;
 import io.github.chaitya62.tripsharr.utils.VolleyWrapperUser;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private void registerUser(final String name, final String email, final String userId) {
-        User user = new User(name, email, userId);
-        VolleyWrapperUser volleyWrapperUser = new VolleyWrapperUser(getApplicationContext());
-        volleyWrapperUser.handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                User user = (User)msg.obj;
-            }
-        };
-        volleyWrapperUser.addUser(user);
-    }
-
-    private class GraphRequestClass extends AsyncTask<Object, Void, Object>{
-
-        @Override
-        protected Object doInBackground(Object[] params) {
-            GraphRequest request = GraphRequest.newMeRequest(
-                    AccessToken.getCurrentAccessToken(),
-                    new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(
-                                JSONObject object,
-                                GraphResponse response) {
-                            Log.i("Debug", "Got In");
-                            if(response.getError() != null) {
-                                //Couldn't get data..
-                                Log.i("Error1", response.getError().toString());
-                            }
-                            try {
-                                //Got data.. Lets Register..
-                                name =  object.get("name").toString();
-                                try {
-                                    email = object.get("email").toString();
-                                } catch (Exception e) {
-                                    Log.i("Error", e.toString());
-                                    email= "unavailable";
-                                }
-                                //Volley Call to register user..
-                                registerUser(name, email, userId);
-                            } catch (Exception e) {
-                                //This should never come.. Cause could be volley..
-                                Log.i("Error", e.toString());
-                                Intent i = new Intent(getApplication(), NavigationActivity.class);
-                                i.putExtra("userId", userId);
-                                i.putExtra("authToken", authToken);
-                                startActivity(i);
-                                //LoginManager.getInstance().logOut();
-                                finish();
-                            }
-                        }
-                    }
-            );
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,email");
-            request.setParameters(parameters);
-            Log.i("Debug", "In here");
-            //Wait till the request is completed..
-            request.executeAndWait();
-            return null;
-        }
-    }
-
     private String authToken, userId, message, name, email;
     private CallbackManager callbackManager;
 
-    protected Object doInBackground() {
+    protected void doInBackground() {
         try {
             //See if user is registered at server..
             VolleyWrapperUser volleyWrapperUser = new VolleyWrapperUser(getApplicationContext());
@@ -115,20 +50,49 @@ public class MainActivity extends AppCompatActivity {
                             intent.putExtra("email", user.getEmail());
                             intent.putExtra("authToken", authToken);
                             startActivity(intent);
+                            finish();
                         }
                     } catch (Exception e) {
                         //Not registered on the server..
                         //Get data from facebook to register..
-                        new GraphRequestClass().execute();
+                        ExtendedAsyncTask graph = new ExtendedAsyncTask(2);
+                        graph.setContext(getApplicationContext());
+                        Log.i("Debug", "In Graph");
+                        Handler handler = new Handler(Looper.getMainLooper()) {
+                            @Override
+                            public void handleMessage(Message message) {
+                                if(message.what == 1) {
+                                    Log.i("Error", "Could Not register user");
+                                }
+                                if(message.what == 0) {
+                                    VolleyWrapperUser volleyWrapperUser = new VolleyWrapperUser(getApplicationContext());
+                                    volleyWrapperUser.handler = new Handler(Looper.getMainLooper()) {
+                                        @Override
+                                        public void handleMessage(Message msg) {
+                                            Log.i("Info", "Registered User Successfully");
+                                        }
+                                    };
+                                    ((User)message.obj).setUserId(userId);
+                                    volleyWrapperUser.addUser((User)message.obj);
+                                    Intent i = new Intent(getApplication(), NavigationActivity.class);
+                                    i.putExtra("userId", ((User) message.obj).getUserId());
+                                    i.putExtra("name", ((User) message.obj).getName());
+                                    i.putExtra("email", ((User) message.obj).getEmail());
+                                    i.putExtra("authToken", authToken);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            }
+                        };
+                        graph.setHandler(handler);
+                        graph.execute();
                     }
                 }
             };
             volleyWrapperUser.getUserByUserId(userId);
         } catch (Exception e) {
             Log.i("Error", e.toString());
-            return null;
         }
-        return null;
     }
 
     private void updateWithToken(final AccessToken currentAccessToken) {
@@ -151,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("email", email);
                     intent.putExtra("authToken", authToken);
                     startActivity(intent);
+                    finish();
                 }
             }, 0);
         }
@@ -159,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getApplicationContext());
+        LoginManager.getInstance().logOut();
         callbackManager = CallbackManager.Factory.create();
         super.onCreate(savedInstanceState);
         //Check if already logged in..

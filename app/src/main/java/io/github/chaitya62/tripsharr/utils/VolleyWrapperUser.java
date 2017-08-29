@@ -19,7 +19,7 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import io.github.chaitya62.tripsharr.R;
-import io.github.chaitya62.tripsharr.UserDB;
+import io.github.chaitya62.tripsharr.localDB.UserDB;
 import io.github.chaitya62.tripsharr.primeobjects.User;
 
 /**
@@ -102,7 +102,7 @@ public class VolleyWrapperUser {
                     params = u.getParams();
                     Log.i("Params", params.toString());
                 } catch (Exception e) {
-                    Log.i("Error", "user.getparams() gave error. "+e.toString());
+                    Log.i("Error", "user.getParams() gave error. "+e.toString());
                 }
                 return params;
             }
