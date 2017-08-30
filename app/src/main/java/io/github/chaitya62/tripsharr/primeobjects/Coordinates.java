@@ -4,7 +4,6 @@ import android.util.Pair;
 
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -15,22 +14,25 @@ import java.util.Map;
  * Created by chaitya62 on 24/8/17.
  */
 
-public class Coordinates implements Serializable{
+public class Coordinates {
     private long id, tripId;
     private String name, description;
     private Pair<Double, Double> point;
     private Timestamp timestamp;
     private int imageCount, videoCount;
+    private int oldCoordinateId;
+
 
     public Coordinates() {
         id = -1;
         tripId = -1;
         name = "Default";
-        description = null;
+        description = "Default";
         point = new Pair<>(-1.0, -1.0);
         timestamp = Timestamp.valueOf("1998-05-22 19:00:00.0");
         imageCount = 0;
         videoCount = 0;
+        oldCoordinateId = 0;
     }
 
     public Coordinates(JSONObject coordinate) throws Exception {
@@ -47,12 +49,13 @@ public class Coordinates implements Serializable{
             timestamp = Timestamp.valueOf(coordinate.get("priority").toString());
             imageCount = Integer.parseInt(coordinate.get("image_count").toString());
             videoCount = Integer.parseInt(coordinate.get("video_count").toString());
+            oldCoordinateId = Integer.parseInt(coordinate.get("old_coordinate_id").toString());
         } catch (Exception e) {
             throw e;
         }
     }
 
-    public Coordinates (long id, long tripId, String name, String description, Pair<Double, Double> point, Timestamp timestamp, int imageCount, int videoCount) {
+    public Coordinates (long id, long tripId, String name, String description, Pair<Double, Double> point, Timestamp timestamp, int imageCount, int videoCount, int oldCoordinateId) {
         this.id = id;
         this.tripId = tripId;
         this.name = name;
@@ -61,6 +64,7 @@ public class Coordinates implements Serializable{
         this.timestamp = timestamp;
         this.imageCount = imageCount;
         this.videoCount = videoCount;
+        this.oldCoordinateId = oldCoordinateId;
     }
 
     public long getId() {
@@ -132,19 +136,25 @@ public class Coordinates implements Serializable{
         if (id != -1) params.put("id", Long.toString(id));
         if (tripId == -1) throw new Exception("TripId Not set");
         else params.put("trip_id", Long.toString(tripId));
-        if (name.equals("Default")) throw new Exception("Name Not set");
-        else params.put("name", name);
+        params.put("name",name);
         if (description != null) params.put("description", toString());
         if (point.first.equals(-1.0) || point.second.equals(-1.0)) throw new Exception("Point Not Set");
         else {
             params.put("x_co", point.first.toString());
             params.put("y_co", point.second.toString());
         }
-        if (timestamp.equals(Timestamp.valueOf("1998-05-22 19:00:00.0"))) throw new Exception("Timestamp to set karde");
-        else params.put("priority", timestamp.toString());
+        params.put("priority", timestamp.toString());
         params.put("image_count", Integer.toString(imageCount));
         params.put("video_count", Integer.toString(videoCount));
+        params.put("old_coordinate_id", Integer.toString(oldCoordinateId));
         return params;
     }
 
+    public int getOldCoordinateId() {
+        return oldCoordinateId;
+    }
+
+    public void setOldCoordinateId(int oldCoordinateId) {
+        this.oldCoordinateId = oldCoordinateId;
+    }
 }

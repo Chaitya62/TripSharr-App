@@ -1,17 +1,33 @@
 package io.github.chaitya62.tripsharr;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.util.Pair;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
+import io.github.chaitya62.tripsharr.primeobjects.Coordinates;
+import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
+//import com.cloudinary.Coordinates;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -26,8 +42,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -35,12 +57,16 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private Location mLastLocation;
     private Marker mCurrLocationMarker;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private FloatingActionButton done,exitcr;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        done = (FloatingActionButton)findViewById(R.id.done);
+        exitcr = (FloatingActionButton)findViewById(R.id.exitcr);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -50,7 +76,54 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.v("map",getIntent().getStringExtra("Tripid"));
+                if(mLastLocation!=null)
+                {
+                    Coordinates coordinates = new Coordinates();
+                    Pair<Double,Double> pair = new Pair(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+                    coordinates.setPoint(pair);
+                    coordinates.setTripId(Integer.parseInt(getIntent().getStringExtra("Tripid")));
+                    String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/add/";
+                    Map<String,String> hp = new HashMap<>();
+                    try{
+                        hp = coordinates.getParams();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    JSONObject jsonObject = new JSONObject(hp);
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.v("respoco",""+response);
+                        }
+                    },new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError){
+                            Log.v("errorco",""+volleyError);
+                        }
+
+                    });
+                    VolleySingleton.getInstance(MapsActivity.this).addToRequestQueue(jsonObjectRequest);
+                }
+
+            }
+        });
+
+        exitcr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent (MapsActivity.this,NavigationActivity.class);
+                startActivity(i);
+            }
+        });
     }
+
+
 
 
     /**
@@ -66,7 +139,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        //mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -83,9 +156,9 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener {
         }
 
         // Add a marker in Sydney and move the camera
-        /*LatLng sydney = new LatLng(-34, 151);
+        LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
 
     }
@@ -127,6 +200,7 @@ GoogleApiClient.OnConnectionFailedListener, LocationListener {
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+
 
     }
 

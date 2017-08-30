@@ -75,6 +75,13 @@ public class CreateTripActivity extends NavigationActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.v("respo : ",""+response);
+                        Intent i = new Intent(CreateTripActivity.this,MapsActivity.class);
+
+                        String tripid= (response.toString()).substring(6,7);
+                        Log.v("crtripid",tripid+" "+tripid.length());
+                        i.putExtra("Tripid",tripid);
+                        startActivity(i);
+                        drawerLayout.closeDrawers();
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -83,8 +90,7 @@ public class CreateTripActivity extends NavigationActivity {
                     }
                 });
                 VolleySingleton.getInstance(CreateTripActivity.this).addToRequestQueue(jsonRequest);
-                Intent i = new Intent(CreateTripActivity.this,MapsActivity.class);
-                startActivity(i);
+
             }
         });
     }
