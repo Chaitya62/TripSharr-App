@@ -4,6 +4,7 @@ import android.util.Pair;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import java.util.Map;
  * Created by chaitya62 on 24/8/17.
  */
 
-public class Coordinates {
+public class Coordinates implements Serializable{
     private long id, tripId;
     private String name, description;
     private Pair<Double, Double> point;

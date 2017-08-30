@@ -2,6 +2,7 @@ package io.github.chaitya62.tripsharr.primeobjects;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import java.util.Map;
  * Created by chaitya62 on 24/8/17.
  */
 
-public class User {
+public class User implements Serializable{
     private long id;
     private String email, name, fbId;
     private long stars;

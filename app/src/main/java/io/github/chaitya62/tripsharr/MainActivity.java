@@ -46,10 +46,7 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             //Is registered..
                             Intent intent = new Intent(getApplication(), NavigationActivity.class);
-                            intent.putExtra("fbId", user.getFbId());
-                            intent.putExtra("name", user.getName());
-                            intent.putExtra("email", user.getEmail());
-                            intent.putExtra("authToken", authToken);
+                            intent.putExtra("User", user);
                             startActivity(intent);
                             finish();
                         }
@@ -78,10 +75,7 @@ public class MainActivity extends AppCompatActivity {
                                             //Registered..
                                             Log.i("Info", "Registered User Successfully");
                                             Intent i = new Intent(getApplication(), NavigationActivity.class);
-                                            i.putExtra("fbId", ((User) message.obj).getFbId());
-                                            i.putExtra("name", ((User) message.obj).getName());
-                                            i.putExtra("email", ((User) message.obj).getEmail());
-                                            i.putExtra("authToken", authToken);
+                                            i.putExtra("user", ((User)msg.obj));
                                             startActivity(i);
                                             finish();
                                         }
@@ -117,12 +111,6 @@ public class MainActivity extends AppCompatActivity {
                     //Change  The Thread..
                     //RequestQueue queue
                     doInBackground();
-                    Intent intent = new Intent(getApplication(), NavigationActivity.class);
-                    intent.putExtra("fbId", fbId);
-                    intent.putExtra("name", name);
-                    intent.putExtra("email", email);
-                    intent.putExtra("authToken", authToken);
-                    startActivity(intent);
                     finish();
                 }
             }, 0);

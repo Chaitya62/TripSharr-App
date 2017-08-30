@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import java.util.Map;
  * Created by ankit on 29/8/17.
  */
 
-public class Media {
+public class Media implements Serializable{
 
     private long id;
     private long coordinateId;
