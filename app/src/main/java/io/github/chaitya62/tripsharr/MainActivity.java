@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                     //Change  The Thread..
                     //RequestQueue queue
                     doInBackground();
-                    finish();
                 }
             }, 0);
         }
