@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void handleMessage (Message msg) {
                     try {
+                        Log.i("USER : ", msg.toString());
                         User user = (User)msg.obj;
                         String fbId1 = user.getFbId();
                         Log.i("Debug", user.getFbId());
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                                 if(message.what == 0) {
                                     //Data arrives properly
                                     //Now register the user..
+                                    Log.i("DEBUG ","Data arrives properly");
                                     VolleyWrapperUser volleyWrapperUser = new VolleyWrapperUser(getApplicationContext());
                                     //Set handler to respond on Callback
                                     volleyWrapperUser.handler = new Handler(Looper.getMainLooper()) {

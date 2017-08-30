@@ -10,11 +10,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-<<<<<<< HEAD
 import android.view.Menu;
-=======
 import android.util.Log;
->>>>>>> 0c5b55eb284d12be7ece86595c99461ff48f88b5
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -87,6 +84,7 @@ public class NavigationActivity extends AppCompatActivity {
         View header = navigationView.getHeaderView(0);
         Intent i = getIntent();
         User user = (User)i.getSerializableExtra("user");
+
         if(user == null) {
             Log.i("Error", "No user found");
             finish();
@@ -134,13 +132,12 @@ public class NavigationActivity extends AppCompatActivity {
         startActivity(profile);
     }
 
-<<<<<<< HEAD
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
-=======
->>>>>>> 0c5b55eb284d12be7ece86595c99461ff48f88b5
+
 }

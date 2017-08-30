@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/TripSharr.iml" filepath="$PROJECT_DIR$/TripSharr.iml" />
-=======
-      <module fileurl="file://$PROJECT_DIR$/TripSharr-App.iml" filepath="$PROJECT_DIR$/TripSharr-App.iml" />
->>>>>>> 0c5b55eb284d12be7ece86595c99461ff48f88b5
       <module fileurl="file://$PROJECT_DIR$/TripSharrApp.iml" filepath="$PROJECT_DIR$/TripSharrApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
