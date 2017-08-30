@@ -81,21 +81,23 @@ public class NavigationActivity extends AppCompatActivity {
                 return false;
             }
         });
-        View header = navigationView.getHeaderView(0);
-        Intent i = getIntent();
-        User user = (User)i.getSerializableExtra("user");
+//        View header = navigationView.getHeaderView(0);
+//        Intent i = getIntent();
+//        User user = (User)i.getSerializableExtra("user");
 
-        if(user == null) {
-            Log.i("Error", "No user found");
-            finish();
-        }
-        TextView name = (TextView) header.findViewById(R.id.profile_name);
-        TextView email = (TextView)header.findViewById(R.id.profile_email);
-        name.setText(user.getName());
-        if(!user.getEmail().equals("unavailable"))
-            email.setText(user.getEmail());
-        else
-            email.setText("");
+//        if(user == null) {
+//            Log.i("Error", "No user found");
+//            finish();
+//        }
+//        else{
+//            TextView name = (TextView) header.findViewById(R.id.profile_name);
+//            TextView email = (TextView)header.findViewById(R.id.profile_email);
+//            name.setText(user.getName());
+//            if(!user.getEmail().equals("unavailable"))
+//                email.setText(user.getEmail());
+//            else
+//                email.setText("");
+//        }
 
     }
 
