@@ -23,25 +23,25 @@ public class TripDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("Create Table trips(" +
                 "id integer primary key autoincrement,"+
-                "user_id int NOT NULL," +
+                "user_id integer NOT NULL," +
                 "name text NOT NULL," +
                 "description text," +
-                "start_x double NOT NULL,"+
-                "start_y double NOT NULL," +
-                "end_x double NOT NULL," +
-                "end_y double NOT NULL," +
-                "no_of_stars int DEFAULT 0," +
-                "no_of_forks int DEFAULT 0," +
-                "old_trip_id int DEFAULT NULL," +
-                "is_complete int DEFAULT 0 NOT NULL," +
-                "is_public boolean DEFAULT 0 NOT NULL," +
-                "owner_id int DEFAULT null );"
+                "start_x real NOT NULL,"+
+                "start_y real NOT NULL," +
+                "end_x real NOT NULL," +
+                "end_y real NOT NULL," +
+                "no_of_stars integer DEFAULT 0," +
+                "no_of_forks integer DEFAULT 0," +
+                "old_trip_id integer DEFAULT NULL," +
+                "is_complete integer DEFAULT false NOT NULL," +
+                "is_public boolean DEFAULT false NOT NULL," +
+                "owner_id integer DEFAULT null );"
         );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + "user");
+        db.execSQL("DROP TABLE IF EXISTS " + "trips");
         onCreate(db);
     }
 
@@ -82,7 +82,7 @@ public class TripDB extends SQLiteOpenHelper {
     public boolean save(Trip trip) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = putContentValues(trip);
-        db.insert("trip", null, contentValues);
+        db.insert("trips", null, contentValues);
         return true;
     }
 

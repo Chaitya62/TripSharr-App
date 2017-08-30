@@ -18,11 +18,25 @@ public class CoordinatesDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        db.execSQL("create table coordinates(" +
+                "id integer PRIMARY KEY AUTOINCREMENT," +
+                "name text NOT NULL," +
+                "description text," +
+                "trip_id integer NOT NULL," +
+                "x_co real NOT NULL," +
+                "y_co real NOT NULL," +
+                "priority timestamp DEFAULT CURRENT_TIMESTAMP," +
+                "image_count integer DEFAULT 0," +
+                "video_count integer DEFAULT 0," +
+                "old_coordinate_id integer DEFAULT 0," +
+                ");");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS " + "coordinates");
+        onCreate(db);
     }
+
+
 }
