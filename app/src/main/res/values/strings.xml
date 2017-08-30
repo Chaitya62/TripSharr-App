@@ -4,10 +4,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="facebook_login_string">Login With Facebook</string>
-    <string name="facebook_app_id">351983211905924</string>
-    <string name="fb_login_protocol_scheme">fb351983211905924</string>
+    <string name="facebook_app_id">120202058628715</string>
+    <string name="fb_login_protocol_scheme">fb120202058628715</string>
     <string name="action_settings">Settings</string>
     <string name="error">Error</string>
     <string name="logout">Logout</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_test">Test</string>
 </resources>

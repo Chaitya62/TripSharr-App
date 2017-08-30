@@ -81,7 +81,9 @@ public class VolleyWrapperUser {
                     @Override
                     public void onResponse(String  response) {
                         try {
-                            Message msg = handler.obtainMessage(0, response);
+                            //Log.i("Response", response);
+                            user.setId(Long.valueOf(response));
+                            Message msg = handler.obtainMessage(0, user);
                             msg.sendToTarget();
                         } catch (Exception e) {
                             Log.i("Error", e.toString());
@@ -150,8 +152,8 @@ public class VolleyWrapperUser {
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
-    public void getUserByUserId(String userId){
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(context.getResources().getString(R.string.host)+"index.php/user/user_id/"+userId,
+    public void getUserByFbId(String fbId){
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(context.getResources().getString(R.string.host)+"index.php/user/userfb/"+fbId,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray jsonArray) {
@@ -164,7 +166,7 @@ public class VolleyWrapperUser {
                         } catch (Exception e) {
                             Log.i("Error", "User Constructor Error "+e.toString());
                             u = new User();
-                            Message message = handler.obtainMessage(0, u);
+                            Message message = handler.obtainMessage(1, u);
                             message.sendToTarget();
                         }
                     }

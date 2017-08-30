@@ -24,7 +24,7 @@ public class UserDB extends SQLiteOpenHelper{
                         "id integer PRIMARY KEY AUTOINCREMENT," +
                 "name text  NOT NULL," +
                 "email text NOT NULL," +
-                "user_id text UNIQUE NOT NULL,"+
+                "fb_id text UNIQUE NOT NULL,"+
                 "forks integer DEFAULT 0,"+
                 "stars integer DEFAULT 0 );"
         );
@@ -40,7 +40,7 @@ public class UserDB extends SQLiteOpenHelper{
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", user.getId());
         contentValues.put("email", user.getEmail());
-        contentValues.put("user_id", user.getUserId());
+        contentValues.put("fb_id", user.getFbId());
         contentValues.put("name", user.getName());
         contentValues.put("stars", user.getStars());
         contentValues.put("forks", user.getForks());
@@ -59,7 +59,7 @@ public class UserDB extends SQLiteOpenHelper{
         User user = new User();
         Cursor res = db.rawQuery("select * from user where id = "+id, null);
         res.moveToFirst();
-        user.setUserId(res.getString(res.getColumnIndex("user_id")));
+        user.setFbId(res.getString(res.getColumnIndex("user_id")));
         user.setEmail(res.getString(res.getColumnIndex("email")));
         user.setId(id);
         user.setForks(res.getLong(res.getColumnIndex("forks")));
@@ -72,9 +72,9 @@ public class UserDB extends SQLiteOpenHelper{
     public User getByUserId(long userId) {
         SQLiteDatabase db = this.getReadableDatabase();
         User user = new User();
-        Cursor res = db.rawQuery("select * from user where user_id = "+userId, null);
+        Cursor res = db.rawQuery("select * from user where fb_id = "+userId, null);
         res.moveToFirst();
-        user.setUserId(res.getString(res.getColumnIndex("user_id")));
+        user.setFbId(res.getString(res.getColumnIndex("fb_id")));
         user.setEmail(res.getString(res.getColumnIndex("email")));
         user.setId(res.getLong(res.getColumnIndex("id")));
         user.setForks(res.getLong(res.getColumnIndex("forks")));
