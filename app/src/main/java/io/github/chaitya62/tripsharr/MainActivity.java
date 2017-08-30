@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             //Is registered..
                             Intent intent = new Intent(getApplication(), NavigationActivity.class);
-                            intent.putExtra("User", user);
+                            intent.putExtra("user", user);
                             startActivity(intent);
                             finish();
                         }
