@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getApplicationContext());
-        LoginManager.getInstance().logOut();
+        //LoginManager.getInstance().logOut();
         callbackManager = CallbackManager.Factory.create();
         super.onCreate(savedInstanceState);
         //Check if already logged in..

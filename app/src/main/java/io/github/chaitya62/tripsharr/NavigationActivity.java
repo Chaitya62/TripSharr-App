@@ -1,6 +1,7 @@
 package io.github.chaitya62.tripsharr;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -35,6 +36,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -54,84 +56,12 @@ import com.facebook.login.LoginManager;
 public class NavigationActivity extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
-    TripAdapter tripAdapter;
+    static Resources res;
+    RecyclerView recList;
     ActionBarDrawerToggle actionBarDrawerToggle;
     static int loaded[] = new int[10];
     ActionBar actionBar;
     Toolbar toolbar;
-
-    public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
-        private List<Trip> tripList;
-
-        public TripAdapter(List<Trip> contactList) {
-            this.tripList = contactList;
-        }
-
-        @Override
-        public int getItemCount() {
-            return tripList.size();
-        }
-
-        @Override
-        public void onBindViewHolder(TripViewHolder tripViewHolder, int i) {
-            Trip trip = tripList.get(i);
-            tripViewHolder.cName.setText(trip.getName());
-            tripViewHolder.cTitle.setText(trip.getName());
-            tripViewHolder.cDesc.setText(trip.getDescription());
-            RoundedBitmapDrawable mDrawable = createRoundedBitmapDrawableWithBorder(BitmapFactory.decodeResource(getResources(), R.drawable.com_facebook_button_icon));
-            tripViewHolder.cImage.setImageDrawable(mDrawable);
-        }
-
-        @Override
-        public TripViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View itemView = LayoutInflater.
-                    from(viewGroup.getContext()).
-                    inflate(R.layout.trip_feed_card, viewGroup, false);
-            return new TripViewHolder(itemView);
-        }
-
-        public void add(Trip trip) {
-            
-        }
-
-        public class TripViewHolder extends RecyclerView.ViewHolder {
-            protected TextView cTitle;
-            protected TextView cName;
-            protected TextView cDesc;
-            protected ImageView cImage;
-
-            public TripViewHolder(View v) {
-                super(v);
-                cTitle =  (TextView) v.findViewById(R.id.card_title);
-                cName = (TextView)  v.findViewById(R.id.card_name);
-                cDesc = (TextView)  v.findViewById(R.id.card_description);
-                cImage = (ImageView) v.findViewById(R.id.card_image);
-            }
-        }
-    }
-
-    private RoundedBitmapDrawable createRoundedBitmapDrawableWithBorder(Bitmap bitmap){
-        int bitmapWidth = bitmap.getWidth();
-        int bitmapHeight = bitmap.getHeight();
-        int borderWidthHalf = 10;
-        int bitmapRadius = Math.min(bitmapWidth,bitmapHeight)/2;
-        int bitmapSquareWidth = Math.min(bitmapWidth,bitmapHeight);
-        int newBitmapSquareWidth = bitmapSquareWidth+borderWidthHalf;
-        Bitmap roundedBitmap = Bitmap.createBitmap(newBitmapSquareWidth,newBitmapSquareWidth,Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(roundedBitmap);
-        canvas.drawColor(Color.RED);
-        int x = borderWidthHalf + bitmapSquareWidth - bitmapWidth;
-        int y = borderWidthHalf + bitmapSquareWidth - bitmapHeight;
-        canvas.drawBitmap(bitmap, x, y, null);
-        Paint borderPaint = new Paint();
-        borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setStrokeWidth(borderWidthHalf*2);
-        borderPaint.setColor(Color.WHITE);
-        canvas.drawCircle(canvas.getWidth()/2, canvas.getWidth()/2, newBitmapSquareWidth/2, borderPaint);
-        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(),roundedBitmap);
-        roundedBitmapDrawable.setAntiAlias(true);
-        return roundedBitmapDrawable;
-    }
 
     private void prepareFeeds(int type) {
         VolleySingleton volleySingleton = VolleySingleton.getInstance(getApplicationContext());
@@ -150,6 +80,19 @@ public class NavigationActivity extends AppCompatActivity {
                     public void onResponse(JSONArray response) {
                         Log.i("Debug", response.toString());
                         loaded[0] += response.length();
+                        ArrayList<Trip> arrayList = new ArrayList<>();
+                        for ( int i = 0; i<response.length(); i++ ) {
+                            try {
+                                arrayList.add(i, new Trip(response.getJSONObject(i)));
+                            } catch (Exception e) {
+                                try {
+                                    Log.i("Error", e.toString() + " " + response.getJSONObject(i));
+                                } catch (Exception ef) {
+                                    Log.i("Error", ef.toString());
+                                }
+                            }
+                        }
+                        recList.setAdapter(new TripAdapter(getApplicationContext(), arrayList));
                     }
                 },
                 new Response.ErrorListener() {
@@ -167,8 +110,8 @@ public class NavigationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-        RecyclerView recList = (RecyclerView) findViewById(R.id.cardList);
-        recList.setHasFixedSize(true);
+        res = getResources();
+        recList = (RecyclerView) findViewById(R.id.cardList);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
@@ -217,22 +160,24 @@ public class NavigationActivity extends AppCompatActivity {
                 return false;
             }
         });
-        View header = navigationView.getHeaderView(0);
-        Intent i = getIntent();
-        User user = (User)i.getSerializableExtra("user");
-
-        if(user == null) {
-            Log.i("Error", "No user found");
-            finish();
-        }
-        TextView name = (TextView) header.findViewById(R.id.profile_name);
-        TextView email = (TextView)header.findViewById(R.id.profile_email);
-        name.setText(user.getName());
-        if(!user.getEmail().equals("unavailable"))
-            email.setText(user.getEmail());
-        else
-            email.setText("");
         prepareFeeds(0);
+//        View header = navigationView.getHeaderView(0);
+//        Intent i = getIntent();
+//        User user = (User)i.getSerializableExtra("user");
+
+//        if(user == null) {
+//            Log.i("Error", "No user found");
+//            finish();
+//        }
+//        else{
+//            TextView name = (TextView) header.findViewById(R.id.profile_name);
+//            TextView email = (TextView)header.findViewById(R.id.profile_email);
+//            name.setText(user.getName());
+//            if(!user.getEmail().equals("unavailable"))
+//                email.setText(user.getEmail());
+//            else
+//                email.setText("");
+//        }
     }
 
     @Override
