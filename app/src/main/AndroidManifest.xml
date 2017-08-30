@@ -40,7 +40,7 @@
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar" />
+            />
         <activity
             android:name=".CreateTripActivity"
             android:label="Create Trip" />

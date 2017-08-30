@@ -76,13 +76,22 @@ public class VolleyWrapperUser {
 
     public void addUser(final User user) {
         u = user;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, context.getResources().getString(R.string.host) + "index.php/user/add/",
-                new Response.Listener<String >() {
+        Map<String, String> params = null;
+        try {
+            params = u.getParams();
+            Log.i("Params", params.toString());
+        } catch (Exception e) {
+            Log.i("Error", "user.getParams() gave error. "+e.toString());
+        }
+        JSONObject parameters = new JSONObject(params);
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,context.getResources().getString(R.string.host) + "index.php/user/add/",parameters,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String  response) {
+                    public void onResponse(JSONObject  response) {
                         try {
-                            //Log.i("Response", response);
-                            user.setId(Long.valueOf(response));
+                            Log.i("Response", response.toString());
+                            user.setId(Long.valueOf(response.get("id").toString()));
                             Message msg = handler.obtainMessage(0, user);
                             msg.sendToTarget();
                         } catch (Exception e) {
@@ -96,25 +105,13 @@ public class VolleyWrapperUser {
                         Log.i("Volley Error", error.toString());
                     }
                 }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = null;
-                try {
-                    params = u.getParams();
-                    Log.i("Params", params.toString());
-                } catch (Exception e) {
-                    Log.i("Error", "user.getParams() gave error. "+e.toString());
-                }
-                return params;
-            }
-        };
+        );
         try {
             Log.i("Debug", u.getParams().toString());
         } catch (Exception e) {
             Log.i("Error", e.toString());
         }
-        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+        VolleySingleton.getInstance(context).addToRequestQueue(jsonRequest);
     }
 
     public void updateUser(User user) {
