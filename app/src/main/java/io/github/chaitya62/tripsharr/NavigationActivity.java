@@ -2,17 +2,8 @@ package io.github.chaitya62.tripsharr;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,29 +13,20 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
-import io.github.chaitya62.tripsharr.primeobjects.User;
+import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 import com.facebook.login.LoginManager;
@@ -161,23 +143,14 @@ public class NavigationActivity extends AppCompatActivity {
             }
         });
         prepareFeeds(0);
-//        View header = navigationView.getHeaderView(0);
-//        Intent i = getIntent();
-//        User user = (User)i.getSerializableExtra("user");
-
-//        if(user == null) {
-//            Log.i("Error", "No user found");
-//            finish();
-//        }
-//        else{
-//            TextView name = (TextView) header.findViewById(R.id.profile_name);
-//            TextView email = (TextView)header.findViewById(R.id.profile_email);
-//            name.setText(user.getName());
-//            if(!user.getEmail().equals("unavailable"))
-//                email.setText(user.getEmail());
-//            else
-//                email.setText("");
-//        }
+        View header = navigationView.getHeaderView(0);
+            TextView name = (TextView) header.findViewById(R.id.profile_name);
+            TextView email = (TextView)header.findViewById(R.id.profile_email);
+            name.setText(SharedPrefs.getPrefs().getString("user_name", null));
+            if(!SharedPrefs.getPrefs().getString("email", null).equals("unavailable"))
+                email.setText(SharedPrefs.getPrefs().getString("email", null));
+            else
+                email.setText("");
     }
 
     @Override
@@ -193,11 +166,12 @@ public class NavigationActivity extends AppCompatActivity {
         }
         if(id == R.id.logout) {
             LoginManager.getInstance().logOut();
+            SharedPrefs.getEditor().clear();
+            SharedPrefs.getEditor().commit();
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
