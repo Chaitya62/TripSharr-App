@@ -1,22 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <EditText
-        android:layout_width="150dp"
-        android:layout_height="70dp"
-        android:hint="Trip Name"
-        android:id="@+id/tripname"
-        android:layout_centerInParent="true"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@color/colorPrimaryDark"
+    android:gravity="center"
+    >
+
+            <LinearLayout
+                    android:id="@+id/in_trip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_above="@id/start"
+                    >
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical"
+                   android:layout_gravity="center"
+                   >
+
+                   <com.airbnb.lottie.LottieAnimationView
+                       android:id="@+id/animation_view"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       app:lottie_fileName="viewTrip.json"
+                       app:lottie_loop="true"
+                       app:lottie_colorFilter="@color/colorAccent"
+                       android:layout_gravity="center"
+                       app:lottie_autoPlay="true" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    >
+                    <EditText
+                        android:id="@+id/tripname"
+                        android:layout_width="match_parent"
+                        android:maxLength="25"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:hint="Trip Name" />
+
+
+                </android.support.design.widget.TextInputLayout>
+
+
+
+                   </LinearLayout>
+
+
+
+               </LinearLayout>
+
+
+
+
+
 
     <Button
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Start Trip"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/tripname"
-        android:layout_marginRight="20dp"
         android:id="@+id/start"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/colorAccent"
+        android:layout_alignParentBottom="true"
+
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="30dp"
+
+        android:text="Start Trip"
+
         />
+
+
+
+
+
 
 </RelativeLayout>

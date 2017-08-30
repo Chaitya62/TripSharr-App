@@ -43,7 +43,9 @@
             />
         <activity
             android:name=".CreateTripActivity"
-            android:label="Create Trip" />
+            android:label="Create Trip"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity android:name=".NavigationActivity" />
         <activity
             android:name=".ViewTripActivity"
