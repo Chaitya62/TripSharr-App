@@ -21,6 +21,7 @@ import java.util.Arrays;
 
 import io.github.chaitya62.tripsharr.primeobjects.User;
 import io.github.chaitya62.tripsharr.utils.ExtendedAsyncTask;
+import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleyWrapperUser;
 
 
@@ -47,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             //Is registered..
                             Intent intent = new Intent(getApplication(), NavigationActivity.class);
+                            SharedPrefs.getEditor().putString("user_name", user.getName());
+                            SharedPrefs.getEditor().putLong("user_id", user.getId());
+                            SharedPrefs.getEditor().putString("fb_id", user.getFbId());
+                            SharedPrefs.getEditor().putLong("forks", user.getForks());
+                            SharedPrefs.getEditor().putLong("stars", user.getStars());
+                            SharedPrefs.getEditor().putString("email", user.getEmail());
+                            SharedPrefs.getEditor().commit();
                             intent.putExtra("user", user);
                             startActivity(intent);
                             finish();
@@ -76,8 +84,16 @@ public class MainActivity extends AppCompatActivity {
                                         public void handleMessage(Message msg) {
                                             //Registered..
                                             Log.i("Info", "Registered User Successfully");
+                                            User user = ((User)msg.obj);
                                             Intent i = new Intent(getApplication(), NavigationActivity.class);
-                                            i.putExtra("user", ((User)msg.obj));
+                                            SharedPrefs.getEditor().putString("user_name", user.getName());
+                                            SharedPrefs.getEditor().putLong("user_id", user.getId());
+                                            SharedPrefs.getEditor().putString("fb_id", user.getFbId());
+                                            SharedPrefs.getEditor().putLong("forks", user.getForks());
+                                            SharedPrefs.getEditor().putLong("stars", user.getStars());
+                                            SharedPrefs.getEditor().putString("email", user.getEmail());
+                                            SharedPrefs.getEditor().commit();
+                                            i.putExtra("user", user);
                                             startActivity(i);
                                             finish();
                                         }
@@ -113,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
                     //Change  The Thread..
                     //RequestQueue queue
                     doInBackground();
-                    finish();
                 }
             }, 0);
         }
@@ -122,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getApplicationContext());
-        LoginManager.getInstance().logOut();
+        new SharedPrefs(getApplication());
+        //LoginManager.getInstance().logOut();
         callbackManager = CallbackManager.Factory.create();
         super.onCreate(savedInstanceState);
         //Check if already logged in..

@@ -44,7 +44,7 @@ public class VolleyWrapperUser {
             user = udb.getById(id);
         } catch (Exception e) {
             //call get method here..
-            final String url = context.getResources().getString(R.string.host)+"/user/user/"+id+"/";
+            final String url = context.getResources().getString(R.string.host)+"index.php/user/user/"+id+"/";
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                     new Response.Listener<JSONObject>() {
                         @Override

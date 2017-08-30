@@ -1,5 +1,6 @@
 package io.github.chaitya62.tripsharr.primeobjects;
 
+import android.util.Log;
 import android.util.Pair;
 
 import org.json.JSONObject;
@@ -56,9 +57,12 @@ public class Trip implements Serializable{
             noOfForks = Long.parseLong(trip.get("no_of_forks").toString());
             isComplete = Boolean.parseBoolean(trip.get("is_complete").toString());
             isPublic = Boolean.parseBoolean(trip.get("is_public").toString());
-            oldTripId = Long.parseLong(trip.get("old_trip_id").toString());
-            ownerId = Long.parseLong(trip.get("owner_id").toString());
+            if(!trip.get("old_trip_id").toString().equals("null"))
+                oldTripId = Long.parseLong(trip.get("old_trip_id").toString());
+            if(!trip.get("owner_id").toString().equals("null"))
+                ownerId = Long.parseLong(trip.get("owner_id").toString());
         }catch(Exception e){
+            Log.i("Error", "JsonObject To Trip: "+trip.toString()+" "+e.toString());
             throw e;
         }
     }
