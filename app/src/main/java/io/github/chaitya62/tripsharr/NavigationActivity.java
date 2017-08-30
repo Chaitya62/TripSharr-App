@@ -3,15 +3,23 @@ package io.github.chaitya62.tripsharr;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+<<<<<<< HEAD
 import android.view.Menu;
+=======
+import android.util.Log;
+>>>>>>> 0c5b55eb284d12be7ece86595c99461ff48f88b5
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import io.github.chaitya62.tripsharr.primeobjects.User;
 
 import com.facebook.login.LoginManager;
 
@@ -76,6 +84,20 @@ public class NavigationActivity extends AppCompatActivity {
                 return false;
             }
         });
+        View header = navigationView.getHeaderView(0);
+        Intent i = getIntent();
+        User user = (User)i.getSerializableExtra("user");
+        if(user == null) {
+            Log.i("Error", "No user found");
+            finish();
+        }
+        TextView name = (TextView) header.findViewById(R.id.profile_name);
+        TextView email = (TextView)header.findViewById(R.id.profile_email);
+        name.setText(user.getName());
+        if(!user.getEmail().equals("unavailable"))
+            email.setText(user.getEmail());
+        else
+            email.setText("");
 
     }
 
@@ -112,10 +134,13 @@ public class NavigationActivity extends AppCompatActivity {
         startActivity(profile);
     }
 
+<<<<<<< HEAD
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
+=======
+>>>>>>> 0c5b55eb284d12be7ece86595c99461ff48f88b5
 }

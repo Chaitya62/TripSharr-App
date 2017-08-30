@@ -26,7 +26,7 @@ import io.github.chaitya62.tripsharr.utils.VolleyWrapperUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String authToken, userId, message, name, email;
+    private String authToken, fbId, message, name, email;
     private CallbackManager callbackManager;
 
     protected void doInBackground() {
@@ -39,17 +39,14 @@ public class MainActivity extends AppCompatActivity {
                 public void handleMessage (Message msg) {
                     try {
                         User user = (User)msg.obj;
-                        String userId1 = user.getUserId();
-                        Log.i("Debug", user.getUserId());
-                        if(userId1 == null)
+                        String fbId1 = user.getFbId();
+                        Log.i("Debug", user.getFbId());
+                        if(fbId1 == null)
                             throw new Exception("Empty User ID");
                         else {
                             //Is registered..
                             Intent intent = new Intent(getApplication(), NavigationActivity.class);
-                            intent.putExtra("userId", user.getUserId());
-                            intent.putExtra("name", user.getName());
-                            intent.putExtra("email", user.getEmail());
-                            intent.putExtra("authToken", authToken);
+                            intent.putExtra("user", user);
                             startActivity(intent);
                             finish();
                         }
@@ -78,15 +75,12 @@ public class MainActivity extends AppCompatActivity {
                                             //Registered..
                                             Log.i("Info", "Registered User Successfully");
                                             Intent i = new Intent(getApplication(), NavigationActivity.class);
-                                            i.putExtra("userId", ((User) message.obj).getUserId());
-                                            i.putExtra("name", ((User) message.obj).getName());
-                                            i.putExtra("email", ((User) message.obj).getEmail());
-                                            i.putExtra("authToken", authToken);
+                                            i.putExtra("user", ((User)msg.obj));
                                             startActivity(i);
                                             finish();
                                         }
                                     };
-                                    ((User)message.obj).setUserId(userId); // Set userId to the received data..
+                                    ((User)message.obj).setFbId(fbId); // Set fbId to the received data..
                                     volleyWrapperUser.addUser((User)message.obj);//Add user
                                 }
                             }
@@ -97,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
             //Check if registered
-            volleyWrapperUser.getUserByUserId(userId);
+            volleyWrapperUser.getUserByFbId(fbId);
         } catch (Exception e) {
             Log.i("Error", e.toString());
         }
@@ -112,17 +106,11 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void run() {
-                    userId = currentAccessToken.getUserId();
+                    fbId = currentAccessToken.getUserId();
                     authToken = currentAccessToken.getToken();
                     //Change  The Thread..
                     //RequestQueue queue
                     doInBackground();
-                    Intent intent = new Intent(getApplication(), NavigationActivity.class);
-                    intent.putExtra("userId", userId);
-                    intent.putExtra("name", name);
-                    intent.putExtra("email", email);
-                    intent.putExtra("authToken", authToken);
-                    startActivity(intent);
                     finish();
                 }
             }, 0);
@@ -150,12 +138,12 @@ public class MainActivity extends AppCompatActivity {
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    userId = loginResult.getAccessToken().getUserId();
+                    fbId = loginResult.getAccessToken().getUserId();
                     authToken = loginResult.getAccessToken().getToken();
                     message = "login success";
                     Log.i("LoginAttempt", message);
                     Log.i("AuthToken", authToken);
-                    Log.i("UserId", userId);
+                    Log.i("UserId", fbId);
                     updateWithToken(AccessToken.getCurrentAccessToken());
                 }
 

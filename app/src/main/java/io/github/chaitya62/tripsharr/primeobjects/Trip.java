@@ -4,13 +4,14 @@ import android.util.Pair;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by chaitya62 on 24/8/17.
  */
-public class Trip {
+public class Trip implements Serializable{
     private long id;
     private long oldTripId;
     private long userId;

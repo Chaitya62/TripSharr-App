@@ -2,6 +2,7 @@ package io.github.chaitya62.tripsharr.primeobjects;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,9 +10,9 @@ import java.util.Map;
  * Created by chaitya62 on 24/8/17.
  */
 
-public class User {
+public class User implements Serializable{
     private long id;
-    private String email, name, userId;
+    private String email, name, fbId;
     private long stars;
     private long forks;
 
@@ -19,7 +20,7 @@ public class User {
         id = -1;
         email = "unavailable";
         name = null;
-        userId = null;
+        fbId = null;
         stars = 0;
         forks = 0;
     }
@@ -30,7 +31,7 @@ public class User {
             id = Long.parseLong(user.get("id").toString());
             email = user.getString("email");
             name = user.getString("name");
-            userId = user.getString("user_id");
+            fbId = user.getString("fb_id");
             stars = user.getLong("stars");
             forks = user.getLong("forks");
         } catch (Exception e) {
@@ -38,19 +39,19 @@ public class User {
         }
     }
 
-    public User(Long id, String name, String email, String userId) {
+    public User(Long id, String name, String email, String fbId) {
         this();
         this.id = id;
         this.email = email;
         this.name = name;
-        this.userId = userId;
+        this.fbId = fbId;
     }
 
-    public User(String name, String email, String userId) {
+    public User(String name, String email, String fbId) {
         this();
         this.email = email;
         this.name = name;
-        this.userId = userId;
+        this.fbId = fbId;
     }
 
     public long getId() {
@@ -65,8 +66,8 @@ public class User {
         return name;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getFbId() {
+        return fbId;
     }
 
     public void setId(long id) {
@@ -81,16 +82,16 @@ public class User {
         this.name = name;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setFbId(String fbId) {
+        this.fbId = fbId;
     }
 
     public Map< String, String > getParams() throws Exception{
         Map<String , String> params = new HashMap<>();
         if (id != -1) params.put("id", Long.toString(id));
         params.put("email", email);
-        if (userId != null) params.put("user_id", userId);
-        else throw new Exception("User Id Not set");
+        if (fbId != null) params.put("fb_id", fbId);
+        else throw new Exception("FB Id Not set");
         if (name != null) params.put("name", name);
         else throw new Exception("Name not set");
         params.put("stars", Long.toString(stars));
