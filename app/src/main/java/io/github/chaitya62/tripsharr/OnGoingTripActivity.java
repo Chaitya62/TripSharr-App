@@ -5,7 +5,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -47,6 +49,15 @@ public class OnGoingTripActivity extends NavigationActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(new TripAdapter(getApplicationContext(),tripList));
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Trip trip = tripList.get(position);
+                Toast.makeText(OnGoingTripActivity.this,trip.getDescription(),Toast.LENGTH_SHORT).show();
+            }
+
+        }));
 
     }
 
