@@ -132,7 +132,7 @@ public class NavigationActivity extends AppCompatActivity {
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.share_trip:
-                        i = new Intent(NavigationActivity.this,ShareTripActivity.class);
+                        i = new Intent(NavigationActivity.this,BottomSheet.class);
                         startActivity(i);
                         drawerLayout.closeDrawers();
                         break;

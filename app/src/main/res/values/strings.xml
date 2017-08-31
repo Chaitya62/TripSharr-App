@@ -135,6 +135,12 @@ public class NavigationActivity extends AppCompatActivity {
 
         "
     </string>
+    <string name="ipsum">"Hello WOrld
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A asperiores blanditiis commodi deleniti dicta distinctio dolores obcaecati perspiciatis rem repudiandae temporibus, vel, vero. Adipisci eligendi nam porro quae, quaerat ut?
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur consequatur dolorum fugiat iure nulla praesentium quae sapiente sequi ullam voluptatibus! Eius, ipsam, voluptatum!
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium distinctio error, explicabo illo ipsum libero modi nobis numquam quo sed, voluptas voluptatem voluptates.
+        "
+    </string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_test">Test</string>
 </resources>
