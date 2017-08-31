@@ -51,7 +51,7 @@ public class NavigationActivity extends AppCompatActivity {
         int limit = 10;
         String url = "";
         if(type == 0)
-            url = getResources().getString(R.string.host) + "index.php/feed/feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
+            url = getResources().getString(R.string.host) + "index.php/feed/feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
         if(type == 1)
             url = getResources().getString(R.string.host) + "index.php/feed/starred_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
         if(type == 2)
@@ -81,6 +81,7 @@ public class NavigationActivity extends AppCompatActivity {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
                         Log.i("Error", error.toString());
                     }
                 }

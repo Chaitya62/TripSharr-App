@@ -1,11 +1,13 @@
 package io.github.chaitya62.tripsharr;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.Image;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +18,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.util.List;
+import java.util.zip.InflaterInputStream;
 
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 
@@ -27,10 +36,12 @@ import io.github.chaitya62.tripsharr.primeobjects.Trip;
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
     private List<Trip> tripList;
     private Context context;
+    private static AssetManager mgr;
 
     public TripAdapter(Context context, List<Trip> tripList) {
         this.context = context;
         this.tripList = tripList;
+        mgr = context.getAssets();
     }
 
     @Override
@@ -38,31 +49,72 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         return tripList.size();
     }
 
-    public static class TripViewHolder extends RecyclerView.ViewHolder {
+    public static class TripViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         protected TextView cTitle;
         protected TextView cName;
         protected TextView cDesc;
-        protected ImageView cImage;
+        protected LottieAnimationView cStar;
+
+
+        //protected ImageView cImage;
 
         public TripViewHolder(View v) {
             super(v);
+
             cTitle =  (TextView) v.findViewById(R.id.card_title);
             cName = (TextView)  v.findViewById(R.id.card_name);
             cDesc = (TextView)  v.findViewById(R.id.card_description);
-            cImage = (ImageView) v.findViewById(R.id.card_image);
+            cStar = (LottieAnimationView) v.findViewById(R.id.card_image);
+            //cImage = (ImageView) v.findViewById(R.id.card_image);
+        }
+
+        @Override
+        public void onClick(View view) {
+            // handle multiple clicks
+
+           if(view.getId() == cStar.getId()){
+               cStar.setAnimation(getJsonFile());
+               cStar.playAnimation();
+           }
+        }
+
+        public JSONObject getJsonFile(){
+            InputStream is;
+            JSONObject jsonObj;
+            try{
+                is = mgr.open("star.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                String json = new String(buffer, "UTF-8");
+                jsonObj = new JSONObject(json);
+                return jsonObj;
+            }catch(Exception e){
+                e.printStackTrace();
+                Log.i("DEBUG: ","Resource not found!");
+            }
+            return null;
         }
     }
 
     @Override
     public void onBindViewHolder(TripViewHolder tripViewHolder, int i) {
         Log.i("Debug", "onBindViewHolder");
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.com_facebook_button_like_background);
         Trip trip = tripList.get(i);
         tripViewHolder.cName.setText(trip.getName());
         tripViewHolder.cTitle.setText(trip.getName());
         tripViewHolder.cDesc.setText(trip.getDescription());
-        RoundedBitmapDrawable mDrawable = createRoundedBitmapDrawableWithBorder(BitmapFactory.decodeResource(context.getResources(), R.drawable.googleg_standard_color_18));
-        tripViewHolder.cImage.setImageDrawable(mDrawable);
+        tripViewHolder.cStar.setImageBitmap(bitmap);
+        tripViewHolder.cStar.setOnClickListener(tripViewHolder);
+        //RoundedBitmapDrawable mDrawable = createRoundedBitmapDrawableWithBorder(BitmapFactory.decodeResource(context.getResources(), R.drawable.googleg_standard_color_18));
+        //tripViewHolder.cImage.setImageDrawable(mDrawable);
     }
+
+
+
+
 
     @Override
     public TripViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
