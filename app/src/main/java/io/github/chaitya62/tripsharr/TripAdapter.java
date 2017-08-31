@@ -74,7 +74,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     }
 
     public void add(Trip trip) {
-
+        tripList.add(tripList.size(), trip);
+        notifyItemInserted(tripList.size()-1);
     }
 
     private RoundedBitmapDrawable createRoundedBitmapDrawableWithBorder(Bitmap bitmap){
