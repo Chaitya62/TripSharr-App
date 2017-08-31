@@ -41,11 +41,12 @@ public class NavigationActivity extends AppCompatActivity {
     static Resources res;
     RecyclerView recList;
     ActionBarDrawerToggle actionBarDrawerToggle;
-    static int loaded[] = new int[10];
+    int type = 0;
+    int loaded[] = new int[10];
     ActionBar actionBar;
     Toolbar toolbar;
 
-    private void prepareFeeds(int type) {
+    private void prepareFeeds() {
         VolleySingleton volleySingleton = VolleySingleton.getInstance(getApplicationContext());
         int limit = 10;
         String url = "";
@@ -55,6 +56,7 @@ public class NavigationActivity extends AppCompatActivity {
             url = getResources().getString(R.string.host) + "index.php/feed/starred_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
         if(type == 2)
             url = getResources().getString(R.string.host) + "index.php/feed/forked_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
+        Log.i("Debug", url);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
 
@@ -62,10 +64,9 @@ public class NavigationActivity extends AppCompatActivity {
                     public void onResponse(JSONArray response) {
                         Log.i("Debug", response.toString());
                         loaded[0] += response.length();
-                        ArrayList<Trip> arrayList = new ArrayList<>();
                         for ( int i = 0; i<response.length(); i++ ) {
                             try {
-                                arrayList.add(i, new Trip(response.getJSONObject(i)));
+                                ((TripAdapter)recList.getAdapter()).add(new Trip(response.getJSONObject(i)));
                             } catch (Exception e) {
                                 try {
                                     Log.i("Error", e.toString() + " " + response.getJSONObject(i));
@@ -74,7 +75,6 @@ public class NavigationActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        recList.setAdapter(new TripAdapter(getApplicationContext(), arrayList));
                     }
                 },
                 new Response.ErrorListener() {
@@ -94,16 +94,28 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
         res = getResources();
         recList = (RecyclerView) findViewById(R.id.cardList);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
+        final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.addOnScrollListener(
+                new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        if(llm.findLastCompletelyVisibleItemPosition()==loaded[type]-1) {
+                            Log.i("Debug", "At last element");
+                            prepareFeeds();
+                        }
+                    }
+                }
+        );
         recList.setLayoutManager(llm);
+        recList.setAdapter(new TripAdapter(getApplicationContext(), new ArrayList<Trip>()));
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -142,7 +154,7 @@ public class NavigationActivity extends AppCompatActivity {
                 return false;
             }
         });
-        prepareFeeds(0);
+        prepareFeeds();
         View header = navigationView.getHeaderView(0);
             TextView name = (TextView) header.findViewById(R.id.profile_name);
             TextView email = (TextView)header.findViewById(R.id.profile_email);
