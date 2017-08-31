@@ -15,6 +15,9 @@ import android.view.Menu;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -55,7 +58,7 @@ public class NavigationActivity extends AppCompatActivity {
         if(type == 1)
             url = getResources().getString(R.string.host) + "index.php/feed/starred_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
         if(type == 2)
-            url = getResources().getString(R.string.host) + "index.php/feed/forked_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
+            url = getResources().getString(R.string.host) + "index.php/feed/forks_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
         Log.i("Debug", url);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -63,7 +66,7 @@ public class NavigationActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.i("Debug", response.toString());
-                        loaded[0] += response.length();
+                        loaded[type] += response.length();
                         for ( int i = 0; i<response.length(); i++ ) {
                             try {
                                 ((TripAdapter)recList.getAdapter()).add(new Trip(response.getJSONObject(i)));
@@ -110,6 +113,30 @@ public class NavigationActivity extends AppCompatActivity {
         );
         recList.setLayoutManager(llm);
         recList.setAdapter(new TripAdapter(getApplicationContext(), new ArrayList<Trip>()));
+        Spinner spinner = (Spinner) findViewById(R.id.feeds_type_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.feeds_type, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                loaded[type] = 0;
+                if(position == 0)
+                    type = 0;
+                if(position == 1)
+                    type = 1;
+                if(position == 2)
+                    type = 2;
+                ((TripAdapter)recList.getAdapter()).clear();
+                prepareFeeds();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.i("Debug", "Nothing Selected");
+            }
+        });
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

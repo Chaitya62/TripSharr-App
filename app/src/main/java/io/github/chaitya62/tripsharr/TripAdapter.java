@@ -130,6 +130,11 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         notifyItemInserted(tripList.size()-1);
     }
 
+    public void clear() {
+        tripList.clear();
+        notifyDataSetChanged();
+    }
+
     private RoundedBitmapDrawable createRoundedBitmapDrawableWithBorder(Bitmap bitmap){
         int bitmapWidth = bitmap.getWidth();
         int bitmapHeight = bitmap.getHeight();
