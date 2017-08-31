@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="feeds_type">
+        <item>Latest</item>
+        <item>Top Starred</item>
+        <item>Top Forked</item>
+    </string-array>
+</resources>
