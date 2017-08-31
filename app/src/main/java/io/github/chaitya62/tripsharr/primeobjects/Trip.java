@@ -3,6 +3,7 @@ package io.github.chaitya62.tripsharr.primeobjects;
 import android.util.Log;
 import android.util.Pair;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -38,6 +39,12 @@ public class Trip implements Serializable{
         isPublic = false;
         ownerId = 0;
     }
+
+    public Trip(String name,String desc){
+        this.name=name;
+        this.description=desc;
+    }
+
 
     public Trip(JSONObject trip) throws Exception{
         this();
@@ -84,7 +91,7 @@ public class Trip implements Serializable{
 
 
     public String getName(){
-        return name;
+        return this.name;
     }
 
     public Map<String, String> getParams() throws Exception{
@@ -126,7 +133,7 @@ public class Trip implements Serializable{
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
