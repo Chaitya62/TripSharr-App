@@ -49,7 +49,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener{
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -76,43 +76,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.v("map",getIntent().getStringExtra("Tripid"));
-                if(mLastLocation!=null)
-                {
-                    Coordinates coordinates = new Coordinates();
-                    Pair<Double,Double> pair = new Pair(mLastLocation.getLatitude(),mLastLocation.getLongitude());
-                    coordinates.setPoint(pair);
-                    coordinates.setTripId(Integer.parseInt(getIntent().getStringExtra("Tripid")));
-                    String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/add/";
-                    Map<String,String> hp = new HashMap<>();
-                    try{
-                        hp = coordinates.getParams();
-                    }
-                    catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    JSONObject jsonObject = new JSONObject(hp);
-                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Log.v("respoco",""+response);
-                        }
-                    },new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError){
-                            Log.v("errorco",""+volleyError);
-                        }
-
-                    });
-                    VolleySingleton.getInstance(MapsActivity.this).addToRequestQueue(jsonObjectRequest);
-                }
-
-            }
-        });
+        done.setOnClickListener(this);
+//
+//        done.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//
+//            }
+//        });
 
         exitcr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,7 +151,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-
+        Log.i("LAT NEW : ", location.getLatitude() + "");
         mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
@@ -197,9 +170,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
         //stop location updates
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        }
 
 
     }
@@ -296,4 +266,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == done.getId()) {
+            Log.v("map", getIntent().getStringExtra("Tripid"));
+            if (mLastLocation != null) {
+                Log.i("LAT : ", "" + mLastLocation.getLatitude());
+                Coordinates coordinates = new Coordinates();
+                Pair<Double, Double> pair = new Pair(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                coordinates.setPoint(pair);
+                coordinates.setTripId(Integer.parseInt(getIntent().getStringExtra("Tripid")));
+                String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/add/";
+                Map<String, String> hp = new HashMap<>();
+                try {
+                    hp = coordinates.getParams();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                JSONObject jsonObject = new JSONObject(hp);
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.v("respoco", "" + response);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Log.v("errorco", "" + volleyError);
+                    }
+
+                });
+                VolleySingleton.getInstance(MapsActivity.this).addToRequestQueue(jsonObjectRequest);
+            }
+        }
+    }
 }
