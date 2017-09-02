@@ -58,10 +58,10 @@ public class OnGoingTripActivity extends NavigationActivity {
             public void onClick(View view, int position) {
                 Trip trip = tripList.get(position);
                 Toast.makeText(OnGoingTripActivity.this,trip.getDescription(),Toast.LENGTH_SHORT).show();
-                /*Intent i = new Intent(OnGoingTripActivity.this,CheckpointActivity.class);
-                i.putExtra("Tripid","1");
+                Intent i = new Intent(OnGoingTripActivity.this,OngoingMapActivity.class);
+                i.putExtra("Tripid",""+trip.getId());
                 startActivity(i);
-                drawerLayout.closeDrawers();*/
+                drawerLayout.closeDrawers();
             }
 
         }));
@@ -81,7 +81,10 @@ public class OnGoingTripActivity extends NavigationActivity {
                         try {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
-                                    ((TripAdapter)recyclerView.getAdapter()).add(new Trip(response.getJSONObject(i)));
+                                    Log.v("list",response.getJSONObject(i).getString("is_complete"));
+                                    if(response.getJSONObject(i).getString("is_complete").equals("0")) {
+                                        ((TripAdapter) recyclerView.getAdapter()).add(new Trip(response.getJSONObject(i)));
+                                    }
 
                                 } catch (Exception e) {
                                     try {
@@ -102,7 +105,6 @@ public class OnGoingTripActivity extends NavigationActivity {
             }
         });
         VolleySingleton.getInstance(OnGoingTripActivity.this).addToRequestQueue(jsonArrayRequest);
-        Log.v("sized",""+tripList.size());
 
     }
 }

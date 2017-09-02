@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="1">
+
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="io.github.chaitya62.tripsharr.MapsActivity"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@mipmap/ic_done_white_24dp"
+        android:id="@+id/ongoing_done"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"/>
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@mipmap/ic_view_list_white_24dp"
+        android:id="@+id/listview"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"/>
+</RelativeLayout>
+

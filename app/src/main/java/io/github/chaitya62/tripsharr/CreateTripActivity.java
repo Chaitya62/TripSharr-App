@@ -81,7 +81,8 @@ public class CreateTripActivity extends NavigationActivity {
                         Log.v("respo : ",""+response);
                         Intent i = new Intent(CreateTripActivity.this,MapsActivity.class);
 
-                        String tripid= (response.toString()).substring(6,7);
+                        String tripid= (response.toString());
+                        tripid= tripid.substring(6,tripid.length()-1);
                         Log.v("crtripid",tripid+" "+tripid.length());
                         i.putExtra("Tripid",tripid);
                         startActivity(i);

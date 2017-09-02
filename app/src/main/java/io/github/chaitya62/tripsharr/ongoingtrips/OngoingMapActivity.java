@@ -1,11 +1,9 @@
-package io.github.chaitya62.tripsharr;
+package io.github.chaitya62.tripsharr.ongoingtrips;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,22 +11,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Pair;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
-import io.github.chaitya62.tripsharr.primeobjects.Coordinates;
-import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
-//import com.cloudinary.Coordinates;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.cloudinary.Coordinates;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -43,39 +38,43 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+import io.github.chaitya62.tripsharr.MapsActivity;
+import io.github.chaitya62.tripsharr.R;
+import io.github.chaitya62.tripsharr.adapters.TripAdapter;
+import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.VolleySingleton;
+
+public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,LocationListener {
 
+    private List<io.github.chaitya62.tripsharr.primeobjects.Coordinates> p = new ArrayList<>();
+    private FloatingActionButton done,listview;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private Location mLastLocation,currLocation;
-    //private LatLng mLastLocation,currrLocation;
+    private Location mLastLocation;
     private Marker mCurrLocationMarker;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    private FloatingActionButton done,exitcr;
-    //LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
+    private String tripid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-
-        done = (FloatingActionButton)findViewById(R.id.done);
-        exitcr = (FloatingActionButton)findViewById(R.id.exitcr);
-
+        setContentView(R.layout.activity_ongoing_map);
+        done = (FloatingActionButton) findViewById(R.id.ongoing_done);
+        listview = (FloatingActionButton) findViewById(R.id.listview);
+        tripid = getIntent().getStringExtra("Tripid");
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
@@ -91,7 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.v("map",getIntent().getStringExtra("Tripid"));
                 if(mLastLocation!=null)
                 {
-                    Coordinates coordinates = new Coordinates();
+                    io.github.chaitya62.tripsharr.primeobjects.Coordinates coordinates = new io.github.chaitya62.tripsharr.primeobjects.Coordinates();
                     Pair<Double,Double> pair = new Pair(mLastLocation.getLatitude(),mLastLocation.getLongitude());
                     coordinates.setPoint(pair);
                     coordinates.setTripId(Integer.parseInt(getIntent().getStringExtra("Tripid")));
@@ -117,16 +116,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
 
                     });
-                    VolleySingleton.getInstance(MapsActivity.this).addToRequestQueue(jsonObjectRequest);
+                    VolleySingleton.getInstance(OngoingMapActivity.this).addToRequestQueue(jsonObjectRequest);
                 }
 
             }
         });
 
-        exitcr.setOnClickListener(new View.OnClickListener() {
+        listview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent (MapsActivity.this,NavigationActivity.class);
+                Intent i = new Intent(OngoingMapActivity.this,CheckpointActivity.class);
+                i.putExtra("Tripid",tripid);
                 startActivity(i);
             }
         });
@@ -138,9 +138,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d("MainActivity", "Current Timestamp: " + format);
         return format;
     }
-
-
-
 
 
     /**
@@ -156,9 +153,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        //mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
-        //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
@@ -172,6 +166,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
 
+        mMap.clear();
+
+        prepareCheckpoints();
+
+
+
         // Add a marker in Sydney and move the camera
         /*LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -179,6 +179,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -187,11 +188,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .build();
         mGoogleApiClient.connect();
     }
-
-
-
-
-
 
     @Override
     public void onLocationChanged(Location location) {
@@ -216,14 +212,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-
-
-
-
-
-
-
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -315,4 +303,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    private Marker drawMarkers(io.github.chaitya62.tripsharr.primeobjects.Coordinates ip){
+
+        Log.v("drawmark",""+ip.getPoint().first+" "+ip.getPoint().second);
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        // Setting latitude and longitude for the marker
+        Pair<Double,Double> pair = ip.getPoint();
+        LatLng point = new LatLng(pair.first,pair.second);
+        markerOptions.position(point);
+
+        // Setting title for the InfoWindow
+        markerOptions.title(ip.getName());
+
+        // Setting InfoWindow contents
+        markerOptions.snippet("Latitude:"+point.latitude+",Longitude:"+point.longitude);
+
+        markerOptions.anchor(0.5f,0.5f);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
+
+        return mMap.addMarker(markerOptions);
+
+    }
+
+    public void prepareCheckpoints(){
+        String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/coordinatesOf/"+tripid;
+        Log.v("maphello",url);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.v("maphello", "" + response);
+                        Trip trip;
+                        io.github.chaitya62.tripsharr.primeobjects.Coordinates coordinates;
+                        JSONObject jsonObject;
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+                                jsonObject = response.getJSONObject(i);
+                                coordinates = new io.github.chaitya62.tripsharr.primeobjects.Coordinates(jsonObject);
+                                drawMarkers(coordinates);
+                                Log.v("formap",""+response.get(i));
+                            }
+                        }
+                        catch (Exception e){}
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.v("hellerr",""+error);
+            }
+        });
+        VolleySingleton.getInstance(OngoingMapActivity.this).addToRequestQueue(jsonArrayRequest);
+    }
 }

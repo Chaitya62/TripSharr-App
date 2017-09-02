@@ -54,8 +54,7 @@
         <activity
             android:name=".ShareTripActivity"
             android:label="Share Trip" />
-
-        <activity android:name=".ongoingtrips.CheckpointActivity"/>
+        <activity android:name=".ongoingtrips.CheckpointActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -86,7 +85,10 @@
         <activity
             android:name=".testActivity"
             android:label="@string/title_activity_test" />
-        <activity android:name=".BottomSheet"></activity>
+        <activity android:name=".BottomSheet" />
+        <activity
+            android:name=".ongoingtrips.OngoingMapActivity"
+            android:label="@string/title_activity_ongoing_map"></activity>
     </application>
 
 </manifest>
