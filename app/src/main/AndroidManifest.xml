@@ -45,9 +45,11 @@
             android:label="Create Trip"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".NavigationActivity" />
+
         <activity
             android:name=".ViewTripActivity"
             android:label="View Trip" />
+
         <activity
             android:name=".ongoingtrips.OnGoingTripActivity"
             android:label="On-Going Trip" />
