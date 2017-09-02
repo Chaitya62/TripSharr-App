@@ -3,6 +3,9 @@ package io.github.chaitya62.tripsharr;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
+import io.github.chaitya62.tripsharr.NavigationActivity;
+import io.github.chaitya62.tripsharr.R;
+
 /**
  * Created by mikasa on 27/8/17.
  */

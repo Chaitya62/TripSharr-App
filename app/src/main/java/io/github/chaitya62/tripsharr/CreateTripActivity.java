@@ -24,7 +24,11 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+
+import io.github.chaitya62.tripsharr.NavigationActivity;
+import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 import static io.github.chaitya62.tripsharr.R.string.error;
@@ -57,7 +61,7 @@ public class CreateTripActivity extends NavigationActivity {
                 newTrip.setDescription("Added from phone");
                 newTrip.setEndCoordinate(new Pair<Double, Double>(231.3, 34.34));
                 newTrip.setStartCoordinate(new Pair<Double, Double>(231.3, 34.34));
-                newTrip.setUserId(1);
+                newTrip.setUserId(SharedPrefs.getPrefs().getLong("user_id",1));
                 String url = "http://tripshare.codeadventure.in/TripShare/index.php/trip/add/";
                 Map<String, String> params = new HashMap<>();
                 try{

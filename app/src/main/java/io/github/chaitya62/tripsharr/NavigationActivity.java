@@ -28,6 +28,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
+import io.github.chaitya62.tripsharr.ongoingtrips.OnGoingTripActivity;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
@@ -40,7 +41,7 @@ import com.facebook.login.LoginManager;
 
 public class NavigationActivity extends AppCompatActivity {
 
-    DrawerLayout drawerLayout;
+    public DrawerLayout drawerLayout;
     static Resources res;
     RecyclerView recList;
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -54,7 +55,7 @@ public class NavigationActivity extends AppCompatActivity {
         int limit = 10;
         String url = "";
         if(type == 0)
-            url = getResources().getString(R.string.host) + "index.php/feed/feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
+            url = getResources().getString(R.string.host) + "index.php/feed/feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
         if(type == 1)
             url = getResources().getString(R.string.host) + "index.php/feed/starred_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
         if(type == 2)
