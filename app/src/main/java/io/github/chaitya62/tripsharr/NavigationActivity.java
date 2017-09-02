@@ -28,6 +28,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
+import io.github.chaitya62.tripsharr.ongoingtrips.OnGoingTripActivity;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
@@ -40,7 +41,7 @@ import com.facebook.login.LoginManager;
 
 public class NavigationActivity extends AppCompatActivity {
 
-    DrawerLayout drawerLayout;
+    public DrawerLayout drawerLayout;
     static Resources res;
     RecyclerView recList;
     ActionBarDrawerToggle actionBarDrawerToggle;

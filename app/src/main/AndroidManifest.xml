@@ -49,11 +49,13 @@
             android:name=".ViewTripActivity"
             android:label="View Trip" />
         <activity
-            android:name=".OnGoingTripActivity"
+            android:name=".ongoingtrips.OnGoingTripActivity"
             android:label="On-Going Trip" />
         <activity
             android:name=".ShareTripActivity"
             android:label="Share Trip" />
+
+        <activity android:name=".ongoingtrips.CheckpointActivity"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
