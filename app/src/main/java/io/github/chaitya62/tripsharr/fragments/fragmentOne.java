@@ -3,6 +3,7 @@ package io.github.chaitya62.tripsharr.fragments;
 import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -63,7 +64,8 @@ public class fragmentOne extends Fragment{
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(new FragmentOneAdapter(getApplicationContext(),list));
-        return inflater.inflate(R.layout.fragment_one, container, false);
+        //return inflater.inflate(R.layout.fragment_one, container, false);
+        return v;
 
     }
     public void prepdata(){
