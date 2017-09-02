@@ -77,26 +77,104 @@
 
 
         <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             app:cardElevation="8dp"
             app:contentPadding="16dp"
             >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text ="@string/test"
-            />
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text ="@string/test"-->
+            <!--/>-->
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:src="@android:drawable/star_on"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:gravity="center"
+                        />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:src="@android:drawable/star_on"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:gravity="center"
+                        />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
 
         </android.support.v7.widget.CardView>
 
 
 
-
-
     </android.support.v4.widget.NestedScrollView>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_height="match_parent"
+        android:id="@+id/topTrips"
+        android:layout_width="match_parent"
+        android:scrollbars="vertical"
+        />
+
+
+    <!--<android.support.v4.widget.NestedScrollView-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_width="match_parent"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+
+        <!--&gt;-->
+
+
+
+
+    <!--</android.support.v4.widget.NestedScrollView>-->
 
 
 

@@ -41,7 +41,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.MyViewHolder> 
         }
     }
 
-    /*public TripAdapter(List<Trip> tripsList) {
+    /*public FeedAdapter(List<Trip> tripsList) {
         this.tripsList = tripsList;
     }*/
 

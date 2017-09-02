@@ -28,6 +28,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
+import io.github.chaitya62.tripsharr.adapters.FeedAdapter;
 import io.github.chaitya62.tripsharr.ongoingtrips.OnGoingTripActivity;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
@@ -57,9 +58,9 @@ public class NavigationActivity extends AppCompatActivity {
         if(type == 0)
             url = getResources().getString(R.string.host) + "index.php/feed/feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
         if(type == 1)
-            url = getResources().getString(R.string.host) + "index.php/feed/starred_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
+            url = getResources().getString(R.string.host) + "index.php/feed/starred_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type])   + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
         if(type == 2)
-            url = getResources().getString(R.string.host) + "index.php/feed/forks_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]);
+            url = getResources().getString(R.string.host) + "index.php/feed/forks_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type])  + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
         Log.i("Debug", url);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -70,7 +71,7 @@ public class NavigationActivity extends AppCompatActivity {
                         loaded[type] += response.length();
                         for ( int i = 0; i<response.length(); i++ ) {
                             try {
-                                ((TripAdapter)recList.getAdapter()).add(new Trip(response.getJSONObject(i)));
+                                ((FeedAdapter)recList.getAdapter()).add(new Trip(response.getJSONObject(i)));
                             } catch (Exception e) {
                                 try {
                                     Log.i("Error", e.toString() + " " + response.getJSONObject(i));
@@ -113,7 +114,7 @@ public class NavigationActivity extends AppCompatActivity {
                 }
         );
         recList.setLayoutManager(llm);
-        recList.setAdapter(new TripAdapter(getApplicationContext(), new ArrayList<Trip>()));
+        recList.setAdapter(new FeedAdapter(getApplicationContext(), new ArrayList<Trip>()));
         Spinner spinner = (Spinner) findViewById(R.id.feeds_type_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.feeds_type, android.R.layout.simple_spinner_item);
@@ -129,7 +130,7 @@ public class NavigationActivity extends AppCompatActivity {
                     type = 1;
                 if(position == 2)
                     type = 2;
-                ((TripAdapter)recList.getAdapter()).clear();
+                ((FeedAdapter)recList.getAdapter()).clear();
                 prepareFeeds();
             }
 

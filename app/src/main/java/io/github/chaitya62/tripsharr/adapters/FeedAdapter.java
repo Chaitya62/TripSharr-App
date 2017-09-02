@@ -1,4 +1,4 @@
-package io.github.chaitya62.tripsharr;
+package io.github.chaitya62.tripsharr.adapters;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.media.Image;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -15,30 +14,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.zip.InflaterInputStream;
 
+import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 
 /**
  * Created by ankit on 30/8/17.
  */
 
-public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
+public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder> {
     private List<Trip> tripList;
     private Context context;
     private static AssetManager mgr;
 
-    public TripAdapter(Context context, List<Trip> tripList) {
+    public FeedAdapter(Context context, List<Trip> tripList) {
         this.context = context;
         this.tripList = tripList;
         mgr = context.getAssets();
