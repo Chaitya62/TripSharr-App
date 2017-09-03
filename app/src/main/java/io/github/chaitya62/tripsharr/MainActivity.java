@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         //Not registered on the server..
                         //Get data from facebook to register..
-                        ExtendedAsyncTask graph = new ExtendedAsyncTask(2); //Call Type 2 for Graph data..
+                        ExtendedAsyncTask graph = new ExtendedAsyncTask(getApplication(),2); //Call Type 2 for Graph data..
                         graph.setContext(getApplicationContext()); //Set context
                         Log.i("Debug", "In Graph");
                         //Make a new handler to respond when data arrives..

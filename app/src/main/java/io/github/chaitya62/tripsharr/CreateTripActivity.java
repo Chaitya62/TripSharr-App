@@ -24,7 +24,11 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+
+import io.github.chaitya62.tripsharr.NavigationActivity;
+import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 import static io.github.chaitya62.tripsharr.R.string.error;
@@ -55,9 +59,7 @@ public class CreateTripActivity extends NavigationActivity {
                 final Trip newTrip = new Trip();
                 newTrip.setName(tripName);
                 newTrip.setDescription("Added from phone");
-                newTrip.setEndCoordinate(new Pair<Double, Double>(231.3, 34.34));
-                newTrip.setStartCoordinate(new Pair<Double, Double>(231.3, 34.34));
-                newTrip.setUserId(1);
+                newTrip.setUserId(SharedPrefs.getPrefs().getLong("user_id",1));
                 String url = "http://tripshare.codeadventure.in/TripShare/index.php/trip/add/";
                 Map<String, String> params = new HashMap<>();
                 try{
@@ -77,7 +79,8 @@ public class CreateTripActivity extends NavigationActivity {
                         Log.v("respo : ",""+response);
                         Intent i = new Intent(CreateTripActivity.this,MapsActivity.class);
 
-                        String tripid= (response.toString()).substring(6,7);
+                        String tripid= (response.toString());
+                        tripid= tripid.substring(6,tripid.length()-1);
                         Log.v("crtripid",tripid+" "+tripid.length());
                         i.putExtra("Tripid",tripid);
                         startActivity(i);

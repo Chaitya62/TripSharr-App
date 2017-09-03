@@ -2,6 +2,7 @@ package io.github.chaitya62.tripsharr.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +41,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.MyViewHolder> 
         }
     }
 
-    /*public TripAdapter(List<Trip> tripsList) {
-        this.tripsList = tripsList;
-    }*/
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
@@ -63,6 +61,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.MyViewHolder> 
     }
 
     public void add(Trip trip) {
+        Log.i("DEBUG",trip.getName());
         tripsList.add(tripsList.size(), trip);
         notifyItemInserted(tripsList.size()-1);
     }

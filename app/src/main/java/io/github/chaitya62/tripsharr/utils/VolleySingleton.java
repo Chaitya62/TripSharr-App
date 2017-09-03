@@ -2,8 +2,13 @@ package io.github.chaitya62.tripsharr.utils;
 
 import android.content.Context;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
 
 /**
@@ -15,11 +20,16 @@ public class VolleySingleton {
     private static VolleySingleton mInstance;
     private RequestQueue mRequestQueue;
     private static Context mContext;
+//    private Cache volleyCache;
+//    private Network network;
 
     private VolleySingleton(Context context){
         // Specify the application context
+
         mContext = context;
         // Get the request queue
+
+
         mRequestQueue = getRequestQueue();
     }
 
@@ -35,7 +45,11 @@ public class VolleySingleton {
     public RequestQueue getRequestQueue(){
         // If RequestQueue is null the initialize new RequestQueue
         if(mRequestQueue == null){
-            mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
+//            volleyCache = new DiskBasedCache(mContext.getCacheDir(),1024*1024);
+//            network = new BasicNetwork(new HurlStack());
+//            mRequestQueue = new RequestQueue(volleyCache, network);
+//            mRequestQueue = Volley.newRequestQueue()
+             mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
         }
 
         // Return RequestQueue
