@@ -1,6 +1,7 @@
 package io.github.chaitya62.tripsharr;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
     String profile_user_id;
     User profileUser;
     TextView starsView,forksView;
+    Resources res;
 
     private void prepareFeeds(){
         String profileFeedUrl = "http://tripshare.codeadventure.in/TripShare/index.php/feed/profile/10" + "/0/" + profile_user_id + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1)) ;
@@ -89,6 +91,9 @@ public class ProfileActivity extends AppCompatActivity {
                     profileUser = new User();
                     profileUser.setId(Long.parseLong(profile_user_id));
                 }
+
+                String stars = res.getQuantityString(R.plurals.star_unit, (int)profileUser.getStars(),(int)profileUser.getStars());
+                String forks = res.getQuantityString(R.plurals.fork_unit, (int)profileUser.getForks(),(int)profileUser.getForks());
                 starsView.setText(profileUser.getStars() + getString(R.string.star_unit));
                 forksView.setText(profileUser.getForks() + getString(R.string.fork_unit));
 
@@ -116,6 +121,7 @@ public class ProfileActivity extends AppCompatActivity {
         profile_user_id  = Long.toString(i.getLongExtra("user_id",1));
         starsView = (TextView) findViewById(R.id.profile_stars);
         forksView = (TextView) findViewById(R.id.profile_forks);
+         res =  getResources();
 
 
         // preparing toolbar to be actionbar
