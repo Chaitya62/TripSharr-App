@@ -19,10 +19,8 @@ public class Trip implements Serializable{
     private long userId;
     private String name;
     private String description;
-    private Pair<Double, Double> startCoordinate;
-    private Pair<Double, Double> endCoordinate;
     private boolean isComplete,isPublic,isStarred;
-    private long noOfStars,noOfForks,ownerId;
+    private long noOfStars,noOfForks,ownerId, startCoordinateId, endCoordinateId;
 
 
     public Trip(){
@@ -31,10 +29,10 @@ public class Trip implements Serializable{
         name = "STuff";
         description = null;
         oldTripId = 0;
-        startCoordinate = new Pair<Double, Double>(-1.0 , -1.0);
-        endCoordinate = new Pair<Double, Double>(-1.0, -1.0);
         noOfStars = 0;
         noOfForks = 0;
+        startCoordinateId = 0;
+        endCoordinateId = 0;
         isComplete = false;
         isPublic = false;
         ownerId = 0;
@@ -53,13 +51,8 @@ public class Trip implements Serializable{
             userId = Long.parseLong(trip.get("user_id").toString());
             name = trip.get("name").toString();
             description = trip.get("description").toString();
-            double x,y;
-            x = Double.parseDouble(trip.get("start_x").toString());
-            y = Double.parseDouble(trip.get("start_y").toString());
-            startCoordinate = new Pair<Double, Double>(x, y);
-            x = Double.parseDouble(trip.get("end_x").toString());
-            y = Double.parseDouble(trip.get("end_y").toString());
-            endCoordinate = new Pair<Double, Double>(x, y);
+            startCoordinateId =  trip.getLong("start_coordinate_id");
+            endCoordinateId =   trip.getLong("end_coordinate_id");
             noOfStars = Long.parseLong(trip.get("no_of_stars").toString());
             noOfForks = Long.parseLong(trip.get("no_of_forks").toString());
             isComplete = Boolean.parseBoolean(trip.get("is_complete").toString());
@@ -79,13 +72,13 @@ public class Trip implements Serializable{
         }
     }
 
-    public Trip(long id, long userId, long oldTripId, String name, String description, Pair<Double, Double> startCoordinate, Pair<Double, Double> endCoordinate, boolean isComplete, boolean isPublic, long noOfStars, long noOfForks, long ownerId) {
+    public Trip(long id, long userId, long oldTripId, String name, String description, long startCoordinateId, long endCoordinateId, boolean isComplete, boolean isPublic, long noOfStars, long noOfForks, long ownerId) {
         this.id = id;
         this.userId = userId;
         this.name = name;
         this.description = description;
-        this.startCoordinate = startCoordinate;
-        this.endCoordinate = endCoordinate;
+        this.startCoordinateId = startCoordinateId;
+        this.endCoordinateId = endCoordinateId;
         this.isComplete = isComplete;
         this.isPublic = isPublic;
         this.oldTripId = oldTripId;
@@ -117,14 +110,6 @@ public class Trip implements Serializable{
         if(description != null){
             params.put("description", description);
         }else throw new Exception("must set description");
-        if(startCoordinate.first != -1.0 && startCoordinate.second != -1.0){
-            params.put("start_x", Double.toString(startCoordinate.first));
-            params.put("start_y", Double.toString(startCoordinate.second));
-        }else throw new Exception("Must set startCoordinate");
-        if( endCoordinate.first != -1.0 && endCoordinate.second != -1.0){
-            params.put("end_x", Double.toString(startCoordinate.first));
-            params.put("end_y", Double.toString(startCoordinate.second));
-        }else throw new Exception("Must set endCoordinate");
 
         return params;
     }
@@ -146,21 +131,8 @@ public class Trip implements Serializable{
     }
 
 
-    public Pair<Double, Double> getStartCoordinate() {
-        return startCoordinate;
-    }
 
-    public void setStartCoordinate(Pair<Double, Double> startCooridnate) {
-        this.startCoordinate = startCooridnate;
-    }
 
-    public Pair<Double, Double> getEndCoordinate() {
-        return endCoordinate;
-    }
-
-    public void setEndCoordinate(Pair<Double, Double> endCoordinate) {
-        this.endCoordinate = endCoordinate;
-    }
 
     public boolean isComplete() {
         return isComplete;
@@ -228,5 +200,22 @@ public class Trip implements Serializable{
 
     public void setStarred(boolean starred) {
         isStarred = starred;
+    }
+
+
+    public long getStartCoordinateId() {
+        return startCoordinateId;
+    }
+
+    public void setStartCoordinateId(long startCoordinateId) {
+        this.startCoordinateId = startCoordinateId;
+    }
+
+    public long getEndCoordinateId() {
+        return endCoordinateId;
+    }
+
+    public void setEndCoordinateId(long endCoordinateId) {
+        this.endCoordinateId = endCoordinateId;
     }
 }

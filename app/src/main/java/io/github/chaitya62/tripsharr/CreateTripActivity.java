@@ -59,8 +59,6 @@ public class CreateTripActivity extends NavigationActivity {
                 final Trip newTrip = new Trip();
                 newTrip.setName(tripName);
                 newTrip.setDescription("Added from phone");
-                newTrip.setEndCoordinate(new Pair<Double, Double>(231.3, 34.34));
-                newTrip.setStartCoordinate(new Pair<Double, Double>(231.3, 34.34));
                 newTrip.setUserId(SharedPrefs.getPrefs().getLong("user_id",1));
                 String url = "http://tripshare.codeadventure.in/TripShare/index.php/trip/add/";
                 Map<String, String> params = new HashMap<>();

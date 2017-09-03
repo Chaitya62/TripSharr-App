@@ -26,10 +26,8 @@ public class TripDB extends SQLiteOpenHelper {
                 "user_id integer NOT NULL," +
                 "name text NOT NULL," +
                 "description text," +
-                "start_x real NOT NULL,"+
-                "start_y real NOT NULL," +
-                "end_x real NOT NULL," +
-                "end_y real NOT NULL," +
+                "start_coordinate_id int DEFAULT 0"+
+                "end_coordinate_id int DEFAULT 0"+
                 "no_of_stars integer DEFAULT 0," +
                 "no_of_forks integer DEFAULT 0," +
                 "old_trip_id integer DEFAULT NULL," +
@@ -51,10 +49,8 @@ public class TripDB extends SQLiteOpenHelper {
         contentValues.put("user_id", trip.getUserId());
         contentValues.put("name", trip.getName());
         contentValues.put("description", trip.getDescription());
-        contentValues.put("start_x", trip.getStartCoordinate().first);
-        contentValues.put("start_y", trip.getStartCoordinate().second);
-        contentValues.put("end_x", trip.getEndCoordinate().first);
-        contentValues.put("end_y", trip.getEndCoordinate().second);
+        contentValues.put("start_coordinate_id", trip.getStartCoordinateId());
+        contentValues.put("end_coordinate_id", trip.getEndCoordinateId());
         contentValues.put("no_of_stars", trip.getNoOfStars());
         contentValues.put("no_of_forks", trip.getNoOfForks());
         contentValues.put("is_compete", trip.isComplete());
@@ -72,8 +68,6 @@ public class TripDB extends SQLiteOpenHelper {
         trip.setDescription(res.getString(res.getColumnIndex("description")));
         trip.setUserId(res.getLong(res.getColumnIndex("user_id")));
         trip.setOldTripId(res.getLong(res.getColumnIndex("old_trip_id")));
-        trip.setEndCoordinate(new Pair<>(res.getDouble(res.getColumnIndex("end_x")), res.getDouble(res.getColumnIndex("end_y"))));
-        trip.setStartCoordinate(new Pair<>(res.getDouble(res.getColumnIndex("start_x")), res.getDouble(res.getColumnIndex("start_y"))));
         trip.setNoOfStars(res.getLong(res.getColumnIndex("no_of_stars")));
         trip.setNoOfForks(res.getLong(res.getColumnIndex("no_of_forks")));
         return trip;
