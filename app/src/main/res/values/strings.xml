@@ -144,4 +144,6 @@ public class NavigationActivity extends AppCompatActivity {
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_test">Test</string>
     <string name="title_activity_ongoing_map">Map</string>
+    <string name="star_unit"> Stars</string>
+    <string name="fork_unit"> Forks</string>
 </resources>

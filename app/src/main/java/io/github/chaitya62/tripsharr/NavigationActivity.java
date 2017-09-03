@@ -232,6 +232,7 @@ public class NavigationActivity extends AppCompatActivity {
 
     public void goToProfileActivity(View view){
         Intent profile = new Intent(getApplicationContext(), ProfileActivity.class);
+        profile.putExtra("user_id",SharedPrefs.getPrefs().getLong("user_id", 1));
         startActivity(profile);
     }
 

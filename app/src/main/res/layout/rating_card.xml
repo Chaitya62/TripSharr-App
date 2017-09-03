@@ -34,6 +34,7 @@
                 android:layout_height="48dp" />
 
             <TextView
+                android:id="@+id/profile_stars"
                 android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,6 +60,7 @@
                 android:layout_height="48dp" />
 
             <TextView
+                android:id="@+id/profile_forks"
                 android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

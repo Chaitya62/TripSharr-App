@@ -111,7 +111,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.com_facebook_button_like_background);
         Trip trip = tripList.get(i);
         Log.i("STARRED : ", trip.isStarred()+"");
-        tripViewHolder.cName.setText(trip.getName());
+        tripViewHolder.cName.setText(trip.getUserName());
         tripViewHolder.cTitle.setText(trip.getName());
         tripViewHolder.cDesc.setText(trip.getDescription());
 

@@ -18,6 +18,7 @@ public class Trip implements Serializable{
     private long oldTripId;
     private long userId;
     private String name;
+    private String userName; // only for feeds not for database
     private String description;
     private boolean isComplete,isPublic,isStarred;
     private long noOfStars,noOfForks,ownerId, startCoordinateId, endCoordinateId;
@@ -31,6 +32,7 @@ public class Trip implements Serializable{
         oldTripId = 0;
         noOfStars = 0;
         noOfForks = 0;
+        userName = "";
         startCoordinateId = 0;
         endCoordinateId = 0;
         isComplete = false;
@@ -59,6 +61,7 @@ public class Trip implements Serializable{
             isPublic = Boolean.parseBoolean(trip.get("is_public").toString());
             try{
                 isStarred = trip.getBoolean("is_starred");
+                userName = trip.getString("user_name");
             }catch(Exception e){
                 Log.i("DEBUG :", "THIS WILL PRINT IF NOT TRIPS ARE NOT FEEDS");
             }
@@ -217,5 +220,9 @@ public class Trip implements Serializable{
 
     public void setEndCoordinateId(long endCoordinateId) {
         this.endCoordinateId = endCoordinateId;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

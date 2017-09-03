@@ -53,7 +53,9 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Trip trip = trips.get(position);
-        holder.textview.setText(trip.getName());
+        holder.cTitle.setText(trip.getName());
+        holder.cName.setText(trip.getUserName());
+        holder.cDesc.setText(trip.getDescription());
 
     }
 
@@ -63,11 +65,13 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
     }
 
     public static  class  ViewHolder extends RecyclerView.ViewHolder{
-        protected TextView textview;
+        protected TextView cTitle, cName, cDesc;
 
         public ViewHolder(View view){
             super(view);
-            textview = (TextView) view.findViewById(R.id.card_title);
+            cTitle = (TextView) view.findViewById(R.id.card_title);
+            cName = (TextView) view.findViewById(R.id.card_name);
+            cDesc = (TextView) view.findViewById(R.id.card_description);
         }
 
 
