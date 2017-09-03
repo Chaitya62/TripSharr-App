@@ -52,22 +52,24 @@ public class NavigationActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     private void prepareFeeds() {
-        VolleySingleton volleySingleton = VolleySingleton.getInstance(getApplicationContext());
-        int limit = 10;
+       int limit = 10;
         String url = "";
-        if(type == 0)
+        if(type == 0) {
             url = getResources().getString(R.string.host) + "index.php/feed/feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
-        if(type == 1)
-            url = getResources().getString(R.string.host) + "index.php/feed/starred_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type])   + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
-        if(type == 2)
-            url = getResources().getString(R.string.host) + "index.php/feed/forks_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type])  + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
-        Log.i("Debug", url);
+        }
+        else if(type == 1) {
+            url = getResources().getString(R.string.host) + "index.php/feed/starred_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
+        }
+        else if(type == 2) {
+            url = getResources().getString(R.string.host) + "index.php/feed/forks_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
+        }
+        Log.i("Url", url);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
 
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.i("Debug", response.toString());
+                        Log.i("URL ", response.toString());
                         loaded[type] += response.length();
                         for ( int i = 0; i<response.length(); i++ ) {
                             try {
@@ -91,7 +93,7 @@ public class NavigationActivity extends AppCompatActivity {
                     }
                 }
         );
-        volleySingleton.addToRequestQueue(jsonArrayRequest);
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonArrayRequest);
     }
 
     @Override
@@ -123,14 +125,18 @@ public class NavigationActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                loaded[type] = 0;
-                if(position == 0)
-                    type = 0;
-                if(position == 1)
-                    type = 1;
-                if(position == 2)
-                    type = 2;
+                Log.i("SPINNER", "CALLED");
                 ((FeedAdapter)recList.getAdapter()).clear();
+                loaded[type] = 0;
+                if(position == 0) {
+                    type = 0;
+                }
+                else if(position == 1) {
+                    type = 1;
+                }
+                else if(position == 2) {
+                    type = 2;
+                }
                 prepareFeeds();
             }
 
@@ -184,7 +190,7 @@ public class NavigationActivity extends AppCompatActivity {
                 return false;
             }
         });
-        prepareFeeds();
+        //prepareFeeds();
         View header = navigationView.getHeaderView(0);
             TextView name = (TextView) header.findViewById(R.id.profile_name);
             TextView email = (TextView)header.findViewById(R.id.profile_email);

@@ -21,7 +21,7 @@ public class Trip implements Serializable{
     private String description;
     private Pair<Double, Double> startCoordinate;
     private Pair<Double, Double> endCoordinate;
-    private boolean isComplete,isPublic;
+    private boolean isComplete,isPublic,isStarred;
     private long noOfStars,noOfForks,ownerId;
 
 
@@ -64,6 +64,11 @@ public class Trip implements Serializable{
             noOfForks = Long.parseLong(trip.get("no_of_forks").toString());
             isComplete = Boolean.parseBoolean(trip.get("is_complete").toString());
             isPublic = Boolean.parseBoolean(trip.get("is_public").toString());
+            try{
+                isStarred = trip.getBoolean("is_starred");
+            }catch(Exception e){
+                Log.i("DEBUG :", "THIS WILL PRINT IF NOT TRIPS ARE NOT FEEDS");
+            }
             if(!trip.get("old_trip_id").toString().equals("null"))
                 oldTripId = Long.parseLong(trip.get("old_trip_id").toString());
             if(!trip.get("owner_id").toString().equals("null"))
@@ -215,5 +220,13 @@ public class Trip implements Serializable{
 
     public void setOldTripId(long oldTripId) {
         this.oldTripId = oldTripId;
+    }
+
+    public boolean isStarred() {
+        return isStarred;
+    }
+
+    public void setStarred(boolean starred) {
+        isStarred = starred;
     }
 }

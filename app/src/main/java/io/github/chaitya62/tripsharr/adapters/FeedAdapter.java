@@ -31,13 +31,16 @@ import io.github.chaitya62.tripsharr.primeobjects.Trip;
  */
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder> {
-    private List<Trip> tripList;
+
+    // static for now
+    private  List<Trip> tripList;
     private Context context;
     private static AssetManager mgr;
 
     public FeedAdapter(Context context, List<Trip> tripList) {
         this.context = context;
         this.tripList = tripList;
+        notifyDataSetChanged();
         mgr = context.getAssets();
     }
 
@@ -53,6 +56,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         protected LottieAnimationView cStar;
 
 
+
         //protected ImageView cImage;
 
         public TripViewHolder(View v) {
@@ -62,37 +66,43 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
             cName = (TextView)  v.findViewById(R.id.card_name);
             cDesc = (TextView)  v.findViewById(R.id.card_description);
             cStar = (LottieAnimationView) v.findViewById(R.id.card_image);
+            cStar.setOnClickListener(this);
             //cImage = (ImageView) v.findViewById(R.id.card_image);
         }
+
+//        public void setIndex(int i){
+//            index = i;
+//        }
 
         @Override
         public void onClick(View view) {
             // handle multiple clicks
 
            if(view.getId() == cStar.getId()){
-               cStar.setAnimation(getJsonFile());
-               cStar.playAnimation();
+               //cStar.setAnimation(getJsonFile());
+
+
            }
         }
 
-        public JSONObject getJsonFile(){
-            InputStream is;
-            JSONObject jsonObj;
-            try{
-                is = mgr.open("star.json");
-                int size = is.available();
-                byte[] buffer = new byte[size];
-                is.read(buffer);
-                is.close();
-                String json = new String(buffer, "UTF-8");
-                jsonObj = new JSONObject(json);
-                return jsonObj;
-            }catch(Exception e){
-                e.printStackTrace();
-                Log.i("DEBUG: ","Resource not found!");
-            }
-            return null;
-        }
+//        public JSONObject getJsonFile(){
+//            InputStream is;
+//            JSONObject jsonObj;
+//            try{
+//                is = mgr.open("star.json");
+//                int size = is.available();
+//                byte[] buffer = new byte[size];
+//                is.read(buffer);
+//                is.close();
+//                String json = new String(buffer, "UTF-8");
+//                jsonObj = new JSONObject(json);
+//                return jsonObj;
+//            }catch(Exception e){
+//                e.printStackTrace();
+//                Log.i("DEBUG: ","Resource not found!");
+//            }
+//            return null;
+//        }
     }
 
     @Override
@@ -100,13 +110,42 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         Log.i("Debug", "onBindViewHolder");
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.com_facebook_button_like_background);
         Trip trip = tripList.get(i);
+        Log.i("STARRED : ", trip.isStarred()+"");
         tripViewHolder.cName.setText(trip.getName());
         tripViewHolder.cTitle.setText(trip.getName());
         tripViewHolder.cDesc.setText(trip.getDescription());
-        tripViewHolder.cStar.setImageBitmap(bitmap);
-        tripViewHolder.cStar.setOnClickListener(tripViewHolder);
+
+        //if(trip.isStarred()){
+          //  tripViewHolder.cStar.reverseAnimation();
+            //Log.i("NOT STARRED", "WRITE CODE TO SET DEFAULT STAR HERE");
+            //TODO add default star here
+        //}else {
+            //tripViewHolder.cStar.refreshDrawableState();
+//        //}
+//        tripViewHolder.cStar.setAnimation(getJsonFile());
+//
+//        tripViewHolder.cStar.setOnClickListener(tripViewHolder);
         //RoundedBitmapDrawable mDrawable = createRoundedBitmapDrawableWithBorder(BitmapFactory.decodeResource(context.getResources(), R.drawable.googleg_standard_color_18));
         //tripViewHolder.cImage.setImageDrawable(mDrawable);
+    }
+
+    public JSONObject getJsonFile(){
+        InputStream is;
+        JSONObject jsonObj;
+        try{
+            is = mgr.open("star.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+            jsonObj = new JSONObject(json);
+            return jsonObj;
+        }catch(Exception e){
+            e.printStackTrace();
+            Log.i("DEBUG: ","Resource not found!");
+        }
+        return null;
     }
 
 
@@ -129,7 +168,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
 
     public void clear() {
         tripList.clear();
-        notifyDataSetChanged();
+//        this.notifyAll();
+         this.notifyDataSetChanged();
     }
 
     private RoundedBitmapDrawable createRoundedBitmapDrawableWithBorder(Bitmap bitmap){
