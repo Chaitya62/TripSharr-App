@@ -37,7 +37,8 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
     private Cloudinary cloudinary;
     private int counter = 0;
 
-    public ExtendedAsyncTask(int callType) {
+    public ExtendedAsyncTask(Context mcontext,int callType) {
+        this.context = mcontext;
         this.callType = callType;
         if(callType == 1) {
             HashMap<String, String> config = new HashMap<>();
@@ -66,12 +67,14 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
         if(callType == 1) {
             Intent data = (Intent)params[0];
             Uri selectedImage = data.getData();
+            Log.i("STRING URL : ", selectedImage + "");
             try {
                 File file = new File(getRealPathFromURI(selectedImage));
                 String imageName= "upload_number"+counter;
                 counter = counter + 1;
                 cloudinary.uploader().upload(new FileInputStream(file), ObjectUtils.asMap("public_id", imageName));
                 String s = cloudinary.url().generate(imageName+".jpg");
+                Log.i("Image Url", s);
                 Message msg = handler.obtainMessage(0, s);
                 msg.sendToTarget();
                 Log.i("Image Url", s);
