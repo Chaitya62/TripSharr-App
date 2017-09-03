@@ -56,7 +56,7 @@ import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,LocationListener {
+        GoogleApiClient.OnConnectionFailedListener,LocationListener,GoogleMap.OnMarkerClickListener {
 
     private List<io.github.chaitya62.tripsharr.primeobjects.Coordinates> p = new ArrayList<>();
     private FloatingActionButton done,listview;
@@ -153,6 +153,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
@@ -167,6 +168,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         }
 
         mMap.clear();
+        mMap.setOnMarkerClickListener(this);
 
         prepareCheckpoints();
 
@@ -178,6 +180,60 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
 
 
+    }
+
+    private Marker drawMarkers(io.github.chaitya62.tripsharr.primeobjects.Coordinates ip){
+
+        Log.v("drawmark",""+ip.getPoint().first+" "+ip.getPoint().second);
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        // Setting latitude and longitude for the marker
+        Pair<Double,Double> pair = ip.getPoint();
+        LatLng point = new LatLng(pair.first,pair.second);
+        markerOptions.position(point);
+
+        // Setting title for the InfoWindow
+        markerOptions.title(ip.getName());
+
+        // Setting InfoWindow contents
+        markerOptions.snippet("Id: "+ip.getId());
+
+        markerOptions.anchor(0.5f,0.5f);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
+
+        return mMap.addMarker(markerOptions);
+
+    }
+
+    public void prepareCheckpoints(){
+        String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/coordinatesOf/"+tripid;
+        Log.v("maphello",url);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.v("maphello", "" + response);
+                        Trip trip;
+                        io.github.chaitya62.tripsharr.primeobjects.Coordinates coordinates;
+                        JSONObject jsonObject;
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+                                jsonObject = response.getJSONObject(i);
+                                coordinates = new io.github.chaitya62.tripsharr.primeobjects.Coordinates(jsonObject);
+                                drawMarkers(coordinates);
+                                Log.v("formap",""+response.get(i));
+                            }
+                        }
+                        catch (Exception e){}
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.v("hellerr",""+error);
+            }
+        });
+        VolleySingleton.getInstance(OngoingMapActivity.this).addToRequestQueue(jsonArrayRequest);
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -236,6 +292,18 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Intent i = new Intent(OngoingMapActivity.this,EditCheckpointActivity.class);
+        i.putExtra("Tripid",tripid);
+        String temp = marker.getSnippet();
+        temp = temp.substring(4,temp.length());
+        Log.v("temp",temp);
+        i.putExtra("Chkptid",temp);
+        startActivity(i);
+        return false;
     }
 
     public boolean checkLocationPermission(){
@@ -303,57 +371,5 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         }
     }
 
-    private Marker drawMarkers(io.github.chaitya62.tripsharr.primeobjects.Coordinates ip){
 
-        Log.v("drawmark",""+ip.getPoint().first+" "+ip.getPoint().second);
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        // Setting latitude and longitude for the marker
-        Pair<Double,Double> pair = ip.getPoint();
-        LatLng point = new LatLng(pair.first,pair.second);
-        markerOptions.position(point);
-
-        // Setting title for the InfoWindow
-        markerOptions.title(ip.getName());
-
-        // Setting InfoWindow contents
-        markerOptions.snippet("Latitude:"+point.latitude+",Longitude:"+point.longitude);
-
-        markerOptions.anchor(0.5f,0.5f);
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
-
-        return mMap.addMarker(markerOptions);
-
-    }
-
-    public void prepareCheckpoints(){
-        String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/coordinatesOf/"+tripid;
-        Log.v("maphello",url);
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.v("maphello", "" + response);
-                        Trip trip;
-                        io.github.chaitya62.tripsharr.primeobjects.Coordinates coordinates;
-                        JSONObject jsonObject;
-                        try {
-                            for (int i = 0; i < response.length(); i++) {
-                                jsonObject = response.getJSONObject(i);
-                                coordinates = new io.github.chaitya62.tripsharr.primeobjects.Coordinates(jsonObject);
-                                drawMarkers(coordinates);
-                                Log.v("formap",""+response.get(i));
-                            }
-                        }
-                        catch (Exception e){}
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.v("hellerr",""+error);
-            }
-        });
-        VolleySingleton.getInstance(OngoingMapActivity.this).addToRequestQueue(jsonArrayRequest);
-    }
 }
