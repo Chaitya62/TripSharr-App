@@ -1,5 +1,6 @@
 package io.github.chaitya62.tripsharr.ongoingtrips;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.chaitya62.tripsharr.R;
+import io.github.chaitya62.tripsharr.ViewTripActivity;
 import io.github.chaitya62.tripsharr.adapters.CheckpointAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Coordinates;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
@@ -76,7 +78,14 @@ public class CheckpointActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.v("uprespo : ",""+response);
-                        Toast.makeText(CheckpointActivity.this,"Congratulations!",Toast.LENGTH_SHORT).show();
+                        try {
+                            if (response.getString("request").equals("Success")) {
+                                Toast.makeText(CheckpointActivity.this, "Congratulations!", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(CheckpointActivity.this, ViewTripActivity.class);
+                                startActivity(i);
+                            }
+                        }
+                        catch (Exception e){}
                     }
                 }, new Response.ErrorListener() {
                     @Override
