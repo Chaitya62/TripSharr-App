@@ -94,8 +94,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                 String stars = res.getQuantityString(R.plurals.star_unit, (int)profileUser.getStars(),(int)profileUser.getStars());
                 String forks = res.getQuantityString(R.plurals.fork_unit, (int)profileUser.getForks(),(int)profileUser.getForks());
-                starsView.setText(profileUser.getStars() + getString(R.string.star_unit));
-                forksView.setText(profileUser.getForks() + getString(R.string.fork_unit));
+                starsView.setText(stars);
+                forksView.setText(forks);
 
             }
         }, new Response.ErrorListener() {
