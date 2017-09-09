@@ -107,7 +107,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
 
     @Override
     public void onBindViewHolder(TripViewHolder tripViewHolder, int i) {
-        Log.i("Debug", "onBindViewHolder");
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.com_facebook_button_like_background);
         Trip trip = tripList.get(i);
         Log.i("STARRED : ", trip.isStarred()+"");
@@ -168,8 +167,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
 
     public void clear() {
         tripList.clear();
-//        this.notifyAll();
-         this.notifyDataSetChanged();
+        Log.i("URL", "CLEAR CALLED "+tripList.size());
+        this.notifyDataSetChanged();
     }
 
     private RoundedBitmapDrawable createRoundedBitmapDrawableWithBorder(Bitmap bitmap){

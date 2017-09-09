@@ -20,7 +20,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
@@ -48,11 +50,12 @@ public class NavigationActivity extends AppCompatActivity {
     ActionBarDrawerToggle actionBarDrawerToggle;
     int type = 0;
     int loaded[] = new int[10];
-    ActionBar actionBar;
     Toolbar toolbar;
+    int feed_loading_flag = 0;
 
     private void prepareFeeds() {
        int limit = 10;
+        Log.i("URL", "prepareFeeds Called");
         String url = "";
         if(type == 0) {
             url = getResources().getString(R.string.host) + "index.php/feed/feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
@@ -63,14 +66,15 @@ public class NavigationActivity extends AppCompatActivity {
         else if(type == 2) {
             url = getResources().getString(R.string.host) + "index.php/feed/forks_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
         }
-        Log.i("Url", url);
+        Log.i("URL", url);
+        feed_loading_flag = 1;
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
-
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.i("URL ", response.toString());
+                        Log.i("URL", response.toString());
                         loaded[type] += response.length();
+                        feed_loading_flag = 0;
                         for ( int i = 0; i<response.length(); i++ ) {
                             try {
                                 ((FeedAdapter)recList.getAdapter()).add(new Trip(response.getJSONObject(i)));
@@ -93,6 +97,7 @@ public class NavigationActivity extends AppCompatActivity {
                     }
                 }
         );
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonArrayRequest);
     }
 
@@ -110,7 +115,8 @@ public class NavigationActivity extends AppCompatActivity {
                     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                         if(llm.findLastCompletelyVisibleItemPosition()==loaded[type]-1) {
                             Log.i("Debug", "At last element");
-                            prepareFeeds();
+                            if(feed_loading_flag == 0)
+                                prepareFeeds();
                         }
                     }
                 }
@@ -125,7 +131,7 @@ public class NavigationActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("SPINNER", "CALLED");
+                Log.i("URL", "SPINNER CALLED");
                 ((FeedAdapter)recList.getAdapter()).clear();
                 loaded[type] = 0;
                 if(position == 0) {
