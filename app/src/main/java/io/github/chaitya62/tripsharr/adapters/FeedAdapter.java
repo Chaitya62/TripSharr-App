@@ -162,7 +162,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
 
         tripViewHolder.star.setOnClickListener(tripViewHolder);
         //tripViewHolder.toggleStar(trip);
-        if(trip.isStarred())  tripViewHolder.star.setText("\uf005");
+        if(trip.isStarred())  tripViewHolder.star.setText("\uf006");
         else tripViewHolder.star.setText("\uf006");
         tripViewHolder.fork.setOnClickListener(tripViewHolder);
         tripViewHolder.setTrip(trip);
