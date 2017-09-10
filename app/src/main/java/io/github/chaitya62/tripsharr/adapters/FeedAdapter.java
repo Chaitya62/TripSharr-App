@@ -99,7 +99,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
 
            if(view.getId() == star.getId()){
                Log.i("CLICKED", "DID");
+                this.toggleStar(trip);
 
+               //TODO update trip on server
                //star.setImageDrawable();
 
            }else if(view.getId() == fork.getId()) {
