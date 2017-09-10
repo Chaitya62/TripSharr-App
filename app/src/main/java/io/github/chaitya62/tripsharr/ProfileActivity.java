@@ -2,6 +2,8 @@ package io.github.chaitya62.tripsharr;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,14 +12,17 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 import io.github.chaitya62.tripsharr.adapters.ProfileFeedAdapter;
@@ -90,6 +95,22 @@ public class ProfileActivity extends AppCompatActivity {
                 String forks = res.getQuantityString(R.plurals.fork_unit, (int)profileUser.getForks(),(int)profileUser.getForks());
                 starsView.setText(profileUser.getStars() + getString(R.string.star_unit));
                 forksView.setText(profileUser.getForks() + getString(R.string.fork_unit));
+                String profileUrl = "https://graph.facebook.com/"+profileUser.getFbId()+"/picture?height=400";
+                Log.i("URL", profileUrl);
+                final ImageView userPicture;
+                userPicture=(ImageView)findViewById(R.id.profile_pic);
+                ImageRequest imageRequest = new ImageRequest(profileUrl, new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        userPicture.setImageBitmap(response);
+                    }
+                }, 0, 0, null, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("URL", "In Volley Image Request Profile pic: "+error.toString());
+                    }
+                });
+                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(imageRequest);
 
             }
         }, new Response.ErrorListener() {
@@ -115,7 +136,7 @@ public class ProfileActivity extends AppCompatActivity {
         profile_user_id  = Long.toString(i.getLongExtra("user_id",1));
         starsView = (TextView) findViewById(R.id.profile_stars);
         forksView = (TextView) findViewById(R.id.profile_forks);
-         res =  getResources();
+        res =  getResources();
 
 
         // preparing toolbar to be actionbar

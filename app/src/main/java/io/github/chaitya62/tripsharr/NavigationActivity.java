@@ -196,7 +196,6 @@ public class NavigationActivity extends AppCompatActivity {
                 return false;
             }
         });
-        //prepareFeeds();
         View header = navigationView.getHeaderView(0);
             TextView name = (TextView) header.findViewById(R.id.profile_name);
             TextView email = (TextView)header.findViewById(R.id.profile_email);

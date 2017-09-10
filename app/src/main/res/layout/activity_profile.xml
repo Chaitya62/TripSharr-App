@@ -36,20 +36,18 @@
             >
 
 
-
-
             <ImageView
+                android:id="@+id/profile_pic"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:contentDescription="TEST IMAGE"
-                android:src="@drawable/images"
-                android:scaleType="centerCrop"
                 android:layout_gravity="start"
+                android:contentDescription="TEST IMAGE"
+                android:scaleType="centerCrop"
+                android:src="@drawable/images"
                 app:layout_collapseMode="parallax"
-                app:paddingStart="@dimen/activity_vertical_margin"
                 app:layout_collapseParallaxMultiplier="0.4"
 
-                />
+                app:paddingStart="@dimen/activity_vertical_margin" />
 
 
 
