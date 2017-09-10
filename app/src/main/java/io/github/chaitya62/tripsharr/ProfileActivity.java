@@ -3,6 +3,7 @@ package io.github.chaitya62.tripsharr;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import io.github.chaitya62.tripsharr.adapters.ProfileFeedAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.primeobjects.User;
+import io.github.chaitya62.tripsharr.utils.FontManager;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
@@ -144,7 +146,8 @@ public class ProfileActivity extends AppCompatActivity {
         starsView = (TextView) findViewById(R.id.profile_stars);
         forksView = (TextView) findViewById(R.id.profile_forks);
         res =  getResources();
-
+        Typeface iconFont = FontManager.getTypeface(getApplicationContext(), FontManager.FONTAWESOME);
+        FontManager.markAsIconContainer(findViewById(R.id.rating_card), iconFont);
 
         // preparing toolbar to be actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar_profile);

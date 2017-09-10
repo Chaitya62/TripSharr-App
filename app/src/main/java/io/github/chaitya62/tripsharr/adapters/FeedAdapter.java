@@ -1,6 +1,7 @@
 package io.github.chaitya62.tripsharr.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.List;
 
+import io.github.chaitya62.tripsharr.ProfileActivity;
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.FontManager;
@@ -64,7 +66,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         protected TextView c_no_of_stars;
         protected TextView c_no_of_forks;
         protected TextView star,fork;
-        protected LottieAnimationView cStar;
+        protected  View view;
+
         private Trip trip;
 
 
@@ -73,20 +76,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
 
         public TripViewHolder(View v) {
             super(v);
-
+            view = v;
             cTitle =  (TextView) v.findViewById(R.id.card_title);
             cName = (TextView)  v.findViewById(R.id.card_name);
             cDesc = (TextView)  v.findViewById(R.id.card_description);
-            cStar = (LottieAnimationView) v.findViewById(R.id.card_image);
             c_no_of_forks = (TextView) v.findViewById(R.id.no_of_forks);
             c_no_of_stars = (TextView) v.findViewById(R.id.no_of_stars);
-            cStar.setOnClickListener(this);
             star = (TextView) v.findViewById(R.id.star);
             fork = (TextView) v.findViewById(R.id.fork);
+
+
             Typeface iconFont = FontManager.getTypeface(v.getContext(), FontManager.FONTAWESOME);
             FontManager.markAsIconContainer(v, iconFont);
-            //star.setTypeface(FontManager.getTypeface(v.getContext(),FontManager.FONTAWESOME));
-            //cImage = (ImageView) v.findViewById(R.id.card_image);
         }
 
 //        public void setIndex(int i){
@@ -106,6 +107,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
 
            }else if(view.getId() == fork.getId()) {
                Toast.makeText(ctx, "Fork Clicked: "+trip.getId(), Toast.LENGTH_SHORT).show();
+           }else if(view.getId() == cName.getId()){
+               Intent profileIntent = new Intent(view.getContext(), ProfileActivity.class);
+               profileIntent.putExtra("user_id", trip.getUserId());
+               view.getContext().startActivity(profileIntent);
            }
         }
 
@@ -129,24 +134,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
             this.trip = trip;
         }
 
-//        public JSONObject getJsonFile(){
-//            InputStream is;
-//            JSONObject jsonObj;
-//            try{
-//                is = mgr.open("star.json");
-//                int size = is.available();
-//                byte[] buffer = new byte[size];
-//                is.read(buffer);
-//                is.close();
-//                String json = new String(buffer, "UTF-8");
-//                jsonObj = new JSONObject(json);
-//                return jsonObj;
-//            }catch(Exception e){
-//                e.printStackTrace();
-//                Log.i("DEBUG: ","Resource not found!");
-//            }
-//            return null;
-//        }
+
     }
 
     @Override
@@ -157,29 +145,21 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         tripViewHolder.cName.setText(trip.getUserName());
         tripViewHolder.cTitle.setText(trip.getName());
         tripViewHolder.cDesc.setText(trip.getDescription());
-
         tripViewHolder.c_no_of_forks.setText(""+trip.getNoOfForks());
         tripViewHolder.c_no_of_stars.setText(""+trip.getNoOfStars());
 
-
-        tripViewHolder.star.setOnClickListener(tripViewHolder);
-        //tripViewHolder.toggleStar(trip);
         if(trip.isStarred())  tripViewHolder.star.setText("\uf006");
         else tripViewHolder.star.setText("\uf006");
-        tripViewHolder.fork.setOnClickListener(tripViewHolder);
+
         tripViewHolder.setTrip(trip);
-        //if(trip.isStarred()){
-          //  tripViewHolder.cStar.reverseAnimation();
-            //Log.i("NOT STARRED", "WRITE CODE TO SET DEFAULT STAR HERE");
+
+        tripViewHolder.cName.setOnClickListener(tripViewHolder);
+        tripViewHolder.star.setOnClickListener(tripViewHolder);
+        tripViewHolder.fork.setOnClickListener(tripViewHolder);
+
+
             //TODO add default star here
-        //}else {
-            //tripViewHolder.cStar.refreshDrawableState();
-//        //}
-//        tripViewHolder.cStar.setAnimation(getJsonFile());
-//
-//        tripViewHolder.cStar.setOnClickListener(tripViewHolder);
-        //RoundedBitmapDrawable mDrawable = createRoundedBitmapDrawableWithBorder(BitmapFactory.decodeResource(context.getResources(), R.drawable.googleg_standard_color_18));
-        //tripViewHolder.cImage.setImageDrawable(mDrawable);
+
     }
 
     public JSONObject getJsonFile(){

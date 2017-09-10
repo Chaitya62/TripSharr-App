@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary"
+    android:id="@+id/trip_info"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,6 +25,7 @@
         android:src="@drawable/images" />
 
     <LinearLayout
+        android:padding= "10dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -34,8 +36,10 @@
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent">
-                <ImageView
-                    android:src="@drawable/star"
+                <TextView
+                    android:text="&#xf005;"
+                    android:textSize="48dp"
+                    android:gravity="center"
                     android:layout_gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="48dp" />
@@ -57,8 +61,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:src="@drawable/star"
+            <TextView
+                android:text="&#xf126;"
+                android:textSize="48dp"
+                android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="48dp" />
@@ -91,10 +97,10 @@
         android:onClick="viewMap"
         app:fabSize="mini"
         app:srcCompat="@android:drawable/ic_menu_compass"
-        android:layout_marginEnd="49dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginBottom="37dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="37dp" />
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
 
 

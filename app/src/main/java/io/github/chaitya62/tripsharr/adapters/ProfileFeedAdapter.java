@@ -1,6 +1,7 @@
 package io.github.chaitya62.tripsharr.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.FontManager;
 
 /**
  * Created by chaitya62 on 2/9/17.
@@ -76,6 +78,9 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
             cDesc = (TextView) view.findViewById(R.id.card_description);
             c_no_of_forks = (TextView) view.findViewById(R.id.no_of_forks);
             c_no_of_stars = (TextView) view.findViewById(R.id.no_of_stars);
+
+            Typeface iconFont = FontManager.getTypeface(view.getContext(), FontManager.FONTAWESOME);
+            FontManager.markAsIconContainer(view, iconFont);
         }
 
 

@@ -1,5 +1,6 @@
 package io.github.chaitya62.tripsharr;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -16,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.FontManager;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 /**
@@ -36,6 +38,8 @@ public class TripInfo extends NavigationActivity{
         super.onCreate(savedInstanceState);
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.activity_trip_info,frameLayout);
+        Typeface iconFont = FontManager.getTypeface(this, FontManager.FONTAWESOME);
+        FontManager.markAsIconContainer(findViewById(R.id.trip_info), iconFont);
 
         String url = getString(R.string.host)+"index.php/Trip/trips/"+ tripid;
         String mediaUrl = getString(R.string.host)+"index.php/Trip/random_media/"+tripid;
