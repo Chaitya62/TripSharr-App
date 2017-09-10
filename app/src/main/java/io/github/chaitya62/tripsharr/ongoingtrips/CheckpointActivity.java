@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -26,7 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.chaitya62.tripsharr.ClickListener;
 import io.github.chaitya62.tripsharr.R;
+import io.github.chaitya62.tripsharr.RecyclerTouchListener;
 import io.github.chaitya62.tripsharr.ViewTripActivity;
 import io.github.chaitya62.tripsharr.adapters.CheckpointAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Coordinates;
@@ -59,6 +62,19 @@ public class CheckpointActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(new CheckpointAdapter(getApplicationContext(),coordinatesList));
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Coordinates coordinates = coordinatesList.get(position);
+                Toast.makeText(CheckpointActivity.this,coordinates.getDescription(),Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(CheckpointActivity.this,EditCheckpointActivity.class);
+                i.putExtra("Tripid",""+coordinates.getTripId());
+                i.putExtra("Chkptid",""+coordinates.getId());
+                startActivity(i);
+            }
+
+        }));
 
         finishtrip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,5 +150,14 @@ public class CheckpointActivity extends AppCompatActivity {
             }
         });
         VolleySingleton.getInstance(CheckpointActivity.this).addToRequestQueue(jsonArrayRequest);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i=new Intent(CheckpointActivity.this,OngoingMapActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        finish();
     }
 }

@@ -53,13 +53,14 @@ import io.github.chaitya62.tripsharr.MapsActivity;
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.adapters.TripAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,LocationListener,GoogleMap.OnMarkerClickListener {
 
-    private List<io.github.chaitya62.tripsharr.primeobjects.Coordinates> p = new ArrayList<>();
-    private FloatingActionButton done,listview;
+    private List< HashMap<String,String>> p = new ArrayList<>();
+    private FloatingActionButton add,listview;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -72,7 +73,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ongoing_map);
-        done = (FloatingActionButton) findViewById(R.id.ongoing_done);
+        add = (FloatingActionButton) findViewById(R.id.ongoing_add);
         listview = (FloatingActionButton) findViewById(R.id.listview);
         tripid = getIntent().getStringExtra("Tripid");
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -83,9 +84,10 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        done.setOnClickListener(new View.OnClickListener() {
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
                 Log.v("map",getIntent().getStringExtra("Tripid"));
                 if(mLastLocation!=null)
@@ -97,6 +99,8 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                     coordinates.setTimestamp(Timestamp.valueOf(getDateTime()));
                     String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/add/";
                     Map<String,String> hp = new HashMap<>();
+                    Intent i = new Intent(OngoingMapActivity.this,AddCheckpointActivity.class);
+
                     try{
                         hp = coordinates.getParams();
                     }
@@ -104,19 +108,25 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                         e.printStackTrace();
                     }
                     JSONObject jsonObject = new JSONObject(hp);
-                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+                    Coordinates coordinates1 = new Coordinates();
+                    Log.v("maph",jsonObject.toString());
+                    i.putExtra("Chkptjson",jsonObject.toString());
+                    startActivity(i);
+                    /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            add.setVisibility(View.INVISIBLE);
                             Log.v("respoco",""+response);
                         }
                     },new Response.ErrorListener(){
                         @Override
                         public void onErrorResponse(VolleyError volleyError){
                             Log.v("errorco",""+volleyError);
+                            Toast.makeText(getApplicationContext(),"Error setting location",Toast.LENGTH_SHORT).show();
                         }
 
                     });
-                    VolleySingleton.getInstance(OngoingMapActivity.this).addToRequestQueue(jsonObjectRequest);
+                    VolleySingleton.getInstance(OngoingMapActivity.this).addToRequestQueue(jsonObjectRequest);*/
                 }
 
             }
@@ -248,6 +258,8 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onLocationChanged(Location location) {
 
+        if(add.getVisibility()==View.INVISIBLE)
+            add.setVisibility(View.VISIBLE);
         mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();

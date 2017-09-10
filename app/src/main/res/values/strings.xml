@@ -146,6 +146,7 @@ public class NavigationActivity extends AppCompatActivity {
     <string name="title_activity_ongoing_map">Map</string>
     <string name="star_unit">star</string>
     <string name="fork_unit">forks</string>
+    <string name="loading">Loading..</string>
     <plurals name="fork_unit">
         <item quantity="one">%d Fork</item>
         <item quantity="other">%d Forks</item>

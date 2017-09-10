@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@mipmap/ic_done_white_24dp"
-        android:id="@+id/ongoing_done"
+        android:src="@mipmap/ic_add_white_24dp"
+        android:id="@+id/ongoing_add"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"/>
     <android.support.design.widget.FloatingActionButton
