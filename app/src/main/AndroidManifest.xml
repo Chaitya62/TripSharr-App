@@ -105,6 +105,7 @@
             android:name=".ongoingtrips.OngoingMapActivity"
             android:label="@string/title_activity_ongoing_map"></activity>
         <activity android:name=".ongoingtrips.EditCheckpointActivity"/>
+        <activity android:name=".ongoingtrips.AddCheckpointActivity"/>
 
     </application>
 
