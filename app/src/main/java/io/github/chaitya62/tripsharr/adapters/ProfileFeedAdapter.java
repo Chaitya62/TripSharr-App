@@ -56,6 +56,8 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
         holder.cTitle.setText(trip.getName());
         holder.cName.setText(trip.getUserName());
         holder.cDesc.setText(trip.getDescription());
+        holder.c_no_of_forks.setText(trip.getNoOfForks() + "");
+        holder.c_no_of_stars.setText(trip.getNoOfStars() + "");
 
     }
 
@@ -65,13 +67,15 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
     }
 
     public static  class  ViewHolder extends RecyclerView.ViewHolder{
-        protected TextView cTitle, cName, cDesc;
+        protected TextView cTitle, cName, cDesc, c_no_of_stars, c_no_of_forks;
 
         public ViewHolder(View view){
             super(view);
             cTitle = (TextView) view.findViewById(R.id.card_title);
             cName = (TextView) view.findViewById(R.id.card_name);
             cDesc = (TextView) view.findViewById(R.id.card_description);
+            c_no_of_forks = (TextView) view.findViewById(R.id.no_of_forks);
+            c_no_of_stars = (TextView) view.findViewById(R.id.no_of_stars);
         }
 
 

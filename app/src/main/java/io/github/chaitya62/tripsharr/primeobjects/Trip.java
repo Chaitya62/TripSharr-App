@@ -55,6 +55,7 @@ public class Trip implements Serializable{
             description = trip.get("description").toString();
             startCoordinateId =  trip.getLong("start_coordinate_id");
             endCoordinateId =   trip.getLong("end_coordinate_id");
+           // Log.i("STARS : ", trip.get("no_of_stars")+"");
             noOfStars = Long.parseLong(trip.get("no_of_stars").toString());
             noOfForks = Long.parseLong(trip.get("no_of_forks").toString());
             isComplete = Boolean.parseBoolean(trip.get("is_complete").toString());

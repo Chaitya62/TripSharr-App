@@ -1,6 +1,7 @@
 package io.github.chaitya62.tripsharr;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 
 import io.github.chaitya62.tripsharr.utils.ExtendedAsyncTask;
+import io.github.chaitya62.tripsharr.utils.FontManager;
 
 public class BottomSheet extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,6 +32,8 @@ public class BottomSheet extends AppCompatActivity implements View.OnClickListen
         Button button1 = (Button) findViewById( R.id.button_1 );
         Button button2 = (Button) findViewById( R.id.button_2 );
         Button button3 = (Button) findViewById( R.id.button_3 );
+
+
 
          media = new ExtendedAsyncTask(getApplication(),1); //for media data
 
