@@ -3,6 +3,9 @@ package io.github.chaitya62.tripsharr;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +34,8 @@ public class ProfileActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     String profile_user_id;
     User profileUser;
+    Toolbar toolbar;
+    CollapsingToolbarLayout collapsingToolbarLayout;
     TextView starsView,forksView;
     Resources res;
 
@@ -79,6 +84,10 @@ public class ProfileActivity extends AppCompatActivity {
             public void onResponse(JSONArray response) {
                 try {
                     profileUser = new User(response.getJSONObject(0));
+                    collapsingToolbarLayout.setTitle(profileUser.getName());
+//                    toolbar.setTitle(profileUser.getName());
+//                    toolbar.setTitleTextColor(Color.RED);
+//                    setSupportActionBar(toolbar);
 
                 } catch (Exception e) {
                     Log.i("Error", "Problem with User JSONObject constructor");
@@ -119,10 +128,14 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         // preparing toolbar to be actionbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_profile);
-        toolbar.setTitle("HELLO WORLD");
-        toolbar.setTitleTextColor(Color.RED);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_profile);
+
+//        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
+//        appBarLayout.setBackgroundColor(Color.RED);
         setSupportActionBar(toolbar);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.colappsing_toolbar);
+    collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorAccent));
+
 
 
 
