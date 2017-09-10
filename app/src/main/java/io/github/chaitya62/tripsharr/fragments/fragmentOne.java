@@ -1,6 +1,7 @@
 package io.github.chaitya62.tripsharr.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -26,8 +28,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.chaitya62.tripsharr.ClickListener;
 import io.github.chaitya62.tripsharr.R;
+import io.github.chaitya62.tripsharr.RecyclerTouchListener;
+import io.github.chaitya62.tripsharr.TripInfo;
 import io.github.chaitya62.tripsharr.adapters.FragmentOneAdapter;
+import io.github.chaitya62.tripsharr.ongoingtrips.OnGoingTripActivity;
+import io.github.chaitya62.tripsharr.ongoingtrips.OngoingMapActivity;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
@@ -65,6 +72,18 @@ public class fragmentOne extends Fragment{
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(new FragmentOneAdapter(getApplicationContext(),list));
         //return inflater.inflate(R.layout.fragment_one, container, false);
+
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Trip trip = list.get(position);
+                Toast.makeText(getApplicationContext(),trip.getDescription(),Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(),TripInfo.class);
+                i.putExtra("Tripid",""+trip.getId());
+                startActivity(i);
+            }
+
+        }));
         return v;
 
     }

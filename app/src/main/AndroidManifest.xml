@@ -60,6 +60,10 @@
             android:label="View Trip" />
 
         <activity
+            android:name=".TripInfo"
+            android:label="Trip Info" />
+
+        <activity
             android:name=".ongoingtrips.OnGoingTripActivity"
             android:label="On-Going Trip" />
         <activity
