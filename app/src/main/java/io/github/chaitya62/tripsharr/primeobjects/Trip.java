@@ -20,7 +20,7 @@ public class Trip implements Serializable{
     private String name;
     private String userName; // only for feeds not for database
     private String description;
-    private boolean isComplete,isPublic,isStarred;
+    private boolean isComplete,isPublic,isStarred, isForked;
     private long noOfStars,noOfForks,ownerId, startCoordinateId, endCoordinateId;
 
 
@@ -61,6 +61,7 @@ public class Trip implements Serializable{
             isComplete = Boolean.parseBoolean(trip.get("is_complete").toString());
             isPublic = Boolean.parseBoolean(trip.get("is_public").toString());
             try{
+                isForked = trip.getBoolean("is_forked");
                 isStarred = trip.getBoolean("is_starred");
                 userName = trip.getString("user_name");
             }catch(Exception e){
@@ -225,5 +226,13 @@ public class Trip implements Serializable{
 
     public String getUserName() {
         return userName;
+    }
+
+    public boolean isForked() {
+        return isForked;
+    }
+
+    public void setForked(boolean forked) {
+        isForked = forked;
     }
 }

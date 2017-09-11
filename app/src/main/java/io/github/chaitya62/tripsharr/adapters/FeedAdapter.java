@@ -21,16 +21,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 
 import io.github.chaitya62.tripsharr.ProfileActivity;
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.FontManager;
+import io.github.chaitya62.tripsharr.utils.SharedPrefs;
+import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 /**
  * Created by ankit on 30/8/17.
@@ -106,7 +113,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
                //star.setImageDrawable();
 
            }else if(view.getId() == fork.getId()) {
-               Toast.makeText(ctx, "Fork Clicked: "+trip.getId(), Toast.LENGTH_SHORT).show();
+               this.toggleFork(trip);
+               //Toast.makeText(ctx, "Fork Clicked: "+trip.getId(), Toast.LENGTH_SHORT).show();
            }else if(view.getId() == cName.getId()){
                Intent profileIntent = new Intent(view.getContext(), ProfileActivity.class);
                profileIntent.putExtra("user_id", trip.getUserId());
@@ -116,20 +124,115 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
 
         public void toggleStar(Trip trip){
             if(trip.isStarred()){
-                this.star.setText("\uf005");
-                this.star.setTextColor(Color.rgb(255,234,0));
-                //Toast.makeText(ctx, "Star Clicked: "+trip.getId(), Toast.LENGTH_SHORT).show();
-                trip.setStarred(false);
-            }else{
                 this.star.setText("\uf006");
                 this.star.setTextColor(Color.BLACK);
                 //Toast.makeText(ctx, "Star Clicked: "+trip.getId(), Toast.LENGTH_SHORT).show();
+                trip.setStarred(false);
+
+            }else{
+
+                this.star.setText("\uf005");
+                this.star.setTextColor(Color.rgb(255,234,0));
+                //Toast.makeText(ctx, "Star Clicked: "+trip.getId(), Toast.LENGTH_SHORT).show();
                 trip.setStarred(true);
+
             }
+
+            setStarOnServer(trip);
+
 
         }
 
+        private void setForkState(Trip trip){
+            if(trip.isForked()){
+                this.fork.setTextColor(Color.rgb(0,0,225));
+            }else{
+                this.fork.setTextColor(Color.BLACK);
+            }
+        }
 
+        private void toggleFork(Trip trip){
+            if(!trip.isForked()){
+                this.fork.setTextColor(Color.rgb(0, 0, 225));
+                trip.setForked(true);
+                setForkOnServer(trip);
+            }
+        }
+
+        private void setForkOnServer(final Trip Forking_trip){
+            String fork_url = ctx.getString(R.string.host);
+            fork_url +=  "index.php/trip/fork/";
+
+            final HashMap<String, String> starred_Trip = new HashMap<>();
+            starred_Trip.put("user_id", SharedPrefs.getPrefs().getLong("user_id", 1)+"");
+            starred_Trip.put("trip_id", Forking_trip.getId()+"");
+            JsonObjectRequest forkRequest = new JsonObjectRequest(Request.Method.POST, fork_url, new JSONObject(starred_Trip), new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.i("URL",response.toString());
+                    if(Forking_trip.isStarred()){
+                        trip.setNoOfForks(trip.getNoOfForks()+1);
+                        c_no_of_forks.setText(trip.getNoOfForks()+"");
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.i("Forking ERROR ", "ERROr IN VOLLEY SERER HUGA "+error.toString());
+                    Toast.makeText(ctx, "Something went wrong, try again!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            VolleySingleton.getInstance(ctx).addToRequestQueue(forkRequest);
+
+        }
+
+        private void setStarOnServer(final Trip Starring_trip){
+            String star_url = ctx.getString(R.string.host);
+
+            if(Starring_trip.isStarred()){
+                star_url +=  "index.php/trip/star/";
+            }else{
+                star_url +=  "index.php/trip/unstar/";
+            }
+            final HashMap<String, String> starred_Trip = new HashMap<>();
+            starred_Trip.put("user_id", SharedPrefs.getPrefs().getLong("user_id", 1)+"");
+            starred_Trip.put("trip_id", Starring_trip.getId()+"");
+            JsonObjectRequest starRequest = new JsonObjectRequest(Request.Method.POST, star_url, new JSONObject(starred_Trip), new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                        Log.i("URL",response.toString());
+                        if(Starring_trip.isStarred()){
+                            trip.setNoOfStars(trip.getNoOfStars()+1);
+                            c_no_of_stars.setText(trip.getNoOfStars()+"");
+                        }else{
+                            trip.setNoOfStars(trip.getNoOfStars()-1);
+                            Log.i("DEBUG", "In Stars"+trip.getNoOfStars());
+                            c_no_of_stars.setText(trip.getNoOfStars()+"");
+                        }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                        Log.i("STARRING ERROR ", "ERROr IN VOLLEY SERER HUGA "+error.toString());
+                        Toast.makeText(ctx, "Something went wrong, try again!", Toast.LENGTH_SHORT).show();
+                    }
+            });
+
+            VolleySingleton.getInstance(ctx).addToRequestQueue(starRequest);
+        }
+
+        private void setStarState(Trip trip){
+            if(trip.isStarred()){
+                this.star.setText("\uf005");
+                this.star.setTextColor(Color.rgb(255,234,0));
+            }else{
+                this.star.setText("\uf006");
+                this.star.setTextColor(Color.BLACK);
+            }
+
+
+        }
         public void setTrip(Trip trip) {
             this.trip = trip;
         }
@@ -152,6 +255,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         else tripViewHolder.star.setText("\uf006");
 
         tripViewHolder.setTrip(trip);
+        tripViewHolder.setStarState(trip);
+        tripViewHolder.setForkState(trip);
 
         tripViewHolder.cName.setOnClickListener(tripViewHolder);
         tripViewHolder.star.setOnClickListener(tripViewHolder);
