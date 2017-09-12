@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             //Logged.. Update Access Token..
+            setContentView(R.layout.loading);
             updateWithToken(AccessToken.getCurrentAccessToken());
         }
     }

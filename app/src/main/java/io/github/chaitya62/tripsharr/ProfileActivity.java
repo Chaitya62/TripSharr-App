@@ -43,7 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
     Resources res;
 
     private void prepareFeeds(){
-        String profileFeedUrl = "http://tripshare.codeadventure.in/TripShare/index.php/feed/profile/10" + "/0/" + profile_user_id + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1)) ;
+        String profileFeedUrl = getString(R.string.host)+"index.php/feed/profile/10" + "/0/" + profile_user_id + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1)) ;
         Log.i("Profile FEED Url : ", profileFeedUrl);
         JsonArrayRequest profileFeedRequest = new JsonArrayRequest(profileFeedUrl, new Response.Listener<JSONArray>() {
             @Override
