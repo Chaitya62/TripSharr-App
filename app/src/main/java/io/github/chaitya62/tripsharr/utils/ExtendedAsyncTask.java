@@ -125,6 +125,15 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
             request.executeAndWait();
             return null;
         }
+        else if (callType == 3) {
+            while(true) {
+                if(SharedPrefs.isNetworkAvailable()) {
+                    Message message = handler.obtainMessage(0);
+                    message.sendToTarget();
+                    break;
+                }
+            }
+        }
         return null;
     }
 

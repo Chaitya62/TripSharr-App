@@ -142,6 +142,23 @@ public class MainActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         super.onCreate(savedInstanceState);
         //Check if already logged in..
+        if(!SharedPrefs.isNetworkAvailable()) {
+            Log.i("ERROR", "Network Unavailable");
+            setContentView(R.layout.loading);
+            Handler handler = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    startApp();
+                }
+            };
+        } else {
+            startApp();
+        }
+        // Past this point Internet is available..
+    }
+
+    private void startApp() {
         boolean checkFlag = false;
         try{
             AccessToken.getCurrentAccessToken().toString();
