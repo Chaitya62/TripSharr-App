@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
             if(!SharedPrefs.isNetworkAvailable()) {
                 Intent i = new Intent(getApplication(), NavigationActivity.class);
                 startActivity(i);
+                finish();
             }
             setContentView(R.layout.loading);
             updateWithToken(AccessToken.getCurrentAccessToken());

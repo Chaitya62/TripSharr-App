@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -52,9 +53,12 @@ public class NavigationActivity extends AppCompatActivity {
     int loaded[] = new int[10];
     Toolbar toolbar;
     int feed_loading_flag = 0;
+    int progress_bar_flag = 0;
+    ProgressBar progressBar = null;
 
     private void prepareFeeds() {
-       int limit = 10;
+        feed_loading_flag = 1;
+        int limit = 10;
         Log.i("URL", "prepareFeeds Called");
         String url = "";
         if(type == 0) {
@@ -67,7 +71,6 @@ public class NavigationActivity extends AppCompatActivity {
             url = getResources().getString(R.string.host) + "index.php/feed/forks_feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
         }
         Log.i("URL", url);
-        feed_loading_flag = 1;
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -75,6 +78,9 @@ public class NavigationActivity extends AppCompatActivity {
                         Log.i("URL", response.toString());
                         loaded[type] += response.length();
                         feed_loading_flag = 0;
+                        progress_bar_flag = 0;
+                        if(progressBar != null)
+                            progressBar.setVisibility(View.GONE);
                         for ( int i = 0; i<response.length(); i++ ) {
                             try {
                                 ((FeedAdapter)recList.getAdapter()).add(new Trip(response.getJSONObject(i)));
@@ -107,6 +113,8 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
         res = getResources();
         recList = (RecyclerView) findViewById(R.id.cardList);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_feeds);
+        progressBar.setVisibility(View.GONE);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.addOnScrollListener(
@@ -117,6 +125,21 @@ public class NavigationActivity extends AppCompatActivity {
                             Log.i("Debug", "At last element");
                             if(feed_loading_flag == 0)
                                 prepareFeeds();
+                        }
+                        if(llm.findFirstCompletelyVisibleItemPosition()==0) {
+                            Log.i("Debug", "Scrolled on Top "+progress_bar_flag);
+                            if(progress_bar_flag == 1) {
+                                progressBar.setVisibility(View.VISIBLE);
+                                loaded[type] = 0;
+                                if(feed_loading_flag == 0) {
+                                    ((FeedAdapter)recList.getAdapter()).clear();
+                                    prepareFeeds();
+                                }
+                            }
+                            else {
+                                progress_bar_flag = 1;
+                                Log.i("Debug", "First element "+progress_bar_flag);
+                            }
                         }
                     }
                 }
