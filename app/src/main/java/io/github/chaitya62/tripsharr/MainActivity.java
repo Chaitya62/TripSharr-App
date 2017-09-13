@@ -142,19 +142,7 @@ public class MainActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         super.onCreate(savedInstanceState);
         //Check if already logged in..
-        if(!SharedPrefs.isNetworkAvailable()) {
-            Log.i("ERROR", "Network Unavailable");
-            setContentView(R.layout.loading);
-            Handler handler = new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                    startApp();
-                }
-            };
-        } else {
-            startApp();
-        }
+        startApp();
         // Past this point Internet is available..
     }
 
@@ -197,6 +185,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             //Logged.. Update Access Token..
+            if(!SharedPrefs.isNetworkAvailable()) {
+                Intent i = new Intent(getApplication(), NavigationActivity.class);
+                startActivity(i);
+            }
             setContentView(R.layout.loading);
             updateWithToken(AccessToken.getCurrentAccessToken());
         }
