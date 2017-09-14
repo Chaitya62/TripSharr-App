@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,7 @@ public class NavigationActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     static Resources res;
     RecyclerView recList;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     int type = 0;
     int loaded[] = new int[10];
@@ -78,7 +80,7 @@ public class NavigationActivity extends AppCompatActivity {
                         Log.i("URL", response.toString());
                         loaded[type] += response.length();
                         feed_loading_flag = 0;
-                        progress_bar_flag = 0;
+                        mSwipeRefreshLayout.setRefreshing(false);
                         if(progressBar != null)
                             progressBar.setVisibility(View.GONE);
                         for ( int i = 0; i<response.length(); i++ ) {
@@ -113,6 +115,16 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
         res = getResources();
         recList = (RecyclerView) findViewById(R.id.cardList);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.loader_feed);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loaded[type] = 0;
+                ((FeedAdapter)recList.getAdapter()).clear();
+                prepareFeeds();
+            }
+        });
         progressBar = (ProgressBar) findViewById(R.id.progress_bar_feeds);
         progressBar.setVisibility(View.GONE);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -125,21 +137,6 @@ public class NavigationActivity extends AppCompatActivity {
                             Log.i("Debug", "At last element");
                             if(feed_loading_flag == 0)
                                 prepareFeeds();
-                        }
-                        if(llm.findFirstCompletelyVisibleItemPosition()==0) {
-                            Log.i("Debug", "Scrolled on Top "+progress_bar_flag);
-                            if(progress_bar_flag == 1) {
-                                progressBar.setVisibility(View.VISIBLE);
-                                loaded[type] = 0;
-                                if(feed_loading_flag == 0) {
-                                    ((FeedAdapter)recList.getAdapter()).clear();
-                                    prepareFeeds();
-                                }
-                            }
-                            else {
-                                progress_bar_flag = 1;
-                                Log.i("Debug", "First element "+progress_bar_flag);
-                            }
                         }
                     }
                 }

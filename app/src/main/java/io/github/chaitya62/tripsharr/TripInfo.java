@@ -14,7 +14,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.FontManager;
@@ -27,7 +26,6 @@ import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 public class TripInfo extends NavigationActivity{
 
     private String tripid;
-    private Trip trip;
     private String s[] = new String[5];
     public void viewMap(View view) {
         Toast.makeText(TripInfo.this, "We did it!", Toast.LENGTH_SHORT).show();

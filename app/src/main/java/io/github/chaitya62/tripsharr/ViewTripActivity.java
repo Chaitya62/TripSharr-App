@@ -1,23 +1,18 @@
 package io.github.chaitya62.tripsharr;
 
-import android.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
 import android.widget.FrameLayout;
-import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.chaitya62.tripsharr.R;
-import io.github.chaitya62.tripsharr.fragments.*;
+import io.github.chaitya62.tripsharr.fragments.fragmentOne;
+import io.github.chaitya62.tripsharr.fragments.fragmentTwo;
 
 /**
  * Created by mikasa on 27/8/17.
