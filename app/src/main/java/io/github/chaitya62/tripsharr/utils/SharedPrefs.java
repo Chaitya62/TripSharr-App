@@ -13,19 +13,10 @@ import android.net.NetworkInfo;
  */
 
 public class SharedPrefs {
-    private static Context context;
     private static SharedPreferences pref;
     private static Editor editor;
 
-    public static boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
     public SharedPrefs(Context context) {
-        SharedPrefs.context = context;
         pref = context.getSharedPreferences("MetaData", 0);
         editor = pref.edit();
     }

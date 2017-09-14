@@ -21,6 +21,7 @@ import java.util.Arrays;
 
 import io.github.chaitya62.tripsharr.primeobjects.User;
 import io.github.chaitya62.tripsharr.utils.ExtendedAsyncTask;
+import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleyWrapperUser;
 
@@ -137,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getApplicationContext());
-        new SharedPrefs(getApplication());
+        new SharedPrefs(getApplicationContext());
+        new NetworkUtils(getApplicationContext());
         //LoginManager.getInstance().logOut();
         callbackManager = CallbackManager.Factory.create();
         super.onCreate(savedInstanceState);
@@ -185,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             //Logged.. Update Access Token..
-            if(!SharedPrefs.isNetworkAvailable()) {
+            if(!NetworkUtils.isNetworkAvailable()) {
                 Intent i = new Intent(getApplication(), NavigationActivity.class);
                 startActivity(i);
                 finish();

@@ -6,13 +6,11 @@
         android:name="io.github.chaitya62.tripsharr.pn.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-
-
     <uses-permission android:name="io.github.chatiya62.tripsharr.pn.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -54,15 +52,12 @@
             android:label="Create Trip"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".NavigationActivity" />
-
         <activity
             android:name=".ViewTripActivity"
             android:label="View Trip" />
-
         <activity
             android:name=".TripInfo"
             android:label="Trip Info" />
-
         <activity
             android:name=".ongoingtrips.OnGoingTripActivity"
             android:label="On-Going Trip" />
@@ -103,10 +98,10 @@
         <activity android:name=".BottomSheet" />
         <activity
             android:name=".ongoingtrips.OngoingMapActivity"
-            android:label="@string/title_activity_ongoing_map"></activity>
-        <activity android:name=".ongoingtrips.EditCheckpointActivity"/>
-        <activity android:name=".ongoingtrips.AddCheckpointActivity"/>
-
+            android:label="@string/title_activity_ongoing_map" />
+        <activity android:name=".ongoingtrips.EditCheckpointActivity" />
+        <activity android:name=".ongoingtrips.AddCheckpointActivity" />
+        <activity android:name=".ViewTripTimeLine"></activity>
     </application>
 
 </manifest>

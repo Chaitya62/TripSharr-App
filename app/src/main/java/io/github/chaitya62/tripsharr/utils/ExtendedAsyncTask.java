@@ -127,7 +127,7 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
         }
         else if (callType == 3) {
             while(true) {
-                if(SharedPrefs.isNetworkAvailable()) {
+                if(NetworkUtils.isNetworkAvailable()) {
                     Message message = handler.obtainMessage(0);
                     message.sendToTarget();
                     break;

@@ -1,21 +1,24 @@
 package io.github.chaitya62.tripsharr;
 
+import android.Manifest;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.media.Image;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import io.github.chaitya62.tripsharr.utils.ExtendedAsyncTask;
-import io.github.chaitya62.tripsharr.utils.FontManager;
 
 public class BottomSheet extends AppCompatActivity implements View.OnClickListener {
 
@@ -32,8 +35,6 @@ public class BottomSheet extends AppCompatActivity implements View.OnClickListen
         Button button1 = (Button) findViewById( R.id.button_1 );
         Button button2 = (Button) findViewById( R.id.button_2 );
         Button button3 = (Button) findViewById( R.id.button_3 );
-
-
 
          media = new ExtendedAsyncTask(getApplication(),1); //for media data
 
@@ -61,7 +62,6 @@ public class BottomSheet extends AppCompatActivity implements View.OnClickListen
         });
     }
 
-
     @Override
     public void onClick(View v) {
         switch( v.getId() ) {
@@ -70,17 +70,34 @@ public class BottomSheet extends AppCompatActivity implements View.OnClickListen
                 break;
             }
             case R.id.button_2:{
-                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                getIntent.setType("image/*");
-
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setType("image/*");
-
-                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-                startActivityForResult(chooserIntent, 1);
+                int checkPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+                if(checkPermission == PackageManager.PERMISSION_DENIED ) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    }
+                } else {
+                    Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(i, 1);
+                }
             }
+            case R.id.button_3:{
+                Intent i = new Intent(getApplicationContext(), ViewTripTimeLine.class);
+                i.putExtra("tripId", (long)17);
+                startActivity(i);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(i, 1);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Permission is required for this feature", Toast.LENGTH_LONG).show();
+                }
         }
     }
 
