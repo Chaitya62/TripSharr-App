@@ -6,14 +6,13 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,9 +23,9 @@ import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.facebook.login.LoginManager;
 
 import org.json.JSONArray;
 
@@ -37,8 +36,6 @@ import io.github.chaitya62.tripsharr.ongoingtrips.OnGoingTripActivity;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
-
-import com.facebook.login.LoginManager;
 
 /**
  * Created by mikasa on 26/8/17.
@@ -55,7 +52,6 @@ public class NavigationActivity extends AppCompatActivity {
     int loaded[] = new int[10];
     Toolbar toolbar;
     int feed_loading_flag = 0;
-    int progress_bar_flag = 0;
     ProgressBar progressBar = null;
 
     private void prepareFeeds() {
@@ -125,8 +121,6 @@ public class NavigationActivity extends AppCompatActivity {
                 prepareFeeds();
             }
         });
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar_feeds);
-        progressBar.setVisibility(View.GONE);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.addOnScrollListener(

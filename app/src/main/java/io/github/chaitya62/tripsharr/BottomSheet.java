@@ -79,11 +79,13 @@ public class BottomSheet extends AppCompatActivity implements View.OnClickListen
                     Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(i, 1);
                 }
+                break;
             }
             case R.id.button_3:{
                 Intent i = new Intent(getApplicationContext(), ViewTripTimeLine.class);
                 i.putExtra("tripId", (long)17);
                 startActivity(i);
+                break;
             }
         }
     }
