@@ -52,7 +52,6 @@ public class NavigationActivity extends AppCompatActivity {
     int loaded[] = new int[10];
     Toolbar toolbar;
     int feed_loading_flag = 0;
-    ProgressBar progressBar = null;
 
     private void prepareFeeds() {
         feed_loading_flag = 1;
@@ -77,8 +76,6 @@ public class NavigationActivity extends AppCompatActivity {
                         loaded[type] += response.length();
                         feed_loading_flag = 0;
                         mSwipeRefreshLayout.setRefreshing(false);
-                        if(progressBar != null)
-                            progressBar.setVisibility(View.GONE);
                         for ( int i = 0; i<response.length(); i++ ) {
                             try {
                                 ((FeedAdapter)recList.getAdapter()).add(new Trip(response.getJSONObject(i)));
