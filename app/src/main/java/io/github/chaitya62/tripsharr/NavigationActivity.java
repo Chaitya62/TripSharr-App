@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import io.github.chaitya62.tripsharr.adapters.FeedAdapter;
 import io.github.chaitya62.tripsharr.ongoingtrips.OnGoingTripActivity;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
@@ -58,6 +60,13 @@ public class NavigationActivity extends AppCompatActivity {
         int limit = 10;
         Log.i("URL", "prepareFeeds Called");
         String url = "";
+        if(!NetworkUtils.isNetworkAvailable()) {
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.coordinator_feeds), "No Internet Connection", Snackbar.LENGTH_LONG);
+            snackbar.show();
+            mSwipeRefreshLayout.setRefreshing(false);
+            return;
+        }
         if(type == 0) {
             url = getResources().getString(R.string.host) + "index.php/feed/feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
         }
@@ -113,6 +122,7 @@ public class NavigationActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                Log.i("Debug", "On Refresh");
                 loaded[type] = 0;
                 ((FeedAdapter)recList.getAdapter()).clear();
                 prepareFeeds();
@@ -208,13 +218,13 @@ public class NavigationActivity extends AppCompatActivity {
             }
         });
         View header = navigationView.getHeaderView(0);
-            TextView name = (TextView) header.findViewById(R.id.profile_name);
-            TextView email = (TextView)header.findViewById(R.id.profile_email);
-            name.setText(SharedPrefs.getPrefs().getString("user_name", null));
-            if(!SharedPrefs.getPrefs().getString("email", null).equals("unavailable"))
-                email.setText(SharedPrefs.getPrefs().getString("email", null));
-            else
-                email.setText("");
+        TextView name = (TextView) header.findViewById(R.id.profile_name);
+        TextView email = (TextView)header.findViewById(R.id.profile_email);
+        name.setText(SharedPrefs.getPrefs().getString("user_name", null));
+        if(!SharedPrefs.getPrefs().getString("email", null).equals("unavailable"))
+            email.setText(SharedPrefs.getPrefs().getString("email", null));
+        else
+            email.setText("");
     }
 
     @Override
