@@ -4,16 +4,16 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,9 +24,9 @@ import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.facebook.login.LoginManager;
 
 import org.json.JSONArray;
 
@@ -35,10 +35,9 @@ import java.util.ArrayList;
 import io.github.chaitya62.tripsharr.adapters.FeedAdapter;
 import io.github.chaitya62.tripsharr.ongoingtrips.OnGoingTripActivity;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
-
-import com.facebook.login.LoginManager;
 
 /**
  * Created by mikasa on 26/8/17.
@@ -55,14 +54,19 @@ public class NavigationActivity extends AppCompatActivity {
     int loaded[] = new int[10];
     Toolbar toolbar;
     int feed_loading_flag = 0;
-    int progress_bar_flag = 0;
-    ProgressBar progressBar = null;
 
     private void prepareFeeds() {
         feed_loading_flag = 1;
         int limit = 10;
         Log.i("URL", "prepareFeeds Called");
         String url = "";
+        if(!NetworkUtils.isNetworkAvailable()) {
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.coordinator_feeds), "No Internet Connection", Snackbar.LENGTH_LONG);
+            snackbar.show();
+            mSwipeRefreshLayout.setRefreshing(false);
+            return;
+        }
         if(type == 0) {
             url = getResources().getString(R.string.host) + "index.php/feed/feeds/" + Integer.toString(limit) + "/" + Integer.toString(loaded[type]) + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1));
         }
@@ -81,8 +85,6 @@ public class NavigationActivity extends AppCompatActivity {
                         loaded[type] += response.length();
                         feed_loading_flag = 0;
                         mSwipeRefreshLayout.setRefreshing(false);
-                        if(progressBar != null)
-                            progressBar.setVisibility(View.GONE);
                         for ( int i = 0; i<response.length(); i++ ) {
                             try {
                                 ((FeedAdapter)recList.getAdapter()).add(new Trip(response.getJSONObject(i)));
@@ -120,13 +122,12 @@ public class NavigationActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                Log.i("Debug", "On Refresh");
                 loaded[type] = 0;
                 ((FeedAdapter)recList.getAdapter()).clear();
                 prepareFeeds();
             }
         });
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar_feeds);
-        progressBar.setVisibility(View.GONE);
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.addOnScrollListener(
@@ -217,13 +218,13 @@ public class NavigationActivity extends AppCompatActivity {
             }
         });
         View header = navigationView.getHeaderView(0);
-            TextView name = (TextView) header.findViewById(R.id.profile_name);
-            TextView email = (TextView)header.findViewById(R.id.profile_email);
-            name.setText(SharedPrefs.getPrefs().getString("user_name", null));
-            if(!SharedPrefs.getPrefs().getString("email", null).equals("unavailable"))
-                email.setText(SharedPrefs.getPrefs().getString("email", null));
-            else
-                email.setText("");
+        TextView name = (TextView) header.findViewById(R.id.profile_name);
+        TextView email = (TextView)header.findViewById(R.id.profile_email);
+        name.setText(SharedPrefs.getPrefs().getString("user_name", null));
+        if(!SharedPrefs.getPrefs().getString("email", null).equals("unavailable"))
+            email.setText(SharedPrefs.getPrefs().getString("email", null));
+        else
+            email.setText("");
     }
 
     @Override

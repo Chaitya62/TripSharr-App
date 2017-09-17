@@ -40,7 +40,7 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
     public ExtendedAsyncTask(Context mcontext,int callType) {
         this.context = mcontext;
         this.callType = callType;
-        if(callType == 1) {
+        if(callType == 1 || callType == 4) {
             HashMap<String, String> config = new HashMap<>();
             config.put("cloud_name", "tripsharr");
             config.put("api_key", "848582555262954");
@@ -67,9 +67,27 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
         if(callType == 1) {
             Intent data = (Intent)params[0];
             Uri selectedImage = data.getData();
-            Log.i("STRING URL : ", selectedImage + "");
+            Log.i("STRING URL : ", getRealPathFromURI(selectedImage) + "");
             try {
                 File file = new File(getRealPathFromURI(selectedImage));
+                String imageName= "upload_number"+counter;
+                counter = counter + 1;
+                cloudinary.uploader().upload(new FileInputStream(file), ObjectUtils.asMap("public_id", imageName));
+                String s = cloudinary.url().generate(imageName+".jpg");
+                Log.i("Image Url", s);
+                Message msg = handler.obtainMessage(0, s);
+                msg.sendToTarget();
+                Log.i("Image Url", s);
+            }
+            catch (Exception e) {
+                Log.i("Exception In Upload", e.toString());
+            }
+            return null;
+        }
+        else if(callType == 4) {
+            Intent data = (Intent)params[0];
+            try {
+                File file = new File(data.getDataString());
                 String imageName= "upload_number"+counter;
                 counter = counter + 1;
                 cloudinary.uploader().upload(new FileInputStream(file), ObjectUtils.asMap("public_id", imageName));
