@@ -147,6 +147,7 @@ public class NavigationActivity extends AppCompatActivity {
     <string name="star_unit">star</string>
     <string name="fork_unit">forks</string>
     <string name="loading">Loading..</string>
+    <string name="back_arrow">&#xf060;</string>
     <plurals name="fork_unit">
         <item quantity="one">%d Fork</item>
         <item quantity="other">%d Forks</item>

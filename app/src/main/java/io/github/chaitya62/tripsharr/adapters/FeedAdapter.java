@@ -263,7 +263,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         tripViewHolder.fork.setOnClickListener(tripViewHolder);
 
 
-            //TODO add default star here
+
 
     }
 

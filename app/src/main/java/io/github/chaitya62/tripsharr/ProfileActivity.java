@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -41,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbarLayout;
     TextView starsView,forksView;
     Resources res;
+    private ProgressBar progressBar;
 
     private void prepareFeeds(){
         String profileFeedUrl = getString(R.string.host)+"index.php/feed/profile/10" + "/0/" + profile_user_id + "/" + Long.toString(SharedPrefs.getPrefs().getLong("user_id", 1)) ;
@@ -55,12 +57,14 @@ public class ProfileActivity extends AppCompatActivity {
 
                         Trip newTrip = new Trip(response.getJSONObject(i));
                         ((ProfileFeedAdapter)recyclerView.getAdapter()).add(newTrip);
+
                     }
                     catch(Exception e){
                         Log.i("Error: ", "Trip had json errors");
                         e.printStackTrace();
                     }
                 }
+                progressBar.setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -145,9 +149,11 @@ public class ProfileActivity extends AppCompatActivity {
         profile_user_id  = Long.toString(i.getLongExtra("user_id",1));
         starsView = (TextView) findViewById(R.id.profile_stars);
         forksView = (TextView) findViewById(R.id.profile_forks);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar1);
         res =  getResources();
         Typeface iconFont = FontManager.getTypeface(getApplicationContext(), FontManager.FONTAWESOME);
         FontManager.markAsIconContainer(findViewById(R.id.rating_card), iconFont);
+        FontManager.markAsIconContainer(findViewById(R.id.back_button), iconFont);
 
         // preparing toolbar to be actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar_profile);
