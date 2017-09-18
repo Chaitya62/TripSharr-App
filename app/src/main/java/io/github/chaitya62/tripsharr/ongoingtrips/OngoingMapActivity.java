@@ -1,13 +1,10 @@
 package io.github.chaitya62.tripsharr.ongoingtrips;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -56,7 +53,6 @@ import io.github.chaitya62.tripsharr.MapsActivity;
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.adapters.TripAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
-import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
@@ -65,8 +61,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
     private List< HashMap<String,String>> p = new ArrayList<>();
     private FloatingActionButton add,listview;
-    public static Handler handler;
-    private static GoogleMap mMap;
+    private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
@@ -80,7 +75,8 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         setContentView(R.layout.activity_ongoing_map);
         add = (FloatingActionButton) findViewById(R.id.ongoing_add);
         listview = (FloatingActionButton) findViewById(R.id.listview);
-        tripid = getIntent().getStringExtra("Tripid");
+        tripid = SharedPrefs.getPrefs().getString("selongtripid","1");
+        Log.v("Tripid",tripid);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
@@ -94,13 +90,13 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
             public void onClick(View v) {
 
 
-                Log.v("map",getIntent().getStringExtra("Tripid"));
+                //Log.v("map",getIntent().getStringExtra("Tripid"));
                 if(mLastLocation!=null)
                 {
                     io.github.chaitya62.tripsharr.primeobjects.Coordinates coordinates = new io.github.chaitya62.tripsharr.primeobjects.Coordinates();
                     Pair<Double,Double> pair = new Pair(mLastLocation.getLatitude(),mLastLocation.getLongitude());
                     coordinates.setPoint(pair);
-                    coordinates.setTripId(Integer.parseInt(getIntent().getStringExtra("Tripid")));
+                    coordinates.setTripId(Long.parseLong(tripid));
                     coordinates.setTimestamp(Timestamp.valueOf(getDateTime()));
                     String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/add/";
                     Map<String,String> hp = new HashMap<>();
@@ -112,10 +108,12 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                     catch (Exception e){
                         e.printStackTrace();
                     }
+                    add.setVisibility(View.INVISIBLE);
                     JSONObject jsonObject = new JSONObject(hp);
                     Coordinates coordinates1 = new Coordinates();
                     Log.v("maph",jsonObject.toString());
-                    i.putExtra("Chkptjson",jsonObject.toString());
+                    SharedPrefs.getEditor().putString("Chkptjson",jsonObject.toString());
+                    SharedPrefs.getEditor().commit();
                     startActivity(i);
                     /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
                         @Override
@@ -141,7 +139,6 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(OngoingMapActivity.this,CheckpointActivity.class);
-                i.putExtra("Tripid",tripid);
                 startActivity(i);
             }
         });
@@ -197,7 +194,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
     }
 
-    private static Marker drawMarkers(io.github.chaitya62.tripsharr.primeobjects.Coordinates ip){
+    private Marker drawMarkers(io.github.chaitya62.tripsharr.primeobjects.Coordinates ip){
 
         Log.v("drawmark",""+ip.getPoint().first+" "+ip.getPoint().second);
 
@@ -249,38 +246,6 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
         VolleySingleton.getInstance(OngoingMapActivity.this).addToRequestQueue(jsonArrayRequest);
-    }
-
-    public static void prepareCheckpoints(long tripid) {
-        String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/coordinatesOf/"+tripid;
-        Log.v("maphello",url);
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.v("maphello", "" + response);
-                        ArrayList<io.github.chaitya62.tripsharr.primeobjects.Coordinates> checkpoints = new ArrayList<>();
-                        io.github.chaitya62.tripsharr.primeobjects.Coordinates coordinates;
-                        JSONObject jsonObject;
-                        try {
-                            for (int i = 0; i < response.length(); i++) {
-                                jsonObject = response.getJSONObject(i);
-                                coordinates = new io.github.chaitya62.tripsharr.primeobjects.Coordinates(jsonObject);
-                                checkpoints.add(coordinates);
-                                Log.v("formap",""+response.get(i));
-                            }
-                            Message message = handler.obtainMessage(0, checkpoints);
-                            message.sendToTarget();
-                        }
-                        catch (Exception e){}
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.v("hellerr",""+error);
-            }
-        });
-        VolleySingleton.getInstance(NetworkUtils.context).addToRequestQueue(jsonArrayRequest);
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -350,6 +315,8 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         String temp = marker.getSnippet();
         temp = temp.substring(4,temp.length());
         Log.v("temp",temp);
+        SharedPrefs.getEditor().putString("selongchkptid",temp);
+        SharedPrefs.getEditor().commit();
         i.putExtra("Chkptid",temp);
         startActivity(i);
         return false;
@@ -418,6 +385,17 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
             // other 'case' lines to check for other permissions this app might request.
             // You can add here other case statements according to your requirement.
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i=new Intent(OngoingMapActivity.this,OnGoingTripActivity.class);
+        SharedPrefs.getEditor().remove("selongchkptid");
+        SharedPrefs.getEditor().remove("Chkptjson");
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        finish();
     }
 
 
