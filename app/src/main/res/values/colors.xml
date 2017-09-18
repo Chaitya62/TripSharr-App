@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#FFFFFF</color>
     <color name="colorAccent">#1b1b1b</color>
     <color name="colorWhite">#1b1b1b</color>
+    <color name="list_item_selected_state">#928e8e</color>
+    <color name="list_item_normal_state">#FFFFFF</color>
 </resources>

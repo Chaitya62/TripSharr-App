@@ -101,6 +101,7 @@
             android:label="@string/title_activity_ongoing_map" />
         <activity android:name=".ongoingtrips.EditCheckpointActivity" />
         <activity android:name=".ongoingtrips.AddCheckpointActivity" />
+        <activity android:name=".ongoingtrips.MediaCollectionActivity"/>
         <activity android:name=".ViewTripTimeLine"></activity>
     </application>
 
