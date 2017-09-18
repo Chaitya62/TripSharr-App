@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.github.chaitya62.tripsharr.R;
-import io.github.chaitya62.tripsharr.utils.Action;
 import io.github.chaitya62.tripsharr.utils.ExtendedAsyncTask;
 
 public class MediaCollectionActivity extends AppCompatActivity {
@@ -99,6 +98,7 @@ public class MediaCollectionActivity extends AppCompatActivity {
                         }
                     } else {
                         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        i.setType("image/*");
                         i.setAction(Intent.ACTION_GET_CONTENT);
                         i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                         startActivityForResult(i, 2);
@@ -143,7 +143,7 @@ public class MediaCollectionActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK){
                 ClipData clipData = data.getClipData();
                 //Uri img = data.getData();
-                Log.v("count",""+clipData.getItemCount());
+                //Log.v("count",""+clipData.getItemCount());
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     Uri uri = clipData.getItemAt(i).getUri();
                     Log.i("THIS IS IT ", uri+"");

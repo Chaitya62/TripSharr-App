@@ -83,6 +83,10 @@ public class fragmentOne extends Fragment{
                 startActivity(i);
             }
 
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         }));
         return v;
 

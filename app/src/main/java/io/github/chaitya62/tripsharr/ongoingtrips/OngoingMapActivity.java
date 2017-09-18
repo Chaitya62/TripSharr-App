@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -53,6 +55,7 @@ import io.github.chaitya62.tripsharr.MapsActivity;
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.adapters.TripAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
@@ -61,12 +64,15 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
     private List< HashMap<String,String>> p = new ArrayList<>();
     private FloatingActionButton add,listview;
-    private GoogleMap mMap;
+    public static Handler handler;
+    private static GoogleMap mMap;
+
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
     private Marker mCurrLocationMarker;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
     private String tripid;
 
     @Override
@@ -247,6 +253,39 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         });
         VolleySingleton.getInstance(OngoingMapActivity.this).addToRequestQueue(jsonArrayRequest);
     }
+
+    public static void prepareCheckpoints(long tripid) {
+        String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/coordinatesOf/"+tripid;
+        Log.v("maphello",url);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.v("maphello", "" + response);
+                        ArrayList<io.github.chaitya62.tripsharr.primeobjects.Coordinates> checkpoints = new ArrayList<>();
+                        io.github.chaitya62.tripsharr.primeobjects.Coordinates coordinates;
+                        JSONObject jsonObject;
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+                                jsonObject = response.getJSONObject(i);
+                                coordinates = new io.github.chaitya62.tripsharr.primeobjects.Coordinates(jsonObject);
+                                checkpoints.add(coordinates);
+                                Log.v("formap",""+response.get(i));
+                            }
+                            Message message = handler.obtainMessage(0, checkpoints);
+                            message.sendToTarget();
+                        }
+                        catch (Exception e){}
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.v("hellerr",""+error);
+            }
+        });
+        VolleySingleton.getInstance(NetworkUtils.context).addToRequestQueue(jsonArrayRequest);
+    }
+
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
