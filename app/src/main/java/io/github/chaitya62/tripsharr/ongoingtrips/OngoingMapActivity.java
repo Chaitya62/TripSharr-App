@@ -3,6 +3,10 @@ package io.github.chaitya62.tripsharr.ongoingtrips;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
@@ -15,16 +19,15 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.cloudinary.Coordinates;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,6 +42,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,23 +50,26 @@ import org.json.JSONObject;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.chaitya62.tripsharr.MapsActivity;
 import io.github.chaitya62.tripsharr.R;
-import io.github.chaitya62.tripsharr.adapters.TripAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.CoordinateComparator;
 import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
+import static java.security.AccessController.getContext;
+
 public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,LocationListener,GoogleMap.OnMarkerClickListener {
 
-    private List< HashMap<String,String>> p = new ArrayList<>();
+    private List<io.github.chaitya62.tripsharr.primeobjects.Coordinates> p = new ArrayList<>();
+    private Bitmap bitmap;
     private FloatingActionButton add,listview;
     public static Handler handler;
     private static GoogleMap mMap;
@@ -79,6 +86,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ongoing_map);
+
         add = (FloatingActionButton) findViewById(R.id.ongoing_add);
         listview = (FloatingActionButton) findViewById(R.id.listview);
         tripid = SharedPrefs.getPrefs().getString("selongtripid","1");
@@ -121,21 +129,6 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                     SharedPrefs.getEditor().putString("Chkptjson",jsonObject.toString());
                     SharedPrefs.getEditor().commit();
                     startActivity(i);
-                    /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            add.setVisibility(View.INVISIBLE);
-                            Log.v("respoco",""+response);
-                        }
-                    },new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError){
-                            Log.v("errorco",""+volleyError);
-                            Toast.makeText(getApplicationContext(),"Error setting location",Toast.LENGTH_SHORT).show();
-                        }
-
-                    });
-                    VolleySingleton.getInstance(OngoingMapActivity.this).addToRequestQueue(jsonObjectRequest);*/
                 }
 
             }
@@ -200,14 +193,16 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
     }
 
-    private Marker drawMarkers(io.github.chaitya62.tripsharr.primeobjects.Coordinates ip){
+    private Marker drawMarkers(io.github.chaitya62.tripsharr.primeobjects.Coordinates ip,int curr){
 
         Log.v("drawmark",""+ip.getPoint().first+" "+ip.getPoint().second);
 
         MarkerOptions markerOptions = new MarkerOptions();
+
         // Setting latitude and longitude for the marker
         Pair<Double,Double> pair = ip.getPoint();
         LatLng point = new LatLng(pair.first,pair.second);
+
         markerOptions.position(point);
 
         // Setting title for the InfoWindow
@@ -218,8 +213,24 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
         markerOptions.anchor(0.5f,0.5f);
 
+
+        if(curr>0) {
+            //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow_head));
+            PolylineOptions polylineOptions = new PolylineOptions().color(Color.rgb(0,191,255)).width((float)10.0);
+            polylineOptions.add(point);
+            pair = p.get(curr-1).getPoint();
+            LatLng previousPoint = new LatLng(pair.first,pair.second);
+            //polylineOptions.add(point,previousPoint);
+
+            polylineOptions.add(previousPoint);
+            mMap.addPolyline(polylineOptions);
+        }
+
+
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
 
+        //return mMap.addMarker(new MarkerOptions().position(point).snippet(""+ip.getId()).icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow_head)));
         return mMap.addMarker(markerOptions);
 
     }
@@ -239,9 +250,16 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                             for (int i = 0; i < response.length(); i++) {
                                 jsonObject = response.getJSONObject(i);
                                 coordinates = new io.github.chaitya62.tripsharr.primeobjects.Coordinates(jsonObject);
-                                drawMarkers(coordinates);
+                                //drawMarkers(coordinates);
+                                p.add(coordinates);
                                 Log.v("formap",""+response.get(i));
                             }
+                            Collections.sort(p,new CoordinateComparator());
+                            for(int i=0;i<p.size();i++) {
+                                Log.v("chkpt",""+p.get(i).getTimestamp());
+                                drawMarkers(p.get(i),i);
+                            }
+
                         }
                         catch (Exception e){}
                     }
@@ -271,6 +289,10 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                                 coordinates = new io.github.chaitya62.tripsharr.primeobjects.Coordinates(jsonObject);
                                 checkpoints.add(coordinates);
                                 Log.v("formap",""+response.get(i));
+                            }
+                            Collections.sort(checkpoints,new CoordinateComparator());
+                            for(int i=0;i<checkpoints.size();i++) {
+                                Log.v("chkpt",""+checkpoints.get(i).getTimestamp());
                             }
                             Message message = handler.obtainMessage(0, checkpoints);
                             message.sendToTarget();
@@ -317,7 +339,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(30));
 
 
     }
@@ -350,10 +372,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public boolean onMarkerClick(Marker marker) {
         Intent i = new Intent(OngoingMapActivity.this,EditCheckpointActivity.class);
-        i.putExtra("Tripid",tripid);
         String temp = marker.getSnippet();
-        if(temp == null)
-            return false;
         temp = temp.substring(4,temp.length());
         Log.v("temp",temp);
         SharedPrefs.getEditor().putString("selongchkptid",temp);
