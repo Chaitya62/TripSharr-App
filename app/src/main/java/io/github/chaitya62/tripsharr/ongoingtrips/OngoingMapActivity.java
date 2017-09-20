@@ -352,6 +352,8 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         Intent i = new Intent(OngoingMapActivity.this,EditCheckpointActivity.class);
         i.putExtra("Tripid",tripid);
         String temp = marker.getSnippet();
+        if(temp == null)
+            return false;
         temp = temp.substring(4,temp.length());
         Log.v("temp",temp);
         SharedPrefs.getEditor().putString("selongchkptid",temp);

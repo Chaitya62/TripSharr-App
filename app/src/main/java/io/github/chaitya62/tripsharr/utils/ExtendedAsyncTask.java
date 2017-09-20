@@ -110,8 +110,8 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
             return null;
         }
         else if (callType == 5) {
-            ArrayList<Uri> data = (ArrayList<Uri>) params[0];
             try {
+                ArrayList<Uri> data = (ArrayList<Uri>) params[0];
                 ArrayList<String> urlsList = new ArrayList<>();
                 int num  = 0;
                 for(Uri image : data) {
