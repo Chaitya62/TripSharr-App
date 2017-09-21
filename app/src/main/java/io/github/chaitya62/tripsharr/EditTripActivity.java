@@ -35,7 +35,7 @@ public class EditTripActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_trip);
-        tripId = getIntent().getStringExtra("Tripid").toString();
+        tripId = SharedPrefs.getPrefs().getString("selongtripid","1");
         Log.v("tripid",""+tripId);
 
         myToolbar = (Toolbar)findViewById(R.id.my_toolbar2);

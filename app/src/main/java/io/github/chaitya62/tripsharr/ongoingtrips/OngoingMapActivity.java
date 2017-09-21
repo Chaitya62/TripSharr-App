@@ -1,10 +1,16 @@
 package io.github.chaitya62.tripsharr.ongoingtrips;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -65,6 +71,7 @@ import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
+import static io.github.chaitya62.tripsharr.utils.NetworkUtils.context;
 import static java.security.AccessController.getContext;
 
 public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -233,6 +240,9 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
 
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.rectangle, ""+curr)));
+
+
         //return mMap.addMarker(new MarkerOptions().position(point).snippet(""+ip.getId()).icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow_head)));
         return mMap.addMarker(markerOptions);
 
@@ -271,6 +281,8 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                             mMap.moveCamera(cu);
                             mMap.animateCamera(cu);
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
 
                         }
                         catch (Exception e){}
@@ -317,7 +329,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                 Log.v("hellerr",""+error);
             }
         });
-        VolleySingleton.getInstance(NetworkUtils.context).addToRequestQueue(jsonArrayRequest);
+        VolleySingleton.getInstance(context).addToRequestQueue(jsonArrayRequest);
     }
 
 
@@ -468,6 +480,50 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         finish();
+    }
+
+    private Bitmap writeTextOnDrawable(int drawableId, String text) {
+
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId)
+                .copy(Bitmap.Config.ARGB_8888, true);
+
+        Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.WHITE);
+        paint.setTypeface(tf);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(convertToPixels(context,11));
+
+        Rect textRect = new Rect();
+        paint.getTextBounds(text, 0, text.length(), textRect);
+
+        Canvas canvas = new Canvas(bm);
+
+        //If the text is bigger than the canvas , reduce the font size
+        if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
+            paint.setTextSize(convertToPixels(context, 7));        //Scaling needs to be used for different dpi's
+
+        //Calculate the positions
+        int xPos = (canvas.getWidth() / 2) - 2;     //-2 is for regulating the x position offset
+
+        //"- ((paint.descent() + paint.ascent()) / 2)" is the distance from the baseline to the center.
+        int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;
+
+        canvas.drawText(text, xPos, yPos, paint);
+
+        return  bm;
+    }
+
+
+
+    public static int convertToPixels(Context context, int nDP)
+    {
+        final float conversionScale = context.getResources().getDisplayMetrics().density;
+
+        return (int) ((nDP * conversionScale) + 0.5f) ;
+
     }
 
 
