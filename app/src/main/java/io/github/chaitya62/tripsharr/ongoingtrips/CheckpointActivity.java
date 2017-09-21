@@ -34,6 +34,7 @@ import io.github.chaitya62.tripsharr.ViewTripActivity;
 import io.github.chaitya62.tripsharr.adapters.CheckpointAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Coordinates;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 /**
@@ -42,7 +43,7 @@ import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 public class CheckpointActivity extends AppCompatActivity {
 
-    int tripId;
+    String tripId;
     private List<Coordinates> coordinatesList = new ArrayList<>();
     private RecyclerView recyclerView;
     Button finishtrip;
@@ -53,7 +54,8 @@ public class CheckpointActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ongoing_checkpoint);
 
         finishtrip = (Button) findViewById(R.id.finishtrip);
-        tripId = Integer.parseInt(getIntent().getStringExtra("Tripid"));
+        tripId = SharedPrefs.getPrefs().getString("selongtripid","1");
+        Log.v("shareded",tripId);
 
         recyclerView = (RecyclerView) findViewById(R.id.ongoing_recycler);
         prepareCheckpoints();
@@ -69,11 +71,15 @@ public class CheckpointActivity extends AppCompatActivity {
                 Coordinates coordinates = coordinatesList.get(position);
                 Toast.makeText(CheckpointActivity.this,coordinates.getDescription(),Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(CheckpointActivity.this,EditCheckpointActivity.class);
-                i.putExtra("Tripid",""+coordinates.getTripId());
-                i.putExtra("Chkptid",""+coordinates.getId());
+                SharedPrefs.getEditor().putString("selongchkptid",""+coordinates.getId());
+                SharedPrefs.getEditor().commit();
                 startActivity(i);
             }
 
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         }));
 
         finishtrip.setOnClickListener(new View.OnClickListener() {
@@ -118,8 +124,8 @@ public class CheckpointActivity extends AppCompatActivity {
 
 
     public void prepareCheckpoints(){
-        String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/coordinatesOf/"+(getIntent().getStringExtra("Tripid"));
-        Log.v("hello",""+getIntent().getStringExtra("Tripid"));
+        String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/coordinatesOf/"+tripId;
+        //Log.v("hello",""+getIntent().getStringExtra("Tripid"));
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -156,6 +162,7 @@ public class CheckpointActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent i=new Intent(CheckpointActivity.this,OngoingMapActivity.class);
+        SharedPrefs.getEditor().remove("selongchkptid");
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         finish();

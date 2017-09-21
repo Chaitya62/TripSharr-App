@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header_home"
-        app:itemTextColor="@color/colorPrimary"
+        app:itemTextColor="@color/colorWhite"
         app:menu="@menu/activity_home_drawer">
 
     </android.support.design.widget.NavigationView>

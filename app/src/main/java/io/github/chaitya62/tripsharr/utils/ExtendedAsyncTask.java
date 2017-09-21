@@ -1,5 +1,6 @@
 package io.github.chaitya62.tripsharr.utils;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import io.github.chaitya62.tripsharr.primeobjects.User;
@@ -32,15 +34,15 @@ import io.github.chaitya62.tripsharr.primeobjects.User;
 public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
 
     private Handler handler;
-    private Context context;
+    private static Context context;
     private int callType;
     private Cloudinary cloudinary;
     private int counter = 0;
 
     public ExtendedAsyncTask(Context mcontext,int callType) {
-        this.context = mcontext;
+        context = mcontext;
         this.callType = callType;
-        if(callType == 1 || callType == 4) {
+        if(callType == 1 || callType == 4 || callType == 5) {
             HashMap<String, String> config = new HashMap<>();
             config.put("cloud_name", "tripsharr");
             config.put("api_key", "848582555262954");
@@ -49,14 +51,19 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
         }
     }
 
-    private String getRealPathFromURI(Uri contentURI) {
+    public static String getRealPathFromURI(Uri contentURI) {
+        Log.i("Debug", "Getting Real Path");
         Cursor cursor = context.getContentResolver().query(contentURI, null, null, null, null);
         if (cursor == null) {
+            Log.i("Debug", "cursor is null");
             return contentURI.getPath();
         } else {
+            Log.i("Debug", "In here");
             cursor.moveToFirst();
+            Log.i("Debug", "In here");
             int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            String s = cursor.getString(idx);
+            Log.i("Debug", Integer.toString(idx));
+            String s = cursor.getString(0);
             cursor.close();
             return s;
         }
@@ -99,6 +106,26 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
             }
             catch (Exception e) {
                 Log.i("Exception In Upload", e.toString());
+            }
+            return null;
+        }
+        else if (callType == 5) {
+            try {
+                ArrayList<Uri> data = (ArrayList<Uri>) params[0];
+                ArrayList<String> urlsList = new ArrayList<>();
+                int num  = 0;
+                for(Uri image : data) {
+                    String imageName = "test_upload"+(num++);
+                    cloudinary.uploader().upload(context.getContentResolver().openInputStream(image), ObjectUtils.asMap("public_id", imageName));
+                    String s = cloudinary.url().generate(imageName+".jpg");
+                    Log.i("Image Url", s);
+                    urlsList.add(s);
+                    Log.i("Debug", image.toString());
+                }
+                Message msg = handler.obtainMessage(0, urlsList);
+                msg.sendToTarget();
+            } catch (Exception e) {
+                Log.i("Error", e.toString());
             }
             return null;
         }

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import io.github.chaitya62.tripsharr.MapsActivity;
 import io.github.chaitya62.tripsharr.R;
+import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 public class AddCheckpointActivity extends AppCompatActivity {
@@ -32,6 +33,7 @@ public class AddCheckpointActivity extends AppCompatActivity {
     String chkptJson;
     Toolbar myToolbar;
     ImageView done;
+    String name,desc;
 
 
     @Override
@@ -46,7 +48,7 @@ public class AddCheckpointActivity extends AppCompatActivity {
 
         done = (ImageView) findViewById(R.id.done);
 
-        chkptJson = getIntent().getStringExtra("Chkptjson");
+        chkptJson = SharedPrefs.getPrefs().getString("Chkptjson","a");
 
         myToolbar.setTitle("Add Checkpoint");
         setSupportActionBar(myToolbar);
@@ -55,17 +57,28 @@ public class AddCheckpointActivity extends AppCompatActivity {
 
     public void addCheckpoint(View view){
         String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/add/";
+        name = upnameet.getText().toString().trim();
+        desc = updescet.getText().toString().trim();
         JSONObject jsonObject = new JSONObject();
         try{
             jsonObject = new JSONObject(chkptJson);
         }
         catch(Exception e){}
+        jsonObject.remove("name");
+        jsonObject.remove("description");
+        try {
+            jsonObject.put("name", name);
+            jsonObject.put("description", desc);
+        }
+        catch (Exception e){}
+
         Log.v("json",""+jsonObject);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.v("respoco",""+response);
                 Toast.makeText(AddCheckpointActivity.this,"Added Checkpoint",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddCheckpointActivity.this,OngoingMapActivity.class));
             }
         },new Response.ErrorListener(){
             @Override

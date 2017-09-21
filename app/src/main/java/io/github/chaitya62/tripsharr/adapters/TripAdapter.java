@@ -66,4 +66,15 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.MyViewHolder> 
         notifyItemInserted(tripsList.size()-1);
     }
 
+    public void clear() {
+        tripsList.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a list of items -- change to type used
+    public void addAll(List<Trip> list) {
+        tripsList.addAll(list);
+        notifyDataSetChanged();
+    }
+
 }
