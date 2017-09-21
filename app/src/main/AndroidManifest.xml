@@ -103,6 +103,7 @@
         <activity android:name=".ongoingtrips.AddCheckpointActivity" />
         <activity android:name=".ongoingtrips.MediaCollectionActivity"/>
         <activity android:name=".ViewTripTimeLine"></activity>
+        <activity android:name=".EditTripActivity"/>
     </application>
 
 </manifest>

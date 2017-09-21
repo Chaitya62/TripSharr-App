@@ -34,12 +34,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -69,6 +71,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         GoogleApiClient.OnConnectionFailedListener,LocationListener,GoogleMap.OnMarkerClickListener {
 
     private List<io.github.chaitya62.tripsharr.primeobjects.Coordinates> p = new ArrayList<>();
+    private ArrayList<Marker> markers = new ArrayList<>();
     private Bitmap bitmap;
     private FloatingActionButton add,listview;
     public static Handler handler;
@@ -259,6 +262,15 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                                 Log.v("chkpt",""+p.get(i).getTimestamp());
                                 drawMarkers(p.get(i),i);
                             }
+                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                            for (Marker marker : markers) {
+                                builder.include(marker.getPosition());
+                            }
+                            LatLngBounds bounds = builder.build();
+                            int padding = 0; // offset from edges of the map in pixels
+                            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                            mMap.moveCamera(cu);
+                            mMap.animateCamera(cu);
 
                         }
                         catch (Exception e){}
@@ -337,9 +349,9 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
-        //move map camera
+        /*move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(30));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(30));*/
 
 
     }
