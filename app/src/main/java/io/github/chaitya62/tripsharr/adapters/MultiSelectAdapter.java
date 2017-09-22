@@ -2,6 +2,7 @@ package io.github.chaitya62.tripsharr.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,13 +28,13 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
     Context mContext;
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView desc, name;
-        public LinearLayout ll_listitem;
+        public CardView ll_listitem;
 
         public MyViewHolder(View view) {
             super(view);
             name = (TextView) view.findViewById(R.id.tripname1);
             desc = (TextView) view.findViewById(R.id.description);
-            ll_listitem=(LinearLayout)view.findViewById(R.id.ll_listitem);
+            ll_listitem=(CardView) view.findViewById(R.id.ll_listitem);
 
         }
     }
@@ -65,11 +66,11 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
 
         if(selected_tripsList.contains(tripsList.get(position))) {
             Log.v("hello","sel");
-            holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.list_item_selected_state));
+            holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorLightText));
         }
         else {
             Log.v("hello","desel");
-            holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.list_item_normal_state));
+            holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.pureWhite));
         }
 
     }
