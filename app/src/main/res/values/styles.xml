@@ -13,6 +13,12 @@
         <item name="android:actionModeBackground">@color/colorPrimary</item>
     </style>
 
+    <style name="AppDark" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:colorAccent">#000000</item>
+
+
+    </style>
+
     <style name="OverFlowStyle">
         <item name="color">@color/colorWhite</item>
         <item name="android:src">@drawable/ic_more_vert_black_48dp</item>
