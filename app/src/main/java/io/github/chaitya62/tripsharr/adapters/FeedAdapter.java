@@ -266,7 +266,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         tripViewHolder.setTrip(trip);
         tripViewHolder.setStarState(trip);
         tripViewHolder.setForkState(trip);
-        tripViewHolder.cTitle.setOnClickListener(tripViewHolder);
+//        tripViewHolder.cTitle.setOnClickListener(tripViewHolder);
         tripViewHolder.cName.setOnClickListener(tripViewHolder);
         tripViewHolder.star.setOnClickListener(tripViewHolder);
         tripViewHolder.fork.setOnClickListener(tripViewHolder);
