@@ -112,7 +112,7 @@ public class TripInfo extends NavigationActivity{
             }
         });
 
-        
+
 
         final ArrayList<TimelineRow> timelineList = new ArrayList<>();
         Handler handler = new Handler(getMainLooper()){
