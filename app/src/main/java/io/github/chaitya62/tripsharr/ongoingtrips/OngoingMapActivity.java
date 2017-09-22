@@ -77,6 +77,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
     private FloatingActionButton add,listview;
     public static Handler handler;
     private static GoogleMap mMap;
+    private boolean tripstatus;
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -94,6 +95,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         add = (FloatingActionButton) findViewById(R.id.ongoing_add);
         listview = (FloatingActionButton) findViewById(R.id.listview);
         tripid = SharedPrefs.getPrefs().getString("selongtripid","1");
+        tripstatus = SharedPrefs.getPrefs().getBoolean("tripstatus",false);
         Log.v("Tripid",tripid);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -189,11 +191,6 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
 
 
-        // Add a marker in Sydney and move the camera
-        /*LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
-
 
     }
 
@@ -223,7 +220,10 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
 
         if(curr>0) {
-            //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow_head));
+
+            if(curr==p.size()-1 && tripstatus) {
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            }
             PolylineOptions polylineOptions = new PolylineOptions().color(Color.rgb(0,191,255)).width((float)10.0);
             polylineOptions.add(point);
             pair = p.get(curr-1).getPoint();
