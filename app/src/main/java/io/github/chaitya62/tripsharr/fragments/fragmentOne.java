@@ -2,7 +2,9 @@ package io.github.chaitya62.tripsharr.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,8 +26,10 @@ import java.util.List;
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.RecyclerTouchListener;
 import io.github.chaitya62.tripsharr.TripInfo;
+import io.github.chaitya62.tripsharr.adapters.FeedAdapter;
 import io.github.chaitya62.tripsharr.adapters.FragmentOneAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
@@ -40,9 +44,9 @@ public class fragmentOne extends Fragment{
 
     private List<Trip> list = new ArrayList<>();
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public fragmentOne() {
-
     }
 
     @Override
@@ -56,7 +60,11 @@ public class fragmentOne extends Fragment{
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_one, container, false);
         recyclerView = (RecyclerView) v.findViewById(R.id.textView);
-
+        if(!NetworkUtils.isNetworkAvailable()) {
+            Snackbar snackbar = Snackbar
+                    .make(v.findViewById(R.id.coordinator_fragment1), "No Internet Connection", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
         prepdata();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);

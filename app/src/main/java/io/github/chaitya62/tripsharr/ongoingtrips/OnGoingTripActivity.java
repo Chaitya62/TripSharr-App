@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,8 +38,11 @@ import io.github.chaitya62.tripsharr.adapters.MultiSelectAdapter;
 import io.github.chaitya62.tripsharr.adapters.TripAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.AlertDialogHelper;
+import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by mikasa on 27/8/17.
@@ -67,6 +71,11 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
         getLayoutInflater().inflate(R.layout.activity_ongoingtrip, contentFrameLayout);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        if(!NetworkUtils.isNetworkAvailable()) {
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.coordinator_on_going_trips), "No Internet Connection", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
 
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer1);
         // Setup refresh listener which triggers new data loading

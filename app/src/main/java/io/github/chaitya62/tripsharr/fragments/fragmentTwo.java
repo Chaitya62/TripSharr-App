@@ -1,6 +1,7 @@
 package io.github.chaitya62.tripsharr.fragments;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -27,6 +28,7 @@ import io.github.chaitya62.tripsharr.RecyclerTouchListener;
 import io.github.chaitya62.tripsharr.TripInfo;
 import io.github.chaitya62.tripsharr.adapters.FragmentOneAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
+import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
