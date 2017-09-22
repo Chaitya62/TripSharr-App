@@ -49,11 +49,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
     private  List<Trip> tripList;
     private Context context;
     private static Context ctx;
+    static protected long AppUserId;
     private static AssetManager mgr;
 
     public FeedAdapter(Context context, List<Trip> tripList) {
         this.context = context;
-        this.ctx = context;
+        FeedAdapter.ctx = context;
+        FeedAdapter.AppUserId = SharedPrefs.getPrefs().getLong("user_id", 1);
         this.tripList = tripList;
         notifyDataSetChanged();
         mgr = context.getAssets();
@@ -74,6 +76,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         protected TextView c_no_of_forks;
         protected TextView star,fork;
         protected  View view;
+
 
         private Trip trip;
 
@@ -254,7 +257,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         tripViewHolder.cDesc.setText(trip.getDescription());
         tripViewHolder.c_no_of_forks.setText(""+trip.getNoOfForks());
         tripViewHolder.c_no_of_stars.setText(""+trip.getNoOfStars());
-
+        if(trip.getUserId() == AppUserId){
+            tripViewHolder.fork.setVisibility(View.GONE);
+        }
         if(trip.isStarred())  tripViewHolder.star.setText("\uf006");
         else tripViewHolder.star.setText("\uf006");
 

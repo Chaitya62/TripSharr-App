@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                                             //Registered..
                                             Log.i("Info", "Registered User Successfully");
                                             User user = ((User)msg.obj);
-                                            Intent i = new Intent(getApplication(), NavigationActivity.class);
+                                            Intent i = new Intent(getApplication(), FeedsActivity.class);
                                             SharedPrefs.getEditor().putString("user_name", user.getName());
                                             SharedPrefs.getEditor().putLong("user_id", user.getId());
                                             SharedPrefs.getEditor().putString("fb_id", user.getFbId());
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         else {
-            Intent i = new Intent(getApplication(), NavigationActivity.class);
+            Intent i = new Intent(getApplication(), FeedsActivity.class);
             startActivity(i);
             finish();
         }

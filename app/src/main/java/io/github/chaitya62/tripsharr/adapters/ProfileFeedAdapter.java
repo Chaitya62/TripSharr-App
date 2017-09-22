@@ -38,10 +38,12 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
 
     private List<Trip> trips;
     private Context mcontext;
+    static protected long AppUserId;
 
     public ProfileFeedAdapter(Context context, List<Trip> trips){
         this.mcontext = context;
         this.trips = trips;
+        ProfileFeedAdapter.AppUserId = SharedPrefs.getPrefs().getLong("user_id", 1);
     }
 
 
@@ -78,6 +80,9 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
         holder.setTrip(trip);
         holder.setForkState(trip);
         holder.setStarState(trip);
+        if(trip.getUserId() == AppUserId){
+            holder.fork.setVisibility(View.GONE);
+        }
         holder.star.setOnClickListener(holder);
         holder.fork.setOnClickListener(holder);
         holder.ctx = mcontext;
