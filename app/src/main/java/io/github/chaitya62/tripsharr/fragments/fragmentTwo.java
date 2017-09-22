@@ -67,9 +67,11 @@ public class fragmentTwo extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Trip trip = list.get(position);
+                Log.i("Debug", ""+trip.getId());
+                SharedPrefs.getEditor().putString("selongtripid", ""+trip.getId());
+                SharedPrefs.getEditor().commit();
                 Toast.makeText(getApplicationContext(),trip.getDescription(),Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getApplicationContext(),TripInfo.class);
-                i.putExtra("Tripid",""+trip.getId());
                 startActivity(i);
             }
 
