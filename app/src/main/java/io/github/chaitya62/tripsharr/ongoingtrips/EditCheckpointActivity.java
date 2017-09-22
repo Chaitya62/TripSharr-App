@@ -221,7 +221,7 @@ public class EditCheckpointActivity extends AppCompatActivity {
 
 
                 break;
-            case R.id.ivmedia:
+            /*case R.id.ivmedia:
                 //Toast.makeText(EditCheckpointActivity.this,"media",Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(EditCheckpointActivity.this,MediaCollectionActivity.class);
 
@@ -255,8 +255,8 @@ public class EditCheckpointActivity extends AppCompatActivity {
                         }
                     }
                 });
-                builder.show();*/
-                break;
+                builder.show();
+                break;*/
         }
     }
 
