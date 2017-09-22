@@ -2,8 +2,14 @@ package io.github.chaitya62.tripsharr;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -20,13 +26,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.facebook.login.LoginManager;
 
@@ -50,12 +57,57 @@ public class NavigationActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     static Resources res;
     RecyclerView recList;
+    private static Bitmap profileImage;
     SwipeRefreshLayout mSwipeRefreshLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
+    private ImageView profilePic;
     int type = 0;
     int loaded[] = new int[10];
     Toolbar toolbar;
     int feed_loading_flag = 0;
+
+    public static Bitmap getRoundedBitmap(Bitmap bitmap) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+                .getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawOval(rectF, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
+
+    private void getPicture() {
+        if(profileImage != null) {
+            profilePic.setImageBitmap(profileImage);
+            return;
+        }
+        String profileUrl = "https://graph.facebook.com/"+SharedPrefs.getPrefs().getString("fb_id", "0")+"/picture?height=100";
+        Log.i("URL", profileUrl);
+        ImageRequest imageRequest = new ImageRequest(profileUrl, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                profileImage = getRoundedBitmap(response);
+                profilePic.setImageBitmap(profileImage);
+            }
+        }, 0, 0, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("URL", "In Volley Image Request Profile pic: "+error.toString());
+            }
+        });
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(imageRequest);
+    }
 
     private void prepareFeeds() {
         feed_loading_flag = 1;
@@ -222,6 +274,8 @@ public class NavigationActivity extends AppCompatActivity {
             }
         });
         View header = navigationView.getHeaderView(0);
+        profilePic = (ImageView) header.findViewById(R.id.profilepic);
+        getPicture();
         TextView name = (TextView) header.findViewById(R.id.profile_name);
         TextView email = (TextView)header.findViewById(R.id.profile_email);
         name.setText(SharedPrefs.getPrefs().getString("user_name", null));
