@@ -1,20 +1,20 @@
 package io.github.chaitya62.tripsharr.primeobjects;
 
+import android.os.Parcelable;
 import android.util.Pair;
 
 import org.json.JSONObject;
 
-import java.sql.Date;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
  * Created by chaitya62 on 24/8/17.
  */
 
-public class Coordinates {
+public class Coordinates{
     private long id, tripId;
     private String name, description;
     private Pair<Double, Double> point;
@@ -66,6 +66,12 @@ public class Coordinates {
         this.videoCount = videoCount;
         this.oldCoordinateId = oldCoordinateId;
     }
+
+    @Override
+    public String toString() {
+        return point.toString();
+    }
+
 
     public long getId() {
         return id;

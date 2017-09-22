@@ -17,10 +17,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-import io.github.chaitya62.tripsharr.primeobjects.Trip;
-
 /**
  * Created by mikasa on 10/9/17.
  */
@@ -52,7 +48,7 @@ public class AlertDialogHelper {
      * @param from
      * @param isCancelable
      */
-    public void showAlertDialog(String title, String message, String positive, String negative, String neutral, final int from, boolean isCancelable, final ArrayList<Trip> selectTrips)
+    public void showAlertDialog(String title, String message, String positive, String negative, String neutral, final int from, boolean isCancelable)
     {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(current_activity);
 
@@ -145,9 +141,9 @@ public class AlertDialogHelper {
      * @param from
      * @param isCancelable
      */
-    public void showAlertDialog(String title,String message,String positive,final int from,boolean isCancelable,ArrayList<Trip> selectTrips)
+    public void showAlertDialog(String title,String message,String positive,final int from,boolean isCancelable)
     {
-        showAlertDialog(title,message,positive,"","",from,isCancelable,selectTrips);
+        showAlertDialog(title,message,positive,"","",from,isCancelable);
     }
 
     /**
@@ -160,9 +156,9 @@ public class AlertDialogHelper {
      * @param positive
      * @param from
      */
-    public void showAlertDialog(String title,String message,String positive,final int from,ArrayList<Trip> selectTrips)
+    public void showAlertDialog(String title,String message,String positive,final int from)
     {
-        showAlertDialog(title,message,positive,"","",from,false,selectTrips);
+        showAlertDialog(title,message,positive,"","",from,false);
     }
 
 
@@ -180,9 +176,9 @@ public class AlertDialogHelper {
      * @param isCancelable
      */
 
-    public void showAlertDialog(String title, String message, String positive, String negative, final int from, boolean isCancelable, ArrayList<Trip> selectTrips)
+    public void showAlertDialog(String title, String message, String positive, String negative, final int from, boolean isCancelable)
     {
-        showAlertDialog(title,message,positive,negative,"",from,isCancelable,selectTrips);
+        showAlertDialog(title,message,positive,negative,"",from,isCancelable);
     }
 
     /**
@@ -197,9 +193,9 @@ public class AlertDialogHelper {
      * @param negative
      * @param from
      */
-    public void showAlertDialog(String title,String message,String positive,String negative,final int from,ArrayList<Trip> selectTrips)
+    public void showAlertDialog(String title,String message,String positive,String negative,final int from)
     {
-        showAlertDialog(title,message,positive,negative,"",from,false,selectTrips);
+        showAlertDialog(title,message,positive,negative,"",from,false);
     }
 
     /**
@@ -214,9 +210,9 @@ public class AlertDialogHelper {
      * @param neutral
      * @param from
      */
-    public void showAlertDialog(String title,String message,String positive,String negative,String neutral,final int from,ArrayList<Trip> selectTrips)
+    public void showAlertDialog(String title,String message,String positive,String negative,String neutral,final int from)
     {
-        showAlertDialog(title,message,positive,negative,neutral,from,false,selectTrips);
+        showAlertDialog(title,message,positive,negative,neutral,from,false);
     }
 
 

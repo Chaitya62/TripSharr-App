@@ -11,10 +11,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -22,10 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -67,12 +63,10 @@ import java.util.Map;
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.CoordinateComparator;
-import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
 import static io.github.chaitya62.tripsharr.utils.NetworkUtils.context;
-import static java.security.AccessController.getContext;
 
 public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,LocationListener,GoogleMap.OnMarkerClickListener {
@@ -101,7 +95,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         listview = (FloatingActionButton) findViewById(R.id.listview);
         tripid = SharedPrefs.getPrefs().getString("selongtripid","1");
         Log.v("Tripid",tripid);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -175,7 +169,7 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
         mMap = googleMap;
 
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
@@ -223,6 +217,10 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
         markerOptions.anchor(0.5f,0.5f);
 
+        if(curr==0) {
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        }
+
 
         if(curr>0) {
             //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow_head));
@@ -240,7 +238,8 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
 
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.rectangle, ""+curr)));
+        //markerOptions.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.rectangle, ""+curr)));
+        Log.v("icon",""+markerOptions.getIcon());
 
 
         //return mMap.addMarker(new MarkerOptions().position(point).snippet(""+ip.getId()).icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow_head)));

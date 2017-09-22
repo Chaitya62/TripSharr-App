@@ -3,9 +3,7 @@ package io.github.chaitya62.tripsharr;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,24 +12,16 @@ import android.widget.FrameLayout;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
-import io.github.chaitya62.tripsharr.NavigationActivity;
-import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
-
-import static io.github.chaitya62.tripsharr.R.string.error;
 
 /**
  * Created by mikasa on 26/8/17.
@@ -60,7 +50,7 @@ public class CreateTripActivity extends NavigationActivity {
                 newTrip.setName(tripName);
                 newTrip.setDescription("Added from phone");
                 newTrip.setUserId(SharedPrefs.getPrefs().getLong("user_id",1));
-                String url = "http://tripshare.codeadventure.in/TripShare/index.php/trip/add/";
+                String url = getResources().getString(R.string.host)+"index.php/trip/add/";
                 Map<String, String> params = new HashMap<>();
                 try{
                     params = newTrip.getParams();

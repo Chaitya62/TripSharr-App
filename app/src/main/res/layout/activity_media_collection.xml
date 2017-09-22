@@ -40,4 +40,23 @@
         android:layout_below="@+id/my_toolbar2"
         android:id="@+id/imgpre"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar3"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/progressBar3"
+        android:layout_below="@+id/progressBar3"
+        android:layout_marginTop="44dp"
+        android:text="Loading.."
+        android:visibility="gone"/>
+
 </RelativeLayout>
