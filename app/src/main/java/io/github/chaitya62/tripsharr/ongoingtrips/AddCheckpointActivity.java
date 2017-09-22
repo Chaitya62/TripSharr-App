@@ -48,7 +48,6 @@ public class AddCheckpointActivity extends AppCompatActivity {
 
         done = (ImageView) findViewById(R.id.done);
 
-        chkptJson = getIntent().getStringExtra("Chkptjson");
         chkptJson = SharedPrefs.getPrefs().getString("Chkptjson","a");
 
         myToolbar.setTitle("Add Checkpoint");

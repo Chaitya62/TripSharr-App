@@ -69,7 +69,7 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
     }
 
     public static  class  ViewHolder extends RecyclerView.ViewHolder{
-        protected TextView cTitle, cName, cDesc, c_no_of_stars, c_no_of_forks;
+        protected TextView cTitle, cName, cDesc, c_no_of_stars, c_no_of_forks, star, fork;
 
         public ViewHolder(View view){
             super(view);
@@ -78,6 +78,8 @@ public class ProfileFeedAdapter extends RecyclerView.Adapter<ProfileFeedAdapter.
             cDesc = (TextView) view.findViewById(R.id.card_description);
             c_no_of_forks = (TextView) view.findViewById(R.id.no_of_forks);
             c_no_of_stars = (TextView) view.findViewById(R.id.no_of_stars);
+            star = (TextView) view.findViewById(R.id.star);
+            fork = (TextView) view.findViewById(R.id.fork);
 
             Typeface iconFont = FontManager.getTypeface(view.getContext(), FontManager.FONTAWESOME);
             FontManager.markAsIconContainer(view, iconFont);

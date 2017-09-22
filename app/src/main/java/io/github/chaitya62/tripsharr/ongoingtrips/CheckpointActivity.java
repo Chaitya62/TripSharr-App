@@ -54,7 +54,6 @@ public class CheckpointActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ongoing_checkpoint);
 
         finishtrip = (Button) findViewById(R.id.finishtrip);
-        tripId = getIntent().getStringExtra("Tripid");
         tripId = SharedPrefs.getPrefs().getString("selongtripid","1");
         Log.v("shareded",tripId);
 

@@ -3,9 +3,7 @@ package io.github.chaitya62.tripsharr.ongoingtrips;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.view.ActionMode;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,7 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.github.chaitya62.tripsharr.ClickListener;
 import io.github.chaitya62.tripsharr.EditTripActivity;
@@ -201,10 +198,6 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
             if( multiselect_list.size()==1){
                 updateSelection=position;
             }
-
-            else
-                mActionMode.setTitle("");
-
             refreshAdapter();
 
         }
@@ -253,7 +246,8 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
                     return true;
                 case R.id.action_update:
                     Intent i = new Intent(OnGoingTripActivity.this,EditTripActivity.class);
-                    i.putExtra("Tripid",""+tripList.get(updateSelection).getId());
+                    SharedPrefs.getEditor().putString("uptripid",""+tripList.get(updateSelection).getId());
+                    SharedPrefs.getEditor().commit();
                     startActivity(i);
                 default:
                     return false;
@@ -316,6 +310,7 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
         super.onBackPressed();
         Intent i=new Intent(OnGoingTripActivity.this,NavigationActivity.class);
         SharedPrefs.getEditor().remove("selongtripid");
+        SharedPrefs.getEditor().remove("uptripid");
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         finish();

@@ -55,8 +55,8 @@ public class MediaCollectionActivity extends AppCompatActivity {
     Toolbar toolbar;
     static final int REQUEST_IMAGE_CAPTURE = 1,REQUEST_FILE_WRITE_ACCESS=1,REQUEST_FILE_READ_ACCESS=2;
     private Bitmap mImageBitmap;
-    private String mCurrentPhotoPath;
     private File imageFile;
+    private String mCurrentPhotoPath;
     private ImageView mImageView;
     private ExtendedAsyncTask media;
     private String chkptid;
@@ -171,7 +171,6 @@ public class MediaCollectionActivity extends AppCompatActivity {
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        imageFile = image;
         return image;
     }
 
