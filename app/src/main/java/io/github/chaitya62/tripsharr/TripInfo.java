@@ -1,9 +1,12 @@
 package io.github.chaitya62.tripsharr;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.qap.ctimelineview.TimelineRow;
 import org.qap.ctimelineview.TimelineViewAdapter;
 
@@ -35,6 +40,9 @@ import io.github.chaitya62.tripsharr.utils.FontManager;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
+import static io.github.chaitya62.tripsharr.R.color.colorAccent;
+import static io.github.chaitya62.tripsharr.utils.NetworkUtils.context;
+
 /**
  * Created by ankit on 9/9/17.
  */
@@ -43,10 +51,11 @@ public class TripInfo extends NavigationActivity{
 
     private String tripid;
     private String s[] = new String[5];
+    private ImageView imageView;
 
     public void viewMap(View view) {
-        Toast.makeText(TripInfo.this, "We did it!", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(TripInfo.this, "We did it!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(getApplicationContext(), OngoingMapActivity.class);
         SharedPrefs.getEditor().putString("selongtripid", tripid);
         SharedPrefs.getEditor().commit();
@@ -65,6 +74,7 @@ public class TripInfo extends NavigationActivity{
 
         String url = getString(R.string.host)+"index.php/Trip/trips/"+ tripid;
         String mediaUrl = getString(R.string.host)+"index.php/Trip/random_media/"+tripid;
+        imageView = (ImageView)findViewById(R.id.media_display);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -80,7 +90,7 @@ public class TripInfo extends NavigationActivity{
                                 stars.setText(Long.toString(trip.getNoOfStars()));
                                 TextView forks = (TextView) findViewById(R.id.profile_forks);
                                 forks.setText(Long.toString(trip.getNoOfForks()));
-                                Toast.makeText(TripInfo.this, trip.getName(), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(TripInfo.this, trip.getName(), Toast.LENGTH_SHORT).show();
                                 Log.i("name",trip.getName());
                                 Log.i("Desc",trip.getDescription());
                                 Toast.makeText(TripInfo.this, trip.getDescription(), Toast.LENGTH_SHORT).show();
@@ -101,27 +111,8 @@ public class TripInfo extends NavigationActivity{
                 Log.v("hellerr",""+error);
             }
         });
-        JsonArrayRequest mediaRequest = new JsonArrayRequest(mediaUrl, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                try {
-                    for (int i = 0; i < response.length(); i++) {
-                        s[i] = response.getString(i);
-                    }
-                } catch (Exception e) {
-                    Log.i("Error", "In Getting Random Media: "+e.toString());
-                }
-                Log.i("Response", response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("VolleyError", "In getting Random Media: " + error.toString());
-            }
-        }
-        );
-        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonArrayRequest);
-        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(mediaRequest);
+
+        
 
         final ArrayList<TimelineRow> timelineList = new ArrayList<>();
         Handler handler = new Handler(getMainLooper()){
@@ -139,11 +130,11 @@ public class TripInfo extends NavigationActivity{
                         timelineRow.setTitleColor(Color.BLACK);
                         timelineRow.setDateColor(Color.BLACK);
                         timelineRow.setDescriptionColor(Color.BLACK);
-                        timelineRow.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.images));
+                        timelineRow.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.timeline));
                         timelineRow.setImageSize(40);
                         timelineRow.setDescription(checkpoint.getDescription());
-                        timelineRow.setBellowLineColor(Color.RED);
-                        timelineRow.setBellowLineSize(6);
+                        timelineRow.setBellowLineColor(colorAccent);
+                        timelineRow.setBellowLineSize(3);
                         timelineList.add(timelineRow);
                     }
                     ArrayAdapter<TimelineRow> listAdapter = new TimelineViewAdapter(getApplicationContext(), 0, timelineList, false);
