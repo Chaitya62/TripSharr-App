@@ -108,6 +108,8 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
                     String temp = ""+trip.getId();
                     SharedPrefs.getEditor().putString("selongtripid",temp);
                     SharedPrefs.getEditor().commit();
+                    SharedPrefs.getEditor().putBoolean("tripstatus",trip.isComplete());
+                    SharedPrefs.getEditor().commit();
                     Log.v("shared",temp + " " + SharedPrefs.getPrefs().getString("selongtripid","1"));
                     startActivity(i);
                     drawerLayout.closeDrawers();
