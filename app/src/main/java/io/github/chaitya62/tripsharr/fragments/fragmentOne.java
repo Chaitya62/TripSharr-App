@@ -1,8 +1,10 @@
 package io.github.chaitya62.tripsharr.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,21 +12,29 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.chaitya62.tripsharr.ClickListener;
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.RecyclerTouchListener;
 import io.github.chaitya62.tripsharr.TripInfo;
 import io.github.chaitya62.tripsharr.adapters.FragmentOneAdapter;
+import io.github.chaitya62.tripsharr.ongoingtrips.OnGoingTripActivity;
+import io.github.chaitya62.tripsharr.ongoingtrips.OngoingMapActivity;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
@@ -62,7 +72,6 @@ public class fragmentOne extends Fragment{
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(new FragmentOneAdapter(getApplicationContext(),list));
         //return inflater.inflate(R.layout.fragment_one, container, false);
-
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -79,6 +88,7 @@ public class fragmentOne extends Fragment{
             }
         }));
         return v;
+
 
     }
     public void prepdata(){
