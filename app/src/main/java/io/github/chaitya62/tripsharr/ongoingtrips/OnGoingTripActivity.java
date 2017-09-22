@@ -258,7 +258,7 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    alertDialogHelper.showAlertDialog("","Delete Contact","DELETE","CANCEL",1,false);
+                    alertDialogHelper.showAlertDialog("","Delete Trip","DELETE","CANCEL",1,false);
                     return true;
                 case R.id.action_update:
                     Intent i = new Intent(OnGoingTripActivity.this,EditTripActivity.class);
