@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary"
     android:id="@+id/trip_info"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -79,13 +80,18 @@
                 />
         </LinearLayout>
         </LinearLayout>
-                <TextView
-                    android:id="@+id/title_description"
-                    android:layout_width="match_parent"
-                    android:layout_below="@id/media_display"
-                    android:layout_height="wrap_content"
-                    android:text="@string/loading"
-                    android:layout_marginTop="11dp" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/timeline"
+        android:divider="@null"
+        android:clickable="false"
+        android:listSelector="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
 
 </LinearLayout>
 
@@ -95,11 +101,11 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:onClick="viewMap"
-        app:fabSize="mini"
-        app:srcCompat="@android:drawable/ic_menu_compass"
-        android:layout_marginEnd="34dp"
-        android:layout_marginBottom="37dp"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        app:srcCompat="@android:drawable/ic_menu_compass"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>
 
