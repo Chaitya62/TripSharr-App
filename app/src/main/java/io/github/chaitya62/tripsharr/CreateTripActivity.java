@@ -68,6 +68,7 @@ public class CreateTripActivity extends NavigationActivity {
                     newTrip.setName(tripName);
                     newTrip.setDescription(mstdesc);
                     newTrip.setUserId(SharedPrefs.getPrefs().getLong("user_id", 1));
+                    SharedPrefs.getEditor().putBoolean("tripstatus",false);
                     String url = "http://tripshare.codeadventure.in/TripShare/index.php/trip/add/";
                     Map<String, String> params = new HashMap<>();
                     try {

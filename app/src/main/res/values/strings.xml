@@ -151,10 +151,12 @@ public class NavigationActivity extends AppCompatActivity {
     <string name="back_arrow">&#xf060;</string>
     <string name="no_internet">No Internet</string>
     <plurals name="fork_unit">
+        <item quantity="zero">%d Fork</item>
         <item quantity="one">%d Fork</item>
         <item quantity="other">%d Forks</item>
     </plurals>
     <plurals name="star_unit">
+        <item quantity="zero">%d Star</item>
         <item quantity="one">%d Star</item>
         <item quantity="other">%d Stars</item>
     </plurals>
