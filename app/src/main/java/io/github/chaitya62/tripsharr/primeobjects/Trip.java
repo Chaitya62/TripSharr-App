@@ -58,7 +58,8 @@ public class Trip implements Serializable{
            // Log.i("STARS : ", trip.get("no_of_stars")+"");
             noOfStars = Long.parseLong(trip.get("no_of_stars").toString());
             noOfForks = Long.parseLong(trip.get("no_of_forks").toString());
-            isComplete = trip.getBoolean("is_complete");
+            isComplete = Boolean.parseBoolean(trip.get("is_complete").toString());
+
             isPublic = Boolean.parseBoolean(trip.get("is_public").toString());
             try{
                 isForked = trip.getBoolean("is_forked");
