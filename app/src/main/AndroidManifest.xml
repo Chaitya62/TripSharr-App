@@ -110,7 +110,6 @@
 
         </activity>
         <activity android:name=".NoInternet" />
-        <activity android:name=".EditTripActivity" />
     </application>
 
 </manifest>
