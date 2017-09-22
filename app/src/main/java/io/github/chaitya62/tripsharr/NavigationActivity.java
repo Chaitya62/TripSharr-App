@@ -69,7 +69,7 @@ public class NavigationActivity extends AppCompatActivity {
             profilePic.setImageBitmap(profileImage);
             return;
         }
-        String profileUrl = "https://graph.facebook.com/"+SharedPrefs.getPrefs().getString("fb_id", "0")+"/picture?height=100";
+        String profileUrl = "https://graph.facebook.com/"+SharedPrefs.getPrefs().getString("fb_id", "0")+"/picture?height=120";
         Log.i("URL", profileUrl);
         ImageRequest imageRequest = new ImageRequest(profileUrl, new Response.Listener<Bitmap>() {
             @Override
