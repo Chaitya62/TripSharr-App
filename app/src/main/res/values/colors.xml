@@ -5,6 +5,7 @@
     <color name="colorAccent">#ffdd4b</color>
     <color name="colorWhite">#1b1b1b</color>
     <color name="colorLightText">#e4e4e4</color>
+    <color name="colorDarkText">#d0caca</color>
     <color name="list_item_selected_state">#ea7703</color>
     <color name="list_item_normal_state">#ff8100</color>
     <color name="polyline_color">#70b0ff</color>
