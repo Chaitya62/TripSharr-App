@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import io.github.chaitya62.tripsharr.EditTripActivity;
+import io.github.chaitya62.tripsharr.FeedsActivity;
 import io.github.chaitya62.tripsharr.HomeActivity;
 import io.github.chaitya62.tripsharr.NavigationActivity;
 import io.github.chaitya62.tripsharr.R;
@@ -315,7 +316,7 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i=new Intent(OnGoingTripActivity.this,HomeActivity.class);
+        Intent i=new Intent(OnGoingTripActivity.this,FeedsActivity.class);
         SharedPrefs.getEditor().remove("selongtripid");
         SharedPrefs.getEditor().commit();
         SharedPrefs.getEditor().remove("uptripid");
