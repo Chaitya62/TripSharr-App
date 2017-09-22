@@ -103,7 +103,6 @@
         <activity android:name=".ongoingtrips.AddCheckpointActivity" />
         <activity android:name=".ongoingtrips.MediaCollectionActivity" />
         <activity android:name=".ViewTripTimeLine" />
-
         <activity android:name=".EditTripActivity" />
         <activity
             android:name=".FeedsActivity"
@@ -112,7 +111,7 @@
 
         </activity>
         <activity android:name=".NoInternet" />
-        <activity android:name=".EditTripActivity"/>
+        <activity android:name=".EditTripActivity" />
     </application>
 
 </manifest>

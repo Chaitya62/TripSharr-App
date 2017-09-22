@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:padding="50dp"
+    android:padding="20dp"
     android:background="#ffffff"
     >
 
@@ -9,19 +9,17 @@
         android:id="@+id/plane"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/plane"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="35dp" />
+        android:src="@drawable/logo"
+        android:layout_marginTop="25dp" />
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="@string/app_name"
-        android:gravity="center"
-        android:textSize="45sp"
-        android:textStyle=""
-        android:layout_below="@id/plane"/>
+    <!--<TextView-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:text="@string/app_name"-->
+        <!--android:gravity="center"-->
+        <!--android:textSize="75sp"-->
+        <!--android:textStyle=""-->
+        <!--android:layout_below="@id/plane"/>-->
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
@@ -34,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
