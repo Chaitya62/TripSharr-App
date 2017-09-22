@@ -63,9 +63,14 @@ public class Trip implements Serializable{
             try{
                 isForked = trip.getBoolean("is_forked");
                 isStarred = trip.getBoolean("is_starred");
+
+            }catch(Exception e){
+                Log.i("DEBUG :", "THIS WILL SHOW IF FORKED OR STARRED IS NOT SET FROM SERVER IN FEEDS");
+            }
+            try{
                 userName = trip.getString("user_name");
             }catch(Exception e){
-                Log.i("DEBUG :", "THIS WILL PRINT IF NOT TRIPS ARE NOT FEEDS");
+                Log.i("DEBUG: ", "THIS WILL SHOW IF USERNAME IS NOT SET FROM SERVER IN FEEDS");
             }
             if(!trip.get("old_trip_id").toString().equals("null"))
                 oldTripId = Long.parseLong(trip.get("old_trip_id").toString());

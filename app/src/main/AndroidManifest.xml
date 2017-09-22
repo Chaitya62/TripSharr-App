@@ -103,6 +103,14 @@
         <activity android:name=".ongoingtrips.AddCheckpointActivity" />
         <activity android:name=".ongoingtrips.MediaCollectionActivity" />
         <activity android:name=".ViewTripTimeLine" />
+
+        <activity android:name=".EditTripActivity" />
+        <activity
+            android:name=".FeedsActivity"
+            android:label="@string/title_activity_feeds"
+            android:theme="@style/AppTheme">
+
+        </activity>
         <activity android:name=".NoInternet" />
         <activity android:name=".EditTripActivity"/>
     </application>

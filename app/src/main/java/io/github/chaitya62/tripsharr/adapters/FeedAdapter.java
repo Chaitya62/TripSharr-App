@@ -49,11 +49,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
     private  List<Trip> tripList;
     private Context context;
     private static Context ctx;
+    static protected long AppUserId;
     private static AssetManager mgr;
 
     public FeedAdapter(Context context, List<Trip> tripList) {
         this.context = context;
-        this.ctx = context;
+        FeedAdapter.ctx = context;
+        FeedAdapter.AppUserId = SharedPrefs.getPrefs().getLong("user_id", 1);
         this.tripList = tripList;
         notifyDataSetChanged();
         mgr = context.getAssets();
@@ -74,6 +76,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         protected TextView c_no_of_forks;
         protected TextView star,fork;
         protected  View view;
+
 
         private Trip trip;
 
@@ -108,17 +111,21 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
            if(view.getId() == star.getId()){
                Log.i("CLICKED", "DID");
                 this.toggleStar(trip);
-
-               //TODO update trip on server
-               //star.setImageDrawable();
+               return;
 
            }else if(view.getId() == fork.getId()) {
                this.toggleFork(trip);
-               //Toast.makeText(ctx, "Fork Clicked: "+trip.getId(), Toast.LENGTH_SHORT).show();
+               Toast.makeText(ctx, "Forked", Toast.LENGTH_SHORT).show();
+               return;
            }else if(view.getId() == cName.getId()){
                Intent profileIntent = new Intent(view.getContext(), ProfileActivity.class);
                profileIntent.putExtra("user_id", trip.getUserId());
                view.getContext().startActivity(profileIntent);
+               return;
+           }else if(view.getId() == cTitle.getId()){
+               Log.i("HERE it is", "IT WAS HERE");
+               Toast.makeText(ctx, "selected the trip", Toast.LENGTH_SHORT).show();
+               return;
            }
         }
 
@@ -170,7 +177,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.i("URL",response.toString());
-                    if(Forking_trip.isStarred()){
+                    if(Forking_trip.isForked()){
                         trip.setNoOfForks(trip.getNoOfForks()+1);
                         c_no_of_forks.setText(trip.getNoOfForks()+"");
                     }
@@ -250,17 +257,20 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         tripViewHolder.cDesc.setText(trip.getDescription());
         tripViewHolder.c_no_of_forks.setText(""+trip.getNoOfForks());
         tripViewHolder.c_no_of_stars.setText(""+trip.getNoOfStars());
-
+        if(trip.getUserId() == AppUserId){
+            tripViewHolder.fork.setVisibility(View.GONE);
+        }
         if(trip.isStarred())  tripViewHolder.star.setText("\uf006");
         else tripViewHolder.star.setText("\uf006");
 
         tripViewHolder.setTrip(trip);
         tripViewHolder.setStarState(trip);
         tripViewHolder.setForkState(trip);
-
+        tripViewHolder.cTitle.setOnClickListener(tripViewHolder);
         tripViewHolder.cName.setOnClickListener(tripViewHolder);
         tripViewHolder.star.setOnClickListener(tripViewHolder);
         tripViewHolder.fork.setOnClickListener(tripViewHolder);
+
 
 
 
