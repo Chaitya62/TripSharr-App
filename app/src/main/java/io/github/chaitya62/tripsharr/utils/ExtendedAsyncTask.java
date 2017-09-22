@@ -113,9 +113,10 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
             try {
                 ArrayList<Uri> data = (ArrayList<Uri>) params[0];
                 ArrayList<String> urlsList = new ArrayList<>();
-                int num  = 0;
+                int num  = (int)params[1];
+                long chkptid = (long) params[2];
                 for(Uri image : data) {
-                    String imageName = "test_upload"+(num++);
+                    String imageName = "test_upload"+chkptid+"_"+(num++);
                     cloudinary.uploader().upload(context.getContentResolver().openInputStream(image), ObjectUtils.asMap("public_id", imageName));
                     String s = cloudinary.url().generate(imageName+".jpg");
                     Log.i("Image Url", s);
@@ -125,6 +126,8 @@ public class ExtendedAsyncTask extends AsyncTask<Object, Void, Object> {
                 Message msg = handler.obtainMessage(0, urlsList);
                 msg.sendToTarget();
             } catch (Exception e) {
+                Message msg = handler.obtainMessage(0);
+                msg.sendToTarget();
                 Log.i("Error", e.toString());
             }
             return null;

@@ -186,14 +186,9 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         else {
-            //Logged.. Update Access Token..
-            if(!NetworkUtils.isNetworkAvailable()) {
-                Intent i = new Intent(getApplication(), NavigationActivity.class);
-                startActivity(i);
-                finish();
-            }
-            setContentView(R.layout.loading);
-            updateWithToken(AccessToken.getCurrentAccessToken());
+            Intent i = new Intent(getApplication(), NavigationActivity.class);
+            startActivity(i);
+            finish();
         }
     }
 

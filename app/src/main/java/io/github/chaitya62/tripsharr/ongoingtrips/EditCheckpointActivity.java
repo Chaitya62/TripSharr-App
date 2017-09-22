@@ -36,6 +36,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -45,6 +46,7 @@ import java.util.Map;
 import io.github.chaitya62.tripsharr.Manifest;
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.ViewTripActivity;
+import io.github.chaitya62.tripsharr.primeobjects.Coordinates;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
@@ -61,6 +63,7 @@ public class EditCheckpointActivity extends AppCompatActivity {
     private Bitmap mImageBitmap;
     private String mCurrentPhotoPath,path;
     private ImageView mImageView;
+    private int imageCount;
     int permissionCheck;
 
     @Override
@@ -227,8 +230,8 @@ public class EditCheckpointActivity extends AppCompatActivity {
             case R.id.ivmedia:
                 //Toast.makeText(EditCheckpointActivity.this,"media",Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(EditCheckpointActivity.this,MediaCollectionActivity.class);
-                startActivity(i);
 
+                startActivity(i);
                 /*CharSequence colors[] = new CharSequence[] {"Camera", "Gallery"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
