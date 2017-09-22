@@ -31,6 +31,7 @@
         android:layout_weight="1"
         app:lottie_fileName="marker.json"
         app:lottie_loop="true"
+        app:lottie_colorFilter="@color/colorAccent"
         android:layout_gravity="center"
         app:lottie_autoPlay="true" />
 
