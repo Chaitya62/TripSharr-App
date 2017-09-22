@@ -3,6 +3,7 @@ package io.github.chaitya62.tripsharr.adapters;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
@@ -51,17 +53,24 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
         return new MyViewHolder(itemView);
     }
 
+
+
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Trip trip = tripsList.get(position);
         holder.name.setText(trip.getName());
         holder.desc.setText(trip.getDescription());
 
+        Log.v("hello","hello");
 
-        if(selected_tripsList.contains(tripsList.get(position)))
+        if(selected_tripsList.contains(tripsList.get(position))) {
+            Log.v("hello","sel");
             holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.list_item_selected_state));
-        else
+        }
+        else {
+            Log.v("hello","desel");
             holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.list_item_normal_state));
+        }
 
     }
 
@@ -69,5 +78,23 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
     public int getItemCount() {
         return tripsList.size();
     }
+
+    public void add(Trip trip) {
+        Log.i("DEBUG",trip.getName());
+        tripsList.add(tripsList.size(), trip);
+        notifyItemInserted(tripsList.size()-1);
+    }
+
+    public void clear() {
+        tripsList.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a list of items -- change to type used
+    public void addAll(List<Trip> list) {
+        tripsList.addAll(list);
+        notifyDataSetChanged();
+    }
+
 }
 

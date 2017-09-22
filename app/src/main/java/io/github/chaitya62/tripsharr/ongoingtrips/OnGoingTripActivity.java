@@ -1,12 +1,15 @@
 package io.github.chaitya62.tripsharr.ongoingtrips;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.ActionMode;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,14 +23,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import io.github.chaitya62.tripsharr.ClickListener;
 import io.github.chaitya62.tripsharr.EditTripActivity;
+import io.github.chaitya62.tripsharr.HomeActivity;
 import io.github.chaitya62.tripsharr.NavigationActivity;
 import io.github.chaitya62.tripsharr.R;
 import io.github.chaitya62.tripsharr.RecyclerTouchListener;
@@ -49,11 +51,11 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
     private ArrayList<Trip> multiselect_list = new ArrayList<>();
     private TripAdapter mAdapter;
     private Menu context_menu;
-    boolean isMultiSelect = false;
-    ActionMode mActionMode;
-    MultiSelectAdapter multiSelectAdapter;
-    AlertDialogHelper alertDialogHelper;
-    int updateSelection=-1;
+    private boolean isMultiSelect = false;
+    private ActionMode mActionMode;
+    private MultiSelectAdapter multiSelectAdapter;
+    private AlertDialogHelper alertDialogHelper;
+    private int updateSelection=-1;
     String tripUrl="http://tripshare.codeadventure.in/TripShare/index.php/Trip/delete/";
     private SwipeRefreshLayout swipeContainer;
 
@@ -90,12 +92,12 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
         multiSelectAdapter = new MultiSelectAdapter(OnGoingTripActivity.this,tripList,multiselect_list);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
-        //recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(new TripAdapter(getApplicationContext(),tripList));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(multiSelectAdapter);
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, recyclerView, new RecyclerTouchListener.OnItemClickListener() {
             @Override
-            public void onClick(View view, int position) {
+            public void onItemClick(View view, int position) {
                 if (isMultiSelect)
                     multi_select(position);
                 else {
@@ -113,7 +115,7 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
             }
 
             @Override
-            public void onLongClick(View view, int position) {
+            public void onItemLongClick(View view, int position) {
                 Log.v("hello","long");
                 Toast.makeText(OnGoingTripActivity.this,"long press",Toast.LENGTH_SHORT).show();
                 if (!isMultiSelect) {
@@ -128,7 +130,6 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
                 multi_select(position);
             }
         }));
-
 
     }
 
@@ -157,7 +158,8 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
                                 try {
                                     Log.v("list",response.getJSONObject(i).getString("is_complete"));
                                     if(response.getJSONObject(i).getString("is_complete").equals("0")) {
-                                        ((TripAdapter) recyclerView.getAdapter()).add(new Trip(response.getJSONObject(i)));
+                                        //((TripAdapter) recyclerView.getAdapter()).add(new Trip(response.getJSONObject(i)));
+                                        ((MultiSelectAdapter) recyclerView.getAdapter()).add(new Trip(response.getJSONObject(i)));
                                     }
 
                                 } catch (Exception e) {
@@ -197,6 +199,9 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
             }
             if( multiselect_list.size()==1){
                 updateSelection=position;
+            }
+            if( multiselect_list.size()==0){
+                mActionMode.setTitle("");
             }
             refreshAdapter();
 
@@ -242,7 +247,7 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    alertDialogHelper.showAlertDialog("","Delete Contact","DELETE","CANCEL",1,false,multiselect_list);
+                    alertDialogHelper.showAlertDialog("","Delete Contact","DELETE","CANCEL",1,false);
                     return true;
                 case R.id.action_update:
                     Intent i = new Intent(OnGoingTripActivity.this,EditTripActivity.class);
@@ -308,7 +313,7 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i=new Intent(OnGoingTripActivity.this,NavigationActivity.class);
+        Intent i=new Intent(OnGoingTripActivity.this,HomeActivity.class);
         SharedPrefs.getEditor().remove("selongtripid");
         SharedPrefs.getEditor().remove("uptripid");
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
