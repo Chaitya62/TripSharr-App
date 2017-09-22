@@ -85,9 +85,7 @@ public class HomeActivity extends AppCompatActivity
 
         } else if (id == R.id.ongoing_trip) {
 
-        } else if (id == R.id.share_trip) {
-
-        }
+        } 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
