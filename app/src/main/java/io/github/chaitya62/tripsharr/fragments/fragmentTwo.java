@@ -93,7 +93,7 @@ public class fragmentTwo extends Fragment {
                         try {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
-                                    ((FragmentOneAdapter) recyclerView.getAdapter()).add(new Trip(response.getJSONObject(i)));
+                                    ((FragmentOneAdapter) recyclerView.getAdapter()).add(new Trip(response.getJSONArray(i).getJSONObject(0)));
                                     Log.v("Response i", "" + response.getJSONArray(i).getJSONObject(0));
                                 } catch (Exception e) {
                                     try {
