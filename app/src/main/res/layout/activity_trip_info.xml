@@ -15,15 +15,25 @@
     >
 
 
-    <ImageView
-        android:id="@+id/media_display"
+    <!--<ImageView-->
+        <!--android:id="@+id/media_display"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="276dp"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_gravity="start"-->
+        <!--android:contentDescription="TEST IMAGE"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:src="@drawable/plane" />-->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
         android:layout_width="match_parent"
-        android:layout_height="276dp"
-        android:layout_alignParentStart="true"
-        android:layout_gravity="start"
-        android:contentDescription="TEST IMAGE"
-        android:scaleType="centerCrop"
-        android:src="@drawable/plane" />
+        android:layout_height="270dp"
+        android:layout_weight="1"
+        app:lottie_fileName="marker.json"
+        app:lottie_loop="true"
+        android:layout_gravity="center"
+        app:lottie_autoPlay="true" />
+
 
     <LinearLayout
         android:padding= "10dp"

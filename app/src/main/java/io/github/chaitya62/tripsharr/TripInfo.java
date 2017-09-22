@@ -74,7 +74,7 @@ public class TripInfo extends NavigationActivity{
 
         String url = getString(R.string.host)+"index.php/Trip/trips/"+ tripid;
         String mediaUrl = getString(R.string.host)+"index.php/Trip/random_media/"+tripid;
-        imageView = (ImageView)findViewById(R.id.media_display);
+        //imageView = (ImageView)findViewById(R.id.media_display);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
