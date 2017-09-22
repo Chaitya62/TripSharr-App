@@ -44,13 +44,4 @@
         <item name="android:gravity">center</item>
     </style>
 
-
-    <style name="Widget.ActionMode">
-        <item name="android:background">?android:attr/actionModeBackground</item>
-        <item name="android:backgroundSplit">?android:attr/actionModeSplitBackground</item>
-        <item name="android:height">?android:attr/actionBarSize</item>
-        <item name="android:titleTextStyle">@android:style/TextAppearance.Widget.ActionMode.Title</item>
-        <item name="android:subtitleTextStyle">@android:style/TextAppearance.Widget.ActionMode.Subtitle</item>
-    </style>
-
 </resources>
