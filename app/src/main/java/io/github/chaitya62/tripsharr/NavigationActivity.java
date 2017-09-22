@@ -193,7 +193,7 @@ public class NavigationActivity extends AppCompatActivity {
                 Intent i;
                 switch (item.getItemId()) {
                     case R.id.home:
-                        i = new Intent(getApplicationContext(), NavigationActivity.class);
+                        i = new Intent(getApplicationContext(), FeedsActivity.class);
                         startActivity(i);
                         drawerLayout.closeDrawers();
                         break;

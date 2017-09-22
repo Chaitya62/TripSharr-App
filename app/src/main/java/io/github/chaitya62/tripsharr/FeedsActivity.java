@@ -171,6 +171,7 @@ public class FeedsActivity extends NavigationActivity {
 
 //        toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        toolbar.setTitleTextColor(Color.BLACK);
+          toolbar.setTitle("Feeds");
 //
 //        setSupportActionBar(toolbar);
 
