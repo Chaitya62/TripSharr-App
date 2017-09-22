@@ -138,9 +138,9 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
     public void fetchTimelineAsync(int page) {
         // Send the network request to fetch the updated data
 
-        ((TripAdapter) recyclerView.getAdapter()).clear();
+        ((MultiSelectAdapter) recyclerView.getAdapter()).clear();
         prepareTripData();
-        ((TripAdapter) recyclerView.getAdapter()).addAll(tripList);
+        ((MultiSelectAdapter) recyclerView.getAdapter()).addAll(tripList);
         swipeContainer.setRefreshing(false);
     }
 
