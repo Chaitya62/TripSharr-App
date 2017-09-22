@@ -23,10 +23,10 @@
             android:id="@+id/ongoing_trip"
             android:icon="@mipmap/ongoing_trip"
             android:title="ON-Going Trips" />
-        <item
-            android:id="@+id/share_trip"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Share Trips" />
+        <!--<item-->
+            <!--android:id="@+id/share_trip"-->
+            <!--android:icon="@drawable/ic_menu_manage"-->
+            <!--android:title="Share Trips" />-->
     </group>
 
 
