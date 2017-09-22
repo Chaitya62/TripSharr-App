@@ -24,24 +24,19 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-<<<<<<< HEAD
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
-=======
->>>>>>> a34d71dcfbfabd8f8fe184c665fdad5f5f8cbb1e
+
 import java.util.HashMap;
 import java.util.Map;
 
 import io.github.chaitya62.tripsharr.R;
-<<<<<<< HEAD
 import io.github.chaitya62.tripsharr.ViewTripActivity;
 import io.github.chaitya62.tripsharr.primeobjects.Coordinates;
-=======
->>>>>>> a34d71dcfbfabd8f8fe184c665fdad5f5f8cbb1e
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 
