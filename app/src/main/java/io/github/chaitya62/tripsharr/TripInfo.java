@@ -79,7 +79,7 @@ public class TripInfo extends NavigationActivity{
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.v("Response", "" + response);
+                        Log.v("Response stuff", "" + response);
                         Trip trip;
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -90,6 +90,7 @@ public class TripInfo extends NavigationActivity{
                                 stars.setText(Long.toString(trip.getNoOfStars()));
                                 TextView forks = (TextView) findViewById(R.id.profile_forks);
                                 forks.setText(Long.toString(trip.getNoOfForks()));
+                                Log.i("stars here: ", trip.getNoOfStars()+"");
                                 //Toast.makeText(TripInfo.this, trip.getName(), Toast.LENGTH_SHORT).show();
                                 Log.i("name",trip.getName());
                                 Log.i("Desc",trip.getDescription());
@@ -111,6 +112,10 @@ public class TripInfo extends NavigationActivity{
                 Log.v("hellerr",""+error);
             }
         });
+
+
+        // who the fuck will do this ? @Showndarya
+        VolleySingleton.getInstance(context).addToRequestQueue(jsonArrayRequest);
 
 
 
