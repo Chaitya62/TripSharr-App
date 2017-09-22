@@ -108,17 +108,21 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
            if(view.getId() == star.getId()){
                Log.i("CLICKED", "DID");
                 this.toggleStar(trip);
-
-               //TODO update trip on server
-               //star.setImageDrawable();
+               return;
 
            }else if(view.getId() == fork.getId()) {
                this.toggleFork(trip);
-               //Toast.makeText(ctx, "Fork Clicked: "+trip.getId(), Toast.LENGTH_SHORT).show();
+               Toast.makeText(ctx, "Forked", Toast.LENGTH_SHORT).show();
+               return;
            }else if(view.getId() == cName.getId()){
                Intent profileIntent = new Intent(view.getContext(), ProfileActivity.class);
                profileIntent.putExtra("user_id", trip.getUserId());
                view.getContext().startActivity(profileIntent);
+               return;
+           }else if(view.getId() == cTitle.getId()){
+               Log.i("HERE it is", "IT WAS HERE");
+               Toast.makeText(ctx, "selected the trip", Toast.LENGTH_SHORT).show();
+               return;
            }
         }
 
@@ -170,7 +174,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.i("URL",response.toString());
-                    if(Forking_trip.isStarred()){
+                    if(Forking_trip.isForked()){
                         trip.setNoOfForks(trip.getNoOfForks()+1);
                         c_no_of_forks.setText(trip.getNoOfForks()+"");
                     }
@@ -257,10 +261,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.TripViewHolder
         tripViewHolder.setTrip(trip);
         tripViewHolder.setStarState(trip);
         tripViewHolder.setForkState(trip);
-
+        tripViewHolder.cTitle.setOnClickListener(tripViewHolder);
         tripViewHolder.cName.setOnClickListener(tripViewHolder);
         tripViewHolder.star.setOnClickListener(tripViewHolder);
         tripViewHolder.fork.setOnClickListener(tripViewHolder);
+
 
 
 

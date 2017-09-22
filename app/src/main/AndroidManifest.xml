@@ -101,9 +101,13 @@
             android:label="@string/title_activity_ongoing_map" />
         <activity android:name=".ongoingtrips.EditCheckpointActivity" />
         <activity android:name=".ongoingtrips.AddCheckpointActivity" />
-        <activity android:name=".ongoingtrips.MediaCollectionActivity"/>
-        <activity android:name=".ViewTripTimeLine"></activity>
-        <activity android:name=".EditTripActivity"/>
+        <activity android:name=".ongoingtrips.MediaCollectionActivity" />
+        <activity android:name=".ViewTripTimeLine" />
+        <activity android:name=".EditTripActivity" />
+        <activity
+            android:name=".FeedsActivity"
+            android:label="@string/title_activity_feeds"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
