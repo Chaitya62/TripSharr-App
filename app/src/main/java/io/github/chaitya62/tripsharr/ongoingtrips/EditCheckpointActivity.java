@@ -171,37 +171,41 @@ public class EditCheckpointActivity extends AppCompatActivity {
         int in = v.getId();
         switch (in){
             case R.id.ivname:
-                Map<String,String> hm = new HashMap<>();
-                hm.put("id",chkptid);
-                hm.put("name",upnameet.getText().toString().trim());
-                JSONObject jsonObject = new JSONObject(hm);
-                Toast.makeText(EditCheckpointActivity.this,"Update Successful",Toast.LENGTH_SHORT).show();
+                if(upnameet.getText().toString().trim().equals(""))
+                    Toast.makeText(EditCheckpointActivity.this,"Name must be filled",Toast.LENGTH_SHORT).show();
+                else {
+                    Map<String, String> hm = new HashMap<>();
+                    hm.put("id", chkptid);
+                    hm.put("name", upnameet.getText().toString().trim());
+                    JSONObject jsonObject = new JSONObject(hm);
 
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, chkptUrl, jsonObject, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.v("chkres", "" + response);
-                        try {
-                            if (response.getString("request").equals("Success")) {
-                                Toast.makeText(EditCheckpointActivity.this, "Update Successful", Toast.LENGTH_SHORT).show();
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, chkptUrl, jsonObject, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.v("chkres", "" + response);
+                            try {
+                                if (response.getString("request").equals("Success")) {
+                                    Toast.makeText(EditCheckpointActivity.this, "Update Successful", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
                             }
                         }
-                        catch (Exception e){}
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.v("chkerr",""+error);
-                    }
-                });
-                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.v("chkerr", "" + error);
+                        }
+                    });
+                    VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+                }
                 break;
             case R.id.ivdesc:
+                Map<String, String> hm = new HashMap<>();
                 hm = new HashMap<>();
                 hm.put("id",chkptid);
                 hm.put("description",updescet.getText().toString().trim());
-                jsonObject = new JSONObject(hm);
-                jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, chkptUrl, jsonObject, new Response.Listener<JSONObject>() {
+                JSONObject jsonObject = new JSONObject(hm);
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, chkptUrl, jsonObject, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Toast.makeText(EditCheckpointActivity.this,"Update Successful",Toast.LENGTH_SHORT).show();

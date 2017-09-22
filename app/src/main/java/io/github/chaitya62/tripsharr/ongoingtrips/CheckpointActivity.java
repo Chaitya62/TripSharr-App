@@ -58,7 +58,7 @@ public class CheckpointActivity extends AppCompatActivity implements AlertDialog
     private AlertDialogHelper alertDialogHelper;
     private int updateSelection=-1;
     String coordinateUrl="http://tripshare.codeadventure.in/TripShare/index.php/Coordinates/delete/";
-    private SwipeRefreshLayout swipeContainer;
+    private boolean tripstatus;
 
 
     @Override
@@ -68,6 +68,7 @@ public class CheckpointActivity extends AppCompatActivity implements AlertDialog
 
         finishtrip = (Button) findViewById(R.id.finishtrip);
         tripId = SharedPrefs.getPrefs().getString("selongtripid","1");
+        tripstatus = SharedPrefs.getPrefs().getBoolean("tripstatus",false);
         Log.v("shareded",tripId);
 
         recyclerView = (RecyclerView) findViewById(R.id.ongoing_recycler);
@@ -80,75 +81,83 @@ public class CheckpointActivity extends AppCompatActivity implements AlertDialog
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(multiSelectCoordinateAdapter);
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                if(isMultiSelect)
-                    multi_select(position);
-                else {
-                    Coordinates coordinates = coordinatesList.get(position);
-                    Toast.makeText(CheckpointActivity.this, coordinates.getDescription(), Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(CheckpointActivity.this, EditCheckpointActivity.class);
-                    SharedPrefs.getEditor().putString("selongchkptid", "" + coordinates.getId());
-                    SharedPrefs.getEditor().commit();
-                    startActivity(i);
-                }
-            }
+        if(tripstatus)
+            finishtrip.setVisibility(View.GONE);
 
-            @Override
-            public void onItemLongClick(View view, int position) {
-                Log.v("hello","long");
-                Toast.makeText(CheckpointActivity.this,"long press",Toast.LENGTH_SHORT).show();
-                if (!isMultiSelect) {
-                    multiselect_list = new ArrayList<Coordinates>();
-                    isMultiSelect = true;
+        if(!tripstatus) {
 
-                    if (mActionMode == null) {
-                        mActionMode = startActionMode(mActionModeCallback);
+            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    if (isMultiSelect)
+                        multi_select(position);
+                    else {
+                        Coordinates coordinates = coordinatesList.get(position);
+                        Toast.makeText(CheckpointActivity.this, coordinates.getDescription(), Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(CheckpointActivity.this, EditCheckpointActivity.class);
+                        SharedPrefs.getEditor().putString("selongchkptid", "" + coordinates.getId());
+                        SharedPrefs.getEditor().commit();
+                        startActivity(i);
                     }
                 }
 
-                multi_select(position);
-            }
-        }));
+                @Override
+                public void onItemLongClick(View view, int position) {
+                    Log.v("hello", "long");
+                    Toast.makeText(CheckpointActivity.this, "long press", Toast.LENGTH_SHORT).show();
+                    if (!isMultiSelect) {
+                        multiselect_list = new ArrayList<Coordinates>();
+                        isMultiSelect = true;
 
-        finishtrip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String url = "http://tripshare.codeadventure.in/TripShare/index.php/trip/update/";
-                Map<String, String> params = new HashMap<>();
-                params.put("id",""+tripId);
-                params.put("is_complete","1");
-                JSONObject jsonObject = new JSONObject(params);
-
-                Log.v("hello", "hello");
-
-                //Call to create trip
-
-                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,url,jsonObject,new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.v("uprespo : ",""+response);
-                        try {
-                            if (response.getString("request").equals("Success")) {
-                                Toast.makeText(CheckpointActivity.this, "Congratulations!", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(CheckpointActivity.this, ViewTripActivity.class);
-                                startActivity(i);
-                            }
+                        if (mActionMode == null) {
+                            mActionMode = startActionMode(mActionModeCallback);
                         }
-                        catch (Exception e){}
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.v("upHugga : ", error.toString());
-                    }
-                });
-                VolleySingleton.getInstance(CheckpointActivity.this).addToRequestQueue(jsonRequest);
 
-            }
-        });
+                    multi_select(position);
+                }
+            }));
+
+            finishtrip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String url = "http://tripshare.codeadventure.in/TripShare/index.php/trip/update/";
+                    Map<String, String> params = new HashMap<>();
+                    params.put("id",""+tripId);
+                    params.put("is_complete","1");
+                    JSONObject jsonObject = new JSONObject(params);
+
+                    Log.v("hello", "hello");
+
+                    //Call to create trip
+
+                    JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,url,jsonObject,new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.v("uprespo : ",""+response);
+                            try {
+                                if (response.getString("request").equals("Success")) {
+                                    Toast.makeText(CheckpointActivity.this, "Congratulations!", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(CheckpointActivity.this, ViewTripActivity.class);
+                                    startActivity(i);
+                                }
+                            }
+                            catch (Exception e){}
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.v("upHugga : ", error.toString());
+                        }
+                    });
+                    VolleySingleton.getInstance(CheckpointActivity.this).addToRequestQueue(jsonRequest);
+
+                }
+            });
+        }
+
+
     }
 
 
