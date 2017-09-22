@@ -105,6 +105,9 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        if(tripstatus)
+            add.setVisibility(View.GONE);
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -394,14 +397,16 @@ public class OngoingMapActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Intent i = new Intent(OngoingMapActivity.this,EditCheckpointActivity.class);
-        String temp = marker.getSnippet();
-        temp = temp.substring(4,temp.length());
-        Log.v("temp",temp);
-        SharedPrefs.getEditor().putString("selongchkptid",temp);
-        SharedPrefs.getEditor().commit();
-        i.putExtra("Chkptid",temp);
-        startActivity(i);
+        if(!tripstatus) {
+            Intent i = new Intent(OngoingMapActivity.this, EditCheckpointActivity.class);
+            String temp = marker.getSnippet();
+            temp = temp.substring(4, temp.length());
+            Log.v("temp", temp);
+            SharedPrefs.getEditor().putString("selongchkptid", temp);
+            SharedPrefs.getEditor().commit();
+            i.putExtra("Chkptid", temp);
+            startActivity(i);
+        }
         return false;
     }
 

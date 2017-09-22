@@ -49,39 +49,43 @@ public class AddCheckpointActivity extends AppCompatActivity {
 
     }
 
-    public void addCheckpoint(View view){
+    public void addCheckpoint(View view) {
         String url = "http://tripshare.codeadventure.in/TripShare/index.php/coordinates/add/";
         name = upnameet.getText().toString().trim();
         desc = updescet.getText().toString().trim();
-        JSONObject jsonObject = new JSONObject();
-        try{
-            jsonObject = new JSONObject(chkptJson);
-        }
-        catch(Exception e){}
-        jsonObject.remove("name");
-        jsonObject.remove("description");
-        try {
-            jsonObject.put("name", name);
-            jsonObject.put("description", desc);
-        }
-        catch (Exception e){}
-
-        Log.v("json",""+jsonObject);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.v("respoco",""+response);
-                Toast.makeText(AddCheckpointActivity.this,"Added Checkpoint",Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(AddCheckpointActivity.this,OngoingMapActivity.class));
+        if (name.equals(""))
+            Toast.makeText(AddCheckpointActivity.this, "Name has to be filled", Toast.LENGTH_SHORT).show();
+        else {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject = new JSONObject(chkptJson);
+            } catch (Exception e) {
             }
-        },new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError volleyError){
-                Log.v("errorco",""+volleyError);
+            jsonObject.remove("name");
+            jsonObject.remove("description");
+            try {
+                jsonObject.put("name", name);
+                jsonObject.put("description", desc);
+            } catch (Exception e) {
             }
 
-        });
-        VolleySingleton.getInstance(AddCheckpointActivity.this).addToRequestQueue(jsonObjectRequest);
+            Log.v("json", "" + jsonObject);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.v("respoco", "" + response);
+                    Toast.makeText(AddCheckpointActivity.this, "Added Checkpoint", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(AddCheckpointActivity.this, OngoingMapActivity.class));
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    Log.v("errorco", "" + volleyError);
+                }
+
+            });
+            VolleySingleton.getInstance(AddCheckpointActivity.this).addToRequestQueue(jsonObjectRequest);
+        }
     }
 
 
