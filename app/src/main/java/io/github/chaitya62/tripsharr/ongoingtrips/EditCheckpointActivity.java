@@ -1,15 +1,9 @@
 package io.github.chaitya62.tripsharr.ongoingtrips;
 
-import android.app.AlertDialog;
-import android.appwidget.AppWidgetProvider;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,33 +12,22 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.chaitya62.tripsharr.Manifest;
 import io.github.chaitya62.tripsharr.R;
-import io.github.chaitya62.tripsharr.ViewTripActivity;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
 

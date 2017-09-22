@@ -81,7 +81,6 @@ public class BottomSheet extends AppCompatActivity implements View.OnClickListen
                 }
                 break;
             }
-            break;
             case R.id.button_3:{
                 Intent i = new Intent(getApplicationContext(), ViewTripTimeLine.class);
                 i.putExtra("tripId", (long)17);

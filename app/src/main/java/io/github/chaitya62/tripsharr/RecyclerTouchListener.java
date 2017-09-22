@@ -14,11 +14,19 @@ import android.view.View;
 
 public  class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
-    private GestureDetector gestureDetector;
-    private ClickListener clickListener;
 
-    public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
-        this.clickListener = clickListener;
+    public static interface OnItemClickListener
+    {
+        public void onItemClick(View view, int position);
+        public void onItemLongClick(View view, int position);
+    }
+
+    private OnItemClickListener mListener;
+    private GestureDetector gestureDetector;
+
+
+    public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final OnItemClickListener onItemClickListener) {
+        mListener = onItemClickListener;
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
@@ -29,9 +37,9 @@ public  class RecyclerTouchListener implements RecyclerView.OnItemTouchListener 
             public void onLongPress(MotionEvent e) {
                 View childView = recyclerView.findChildViewUnder(e.getX(), e.getY());
 
-                if(childView != null && clickListener != null)
+                if(childView != null && onItemClickListener != null)
                 {
-                    clickListener.onLongClick(childView, recyclerView.getChildPosition(childView));
+                    mListener.onItemLongClick(childView, recyclerView.getChildPosition(childView));
                 }
             }
         });
@@ -42,8 +50,8 @@ public  class RecyclerTouchListener implements RecyclerView.OnItemTouchListener 
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
 
         View child = rv.findChildViewUnder(e.getX(), e.getY());
-        if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
-            clickListener.onClick(child, rv.getChildPosition(child));
+        if (child != null && mListener != null && gestureDetector.onTouchEvent(e)) {
+            mListener.onItemClick(child, rv.getChildPosition(child));
         }
         return false;
     }

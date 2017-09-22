@@ -50,6 +50,21 @@
 
                 </android.support.design.widget.TextInputLayout>
 
+                   <android.support.design.widget.TextInputLayout
+                       android:layout_height="match_parent"
+                       android:layout_width="match_parent"
+                       >
+                       <EditText
+                           android:id="@+id/stdesc"
+                           android:layout_width="match_parent"
+                           android:maxLength="25"
+                           android:layout_weight="1"
+                           android:layout_height="wrap_content"
+                           android:hint="Description" />
+
+
+                   </android.support.design.widget.TextInputLayout>
+
 
 
                    </LinearLayout>
