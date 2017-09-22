@@ -3,6 +3,7 @@ package io.github.chaitya62.tripsharr;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -157,12 +158,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         // preparing toolbar to be actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar_profile);
+        toolbar.setTitleTextColor(Color.BLACK);
 
 //        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
 //        appBarLayout.setBackgroundColor(Color.RED);
         setSupportActionBar(toolbar);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.colappsing_toolbar);
-        collapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorAccent));
+        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.BLACK);
 
 
 
@@ -192,5 +194,15 @@ public class ProfileActivity extends AppCompatActivity {
     public void onClick(View view){
         super.onBackPressed();
         return;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i=new Intent(ProfileActivity.this,HomeActivity.class);
+        SharedPrefs.getEditor().remove("selongtripid");
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        finish();
     }
 }
