@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +29,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import io.github.chaitya62.tripsharr.EditTripActivity;
+import io.github.chaitya62.tripsharr.FeedsActivity;
 import io.github.chaitya62.tripsharr.HomeActivity;
 import io.github.chaitya62.tripsharr.NavigationActivity;
 import io.github.chaitya62.tripsharr.R;
@@ -38,11 +38,8 @@ import io.github.chaitya62.tripsharr.adapters.MultiSelectAdapter;
 import io.github.chaitya62.tripsharr.adapters.TripAdapter;
 import io.github.chaitya62.tripsharr.primeobjects.Trip;
 import io.github.chaitya62.tripsharr.utils.AlertDialogHelper;
-import io.github.chaitya62.tripsharr.utils.NetworkUtils;
 import io.github.chaitya62.tripsharr.utils.SharedPrefs;
 import io.github.chaitya62.tripsharr.utils.VolleySingleton;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by mikasa on 27/8/17.
@@ -71,11 +68,6 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
         getLayoutInflater().inflate(R.layout.activity_ongoingtrip, contentFrameLayout);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        if(!NetworkUtils.isNetworkAvailable()) {
-            Snackbar snackbar = Snackbar
-                    .make(findViewById(R.id.coordinator_on_going_trips), "No Internet Connection", Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }
 
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer1);
         // Setup refresh listener which triggers new data loading
@@ -117,7 +109,7 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
                     String temp = ""+trip.getId();
                     SharedPrefs.getEditor().putString("selongtripid",temp);
                     SharedPrefs.getEditor().commit();
-                    SharedPrefs.getEditor().putBoolean("tripstatus",trip.isComplete());
+                    SharedPrefs.getEditor().putBoolean("tripstatus",false);
                     SharedPrefs.getEditor().commit();
                     Log.v("shared",temp + " " + SharedPrefs.getPrefs().getString("selongtripid","1"));
                     startActivity(i);
@@ -303,7 +295,7 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
             if (mActionMode != null) {
                 mActionMode.finish();
             }
-            Toast.makeText(getApplicationContext(), "Delete Click", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Delete Click", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -324,11 +316,12 @@ public class OnGoingTripActivity extends NavigationActivity implements AlertDial
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i=new Intent(OnGoingTripActivity.this,HomeActivity.class);
+        Intent i=new Intent(OnGoingTripActivity.this,FeedsActivity.class);
         SharedPrefs.getEditor().remove("selongtripid");
+        SharedPrefs.getEditor().commit();
         SharedPrefs.getEditor().remove("uptripid");
+        SharedPrefs.getEditor().commit();
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         finish();
     }
 
