@@ -66,11 +66,11 @@ public class MultiSelectAdapter extends RecyclerView.Adapter<MultiSelectAdapter.
 
         if(selected_tripsList.contains(tripsList.get(position))) {
             Log.v("hello","sel");
-            holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorDarkText));
+            holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorLightText));
         }
         else {
             Log.v("hello","desel");
-            holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorLightText));
+            holder.ll_listitem.setBackgroundColor(ContextCompat.getColor(mContext, R.color.pureWhite));
         }
 
     }
